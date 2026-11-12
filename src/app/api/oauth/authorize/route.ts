@@ -1,7 +1,8 @@
 import { requestBase } from '@/lib/http/request-base'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { ensurePrimaryOrg } from '@/lib/org/server'
-import { createAuthCode, getClient } from '@/lib/mcp/oauth'
+import { createAuthCode, issuer, resolveClient, type OAuthClient } from '@/lib/mcp/oauth'
+import { ClientMetadataError, redirectUriAllowed } from '@/lib/mcp/client-metadata'
 import { createClient } from '@/utils/supabase/server'
 import { CONSENT_HEADERS, renderConsentDocument, renderConsentError } from '@/lib/mcp/consent-document'
 import { consentCopy } from '@/lib/mcp/consent-copy'
@@ -20,10 +21,22 @@ async function htmlError(message: string, status = 400) {
   } }), { status, headers: CONSENT_HEADERS })
 }
 
-function backToClient(redirectUri: string, params: Record<string, string>) {
+/** `iss` (RFC 9207) lets the client check the answer came from the server it asked. */
+function backToClient(req: Request, redirectUri: string, params: Record<string, string>) {
   const url = new URL(redirectUri)
+  url.searchParams.set('iss', issuer(req))
   for (const [k, v] of Object.entries(params)) if (v) url.searchParams.set(k, v)
   return Response.redirect(url.toString(), 302)
+}
+
+/**
+ * What the consent screen calls the client. A metadata-document client's name is self-asserted,
+ * so the host it is published on — the one thing the document cannot fake — is always shown too.
+ */
+function clientLabel(client: OAuthClient): string {
+  if (!client.client_id.startsWith('https://')) return client.client_name || client.client_id
+  const host = new URL(client.client_id).hostname
+  return client.client_name ? `${client.client_name} (${host})` : host
 }
 
 interface AuthzParams {
@@ -50,12 +63,21 @@ function read(sp: URLSearchParams): AuthzParams {
 }
 
 /** Validate the client + redirect_uri (the only errors we must NOT redirect for). */
-async function validateClient(p: AuthzParams): Promise<string | null> {
-  if (!p.client_id) return 'missing client_id'
-  const client = await getClient(p.client_id)
-  if (!client) return 'unknown client_id'
-  if (!p.redirect_uri || !client.redirect_uris.includes(p.redirect_uri)) return 'redirect_uri not registered for this client'
-  return null
+async function validateClient(p: AuthzParams): Promise<{ client: OAuthClient } | { error: string }> {
+  if (!p.client_id) return { error: 'missing client_id' }
+  let client: OAuthClient | null
+  try {
+    client = await resolveClient(p.client_id)
+  } catch (e) {
+    // a metadata document we could not fetch or accept: say why, never redirect to its redirect_uri
+    if (e instanceof ClientMetadataError) return { error: e.message }
+    throw e
+  }
+  if (!client) return { error: 'unknown client_id' }
+  // exact match, except a native client's loopback redirect may use any port (RFC 8252 §7.3)
+  if (!p.redirect_uri || !redirectUriAllowed(p.redirect_uri, client.redirect_uris))
+    return { error: 'redirect_uri not registered for this client' }
+  return { client }
 }
 
 /** GET: validate, require a logged-in supalens user, render the consent screen. */
@@ -63,11 +85,11 @@ export async function GET(req: Request) {
   const url = new URL(req.url)
   const p = read(url.searchParams)
 
-  const clientErr = await validateClient(p)
-  if (clientErr) return await htmlError(clientErr)
-  if (p.response_type !== 'code') return backToClient(p.redirect_uri, { error: 'unsupported_response_type', state: p.state })
+  const checked = await validateClient(p)
+  if ('error' in checked) return await htmlError(checked.error)
+  if (p.response_type !== 'code') return backToClient(req, p.redirect_uri, { error: 'unsupported_response_type', state: p.state })
   if (!p.code_challenge || p.code_challenge_method !== 'S256')
-    return backToClient(p.redirect_uri, { error: 'invalid_request', error_description: 'PKCE S256 required', state: p.state })
+    return backToClient(req, p.redirect_uri, { error: 'invalid_request', error_description: 'PKCE S256 required', state: p.state })
 
   const supabase = await createClient()
   const user = supabase ? (await supabase.auth.getUser()).data.user : null
@@ -77,10 +99,9 @@ export async function GET(req: Request) {
   }
 
   const t = await getTranslations('oauthConsent')
-  const client = await getClient(p.client_id)
   return new Response(renderConsentDocument({
     locale: await getLocale(), copy: consentCopy(t, user.email ?? ''),
-    clientName: client?.client_name || p.client_id, fields: { ...p },
+    clientName: clientLabel(checked.client), fields: { ...p },
   }), { headers: CONSENT_HEADERS })
 }
 
@@ -90,8 +111,8 @@ export async function POST(req: Request) {
   const p = read(form)
   const decision = form.get('decision')
 
-  const clientErr = await validateClient(p)
-  if (clientErr) return await htmlError(clientErr)
+  const checked = await validateClient(p)
+  if ('error' in checked) return await htmlError(checked.error)
 
   const supabase = await createClient()
   const user = supabase ? (await supabase.auth.getUser()).data.user : null
@@ -100,7 +121,7 @@ export async function POST(req: Request) {
     return await htmlError(t('sessionExpired'), 401)
   }
 
-  if (decision !== 'approve') return backToClient(p.redirect_uri, { error: 'access_denied', state: p.state })
+  if (decision !== 'approve') return backToClient(req, p.redirect_uri, { error: 'access_denied', state: p.state })
 
   const orgId = await ensurePrimaryOrg(supabase!, user)
   // Role-gate the granted scope: a viewer must not mint a write-capable token via consent when
@@ -125,5 +146,5 @@ export async function POST(req: Request) {
     scope: granted.join(' ') || 'read',
     resource: p.resource || null,
   })
-  return backToClient(p.redirect_uri, { code, state: p.state })
+  return backToClient(req, p.redirect_uri, { code, state: p.state })
 }

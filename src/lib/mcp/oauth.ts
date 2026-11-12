@@ -5,10 +5,14 @@ import { getPublicOrigin } from 'mcp-handler'
 import { requireAdminClient } from '@/utils/supabase/admin'
 
 import { hashKey } from './keys'
+import { fetchClientMetadata } from './client-metadata'
 
 /**
  * OAuth 2.1 (PKCE) authorization server for the MCP endpoint. supalens IS the AS:
- * it registers clients (DCR), authorizes via the user's Supabase session + consent,
+ * it identifies clients by a Client ID Metadata Document (CIMD, the MCP 2026-07-28 way — the
+ * client_id is an HTTPS URL, nothing is registered) and still accepts dynamically registered
+ * clients (DCR, deprecated in that revision) so connections made before it keep working. It
+ * authorizes via the user's Supabase session + consent,
  * and issues access/refresh tokens stored in `api_keys` (mcp_access_token / _refresh_token).
  * Public clients only (token_endpoint_auth_method=none) — PKCE S256 is mandatory.
  */
@@ -40,7 +44,26 @@ export function protectedResourceMetadata(req: Request) {
     authorization_servers: [issuer(req)],
     bearer_methods_supported: ['header'],
     scopes_supported: DEFAULT_SCOPES,
+    resource_name: 'Supalens',
   }
+}
+
+/** RFC 9728 §3.1: the path-suffixed metadata URL, which clients try before the root one. */
+export function resourceMetadataUrl(req: Request): string {
+  const resource = new URL(resourceUrl(req))
+  return `${resource.origin}/.well-known/oauth-protected-resource${resource.pathname}`
+}
+
+/**
+ * The `WWW-Authenticate` value that lets an OAuth client start (or redo) sign-in on its own.
+ * A request that carried NO credential gets no error code (RFC 6750 §3.1) — `invalid_token` there
+ * makes a client tell a signed-out user that their login expired. Pass `rejected` only when a
+ * token was presented and failed.
+ */
+export function signInChallenge(req: Request, rejected?: string): string {
+  const pointer = `resource_metadata="${resourceMetadataUrl(req)}", scope="${DEFAULT_SCOPES.join(' ')}"`
+  if (rejected === undefined) return `Bearer ${pointer}`
+  return `Bearer error="invalid_token", error_description="${rejected.replace(/["\\]/g, '')}", ${pointer}`
 }
 
 export function authServerMetadata(req: Request) {
@@ -49,11 +72,18 @@ export function authServerMetadata(req: Request) {
     issuer: iss,
     authorization_endpoint: `${iss}/api/oauth/authorize`,
     token_endpoint: `${iss}/api/oauth/token`,
+    revocation_endpoint: `${iss}/api/oauth/revoke`,
+    // DCR stays for clients that predate CIMD; a client that supports both prefers CIMD.
     registration_endpoint: `${iss}/api/oauth/register`,
     response_types_supported: ['code'],
     grant_types_supported: ['authorization_code', 'refresh_token'],
     code_challenge_methods_supported: ['S256'],
     token_endpoint_auth_methods_supported: ['none'],
+    revocation_endpoint_auth_methods_supported: ['none'],
+    // The two fields a 2026-07-28 client checks before it identifies itself with a metadata
+    // document instead of registering: this flag and "none" above.
+    client_id_metadata_document_supported: true,
+    authorization_response_iss_parameter_supported: true,
     scopes_supported: DEFAULT_SCOPES,
   }
 }
@@ -100,6 +130,28 @@ export async function getClient(clientId: string): Promise<OAuthClient | null> {
     .eq('client_id', clientId)
     .limit(1)
   return (data?.[0] as OAuthClient | undefined) ?? null
+}
+
+/**
+ * Resolve a client by id, whichever way it identifies itself. An HTTPS URL is a Client ID
+ * Metadata Document: fetched (SSRF-checked, cached) and mirrored into `oauth_clients` so the
+ * codes and tokens that reference the client keep their foreign key — the document is re-read on
+ * the next authorization, so the row never outlives what the client publishes. Anything else is a
+ * registered client. Throws ClientMetadataError when a document is unreachable or invalid.
+ */
+export async function resolveClient(clientId: string): Promise<OAuthClient | null> {
+  if (!clientId.startsWith('https://')) return getClient(clientId)
+  const doc = await fetchClientMetadata(clientId)
+  const client: OAuthClient = {
+    client_id: doc.clientId,
+    redirect_uris: doc.redirectUris,
+    client_name: doc.clientName,
+    token_endpoint_auth_method: 'none',
+    grant_types: ['authorization_code', 'refresh_token'],
+  }
+  const { error } = await requireAdminClient().from('oauth_clients').upsert(client, { onConflict: 'client_id' })
+  if (error) throw new Error(`client lookup failed: ${error.message}`)
+  return client
 }
 
 // ── authorization codes ───────────────────────────────────────────────────────
@@ -252,10 +304,52 @@ export async function refreshTokens(refreshToken: string, clientId: string): Pro
   const row = data?.[0] as
     | { id: string; org_id: string; scopes: string[]; created_by: string | null; client_id: string | null; revoked_at: string | null }
     | undefined
-  if (!row || row.revoked_at) throw new Error('invalid_grant: unknown or revoked refresh token')
+  if (!row) throw new Error('invalid_grant: unknown refresh token')
+  if (row.revoked_at) {
+    // A rotated-out refresh token presented again means it was copied: end the whole grant
+    // (OAuth 2.1 §4.3.1), so whoever holds the newer tokens loses them too.
+    await revokeGrant({ orgId: row.org_id, userId: row.created_by, clientId: row.client_id })
+    throw new Error('invalid_grant: refresh token was already used')
+  }
   if (row.client_id && row.client_id !== clientId) throw new Error('invalid_grant: client mismatch')
 
   // rotation: revoke the presented refresh token before minting new ones.
   await admin.from('api_keys').update({ revoked_at: new Date().toISOString() }).eq('id', row.id)
   return issueTokens({ orgId: row.org_id, userId: row.created_by, clientId, scope: (row.scopes ?? DEFAULT_SCOPES).join(' ') })
+}
+
+// ── revocation (RFC 7009) ─────────────────────────────────────────────────────
+/**
+ * A grant is every live OAuth token one user issued to one client in one workspace. Tokens carry
+ * no grant id, so that triple is the identity; a row without a client or a creator is never
+ * matched (an API key or an org-level key is not an OAuth grant).
+ */
+async function revokeGrant(grant: { orgId: string; userId: string | null; clientId: string | null }): Promise<void> {
+  if (!grant.userId || !grant.clientId) return
+  const { error } = await requireAdminClient()
+    .from('api_keys')
+    .update({ revoked_at: new Date().toISOString() })
+    .eq('org_id', grant.orgId)
+    .eq('created_by', grant.userId)
+    .eq('client_id', grant.clientId)
+    .in('kind', ['mcp_access_token', 'mcp_refresh_token'])
+    .is('revoked_at', null)
+  if (error) throw new Error(`revocation failed: ${error.message}`)
+}
+
+/** Revoke by either token of a grant; ends the whole grant. An unknown token is a silent no-op. */
+export async function revokeToken(token: string): Promise<void> {
+  if (!token.startsWith(ACCESS_PREFIX) && !token.startsWith(REFRESH_PREFIX)) return
+  const admin = requireAdminClient()
+  const { data, error } = await admin
+    .from('api_keys')
+    .select('id, org_id, created_by, client_id')
+    .eq('token_hash', hashKey(token))
+    .in('kind', ['mcp_access_token', 'mcp_refresh_token'])
+    .limit(1)
+  if (error) throw new Error(`revocation failed: ${error.message}`)
+  const row = data?.[0] as { id: string; org_id: string; created_by: string | null; client_id: string | null } | undefined
+  if (!row) return
+  await admin.from('api_keys').update({ revoked_at: new Date().toISOString() }).eq('id', row.id).is('revoked_at', null)
+  await revokeGrant({ orgId: row.org_id, userId: row.created_by, clientId: row.client_id })
 }

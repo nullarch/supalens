@@ -1,6 +1,5 @@
 import { appOrigin } from '@/config/edition'
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
-import type { RequestHandlerExtra } from '@modelcontextprotocol/sdk/shared/protocol.js'
+import type { McpServer, ServerContext } from '@modelcontextprotocol/server'
 import { z } from 'zod'
 
 import { assertReadOnly, executeReadOnly, getSchema, rlsSchemaNote } from '@/lib/query'
@@ -53,10 +52,29 @@ const FirestoreWhere = z.object({
   value: z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.union([z.string(), z.number(), z.boolean()]))]),
 })
 
-type TextResult = { content: { type: 'text'; text: string }[]; isError?: boolean }
-type Extra = RequestHandlerExtra<never, never>
+type TextResult = {
+  content: { type: 'text'; text: string }[]
+  structuredContent?: Record<string, unknown>
+  isError?: boolean
+}
+type Extra = ServerContext
 
-const ok = (data: unknown): TextResult => ({ content: [{ type: 'text', text: JSON.stringify(data) }] })
+/**
+ * Every tool answers with one JSON document. Declared loose on purpose: the fields differ per tool
+ * and are described in each tool's description; the schema only promises "a JSON object", which
+ * is what lets a client read `structuredContent` instead of re-parsing the text block.
+ */
+const RESULT = z.looseObject({})
+
+/**
+ * The same document twice: a text block (every client, and the model) and `structuredContent`
+ * (clients that parse). JSON round-trip so the structured copy holds only JSON values — a Date or
+ * bigint from a driver row must not reach the protocol encoder.
+ */
+const ok = (data: Record<string, unknown>): TextResult => {
+  const text = JSON.stringify(data)
+  return { content: [{ type: 'text', text }], structuredContent: JSON.parse(text) as Record<string, unknown> }
+}
 const err = (message: string): TextResult => ({ content: [{ type: 'text', text: message }], isError: true })
 
 /**
@@ -114,7 +132,7 @@ async function createGoalAlert(
 
 /** Pull the verified org context off the request. Throws → surfaced as an MCP error. */
 function ctxOf(extra: Extra): McpAuthContext {
-  const c = extra.authInfo?.extra as McpAuthContext | undefined
+  const c = extra.http?.authInfo?.extra as McpAuthContext | undefined
   if (!c?.orgId) throw new Error('unauthorized: missing org context')
   return c
 }
@@ -230,8 +248,9 @@ export function registerSupalensTools(server: McpServer): void {
       title: 'Workspace setup status',
       description:
         'Start here. Returns whether this workspace has a connected database, its data sources, and what to do next. Call this first in a fresh session.',
-      annotations: { readOnlyHint: true, openWorldHint: false },
-      inputSchema: {},
+      annotations: { title: 'Workspace setup status', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
+      inputSchema: z.object({}),
     },
     async (_args, extra: Extra) => {
       try {
@@ -276,8 +295,9 @@ export function registerSupalensTools(server: McpServer): void {
     {
       title: 'List data sources',
       description: 'List the databases connected to this workspace (id, name, engine, status).',
-      annotations: { readOnlyHint: true, openWorldHint: false },
-      inputSchema: {},
+      annotations: { title: 'List data sources', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
+      inputSchema: z.object({}),
     },
     async (_args, extra: Extra) => {
       try {
@@ -301,11 +321,12 @@ export function registerSupalensTools(server: McpServer): void {
       title: 'Get database schema',
       description:
         'List the tables and columns of a connected database (read-only introspection). Use this before writing SQL so queries match the REAL production schema.',
-      annotations: { readOnlyHint: true, openWorldHint: false },
-      inputSchema: {
+      annotations: { title: 'Get database schema', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
+      inputSchema: z.object({
         dataSourceId: z.string().optional().describe('omit if the workspace has exactly one data source'),
         schema: z.string().optional().describe('optional schema name filter, e.g. "public"'),
-      },
+      }),
     },
     async ({ dataSourceId, schema }, extra: Extra) => {
       try {
@@ -326,11 +347,12 @@ export function registerSupalensTools(server: McpServer): void {
       title: 'Run read-only SQL',
       description:
         "Run a READ-ONLY (SELECT/WITH) SQL query against the workspace's connected PostgreSQL/MySQL database. Returns {columns, rows, rowCount, truncated}. Writes are structurally rejected (SELECT-only guard + read-only transaction). Credentials never leave supalens.",
-      annotations: { readOnlyHint: true, openWorldHint: false },
-      inputSchema: {
+      annotations: { title: 'Run read-only SQL', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
+      inputSchema: z.object({
         sql: z.string().describe('a single read-only SELECT or WITH query'),
         dataSourceId: z.string().optional().describe('omit if the workspace has exactly one data source'),
-      },
+      }),
     },
     async ({ sql, dataSourceId }, extra: Extra) => {
       try {
@@ -351,8 +373,9 @@ export function registerSupalensTools(server: McpServer): void {
       title: 'List Firestore collections',
       description:
         'List the top-level collection ids of a connected Firestore (document) data source. Use before query_documents. For SQL sources use get_schema instead.',
-      annotations: { readOnlyHint: true, openWorldHint: false },
-      inputSchema: { dataSourceId: z.string().optional().describe('omit if the workspace has exactly one data source') },
+      annotations: { title: 'List Firestore collections', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
+      inputSchema: z.object({ dataSourceId: z.string().optional().describe('omit if the workspace has exactly one data source') }),
     },
     async ({ dataSourceId }, extra: Extra) => {
       try {
@@ -372,8 +395,9 @@ export function registerSupalensTools(server: McpServer): void {
       title: 'Infer Firestore collection schema',
       description:
         "Infer a Firestore collection's fields and types by SAMPLING documents. Returns {collection, sampled, fields}. This is a sample, not authoritative — fields only in unsampled docs may be missing.",
-      annotations: { readOnlyHint: true, openWorldHint: false },
-      inputSchema: { collection: z.string().describe('collection id, e.g. "users"'), dataSourceId: z.string().optional() },
+      annotations: { title: 'Infer Firestore collection schema', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
+      inputSchema: z.object({ collection: z.string().describe('collection id, e.g. "users"'), dataSourceId: z.string().optional() }),
     },
     async ({ collection, dataSourceId }, extra: Extra) => {
       try {
@@ -393,15 +417,16 @@ export function registerSupalensTools(server: McpServer): void {
       title: 'Query Firestore documents',
       description:
         "Read documents from ONE collection of the workspace's connected Firestore database, with optional where filters, an orderBy, and a limit. Returns {columns, rows, rowCount, truncated} (documents flattened; __id is the doc id). NO JOINs; results are capped.",
-      annotations: { readOnlyHint: true, openWorldHint: false },
-      inputSchema: {
+      annotations: { title: 'Query Firestore documents', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
+      inputSchema: z.object({
         collection: z.string(),
         where: z.array(FirestoreWhere).optional(),
         orderBy: z.object({ field: z.string(), direction: z.enum(['asc', 'desc']).optional() }).optional(),
         limit: z.number().int().positive().max(1000).optional(),
         collectionGroup: z.boolean().optional().describe('query across all sub-collections with this id'),
         dataSourceId: z.string().optional(),
-      },
+      }),
     },
     async ({ collection, where, orderBy, limit, collectionGroup, dataSourceId }, extra: Extra) => {
       try {
@@ -426,15 +451,16 @@ export function registerSupalensTools(server: McpServer): void {
       title: 'Aggregate Firestore documents',
       description:
         'Server-side aggregation over a Firestore collection: count, or sum/average of a numeric field, with optional where filters. Cheap — prefer over reading all documents to total them.',
-      annotations: { readOnlyHint: true, openWorldHint: false },
-      inputSchema: {
+      annotations: { title: 'Aggregate Firestore documents', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
+      inputSchema: z.object({
         collection: z.string(),
         op: z.enum(['count', 'sum', 'average']),
         field: z.string().optional().describe('required for sum/average'),
         where: z.array(FirestoreWhere).optional(),
         collectionGroup: z.boolean().optional(),
         dataSourceId: z.string().optional(),
-      },
+      }),
     },
     async ({ collection, op, field, where, collectionGroup, dataSourceId }, extra: Extra) => {
       try {
@@ -456,8 +482,9 @@ export function registerSupalensTools(server: McpServer): void {
       title: 'Save a reusable query',
       description:
         'Save a named, re-runnable SQL query to this workspace so it can back widgets and be reused by the team.',
-      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
-      inputSchema: {
+      annotations: { title: 'Save a reusable query', readOnlyHint: false, destructiveHint: false, openWorldHint: false, idempotentHint: false },
+      outputSchema: RESULT,
+      inputSchema: z.object({
         name: z.string().describe('human-readable name, e.g. "Daily signups"'),
         sql: z.string().describe('a read-only SELECT/WITH query'),
         dataSourceId: z.string().optional(),
@@ -465,7 +492,7 @@ export function registerSupalensTools(server: McpServer): void {
           .string()
           .optional()
           .describe('provenance: where this came from, e.g. "src/lib/billing/mrr.ts" or a git ref'),
-      },
+      }),
     },
     async ({ name, sql, dataSourceId, source }, extra: Extra) => {
       try {
@@ -495,10 +522,11 @@ export function registerSupalensTools(server: McpServer): void {
     {
       title: 'Create or update dashboard',
       // destructiveHint: re-running with an existing slug REPLACES that dashboard's widget set.
-      annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+      annotations: { title: 'Create or update dashboard', readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+      outputSchema: RESULT,
       description:
         'Create (or update, by slug) a dashboard, optionally with widgets in one call. Each widget = a read-only SQL + a chart config; supalens runs the SQL, validates the chart against the real columns, and persists it. Re-running with the same slug REPLACES the widget set (declarative sync) — safe to re-run as code evolves. This is how you turn KPIs you found in a repo into a shared, live dashboard. For the automated path, extract_kpis proposes a full validated KPI catalog from the schema (and repo) and apply_kpis builds this dashboard from it.',
-      inputSchema: {
+      inputSchema: z.object({
         title: z.string().describe('dashboard title'),
         slug: z.string().optional().describe('stable id for idempotent updates; defaults to a slug of the title'),
         dataSourceId: z.string().optional(),
@@ -512,7 +540,7 @@ export function registerSupalensTools(server: McpServer): void {
           )
           .max(MAX_WIDGETS)
           .optional(),
-      },
+      }),
     },
     async ({ title, slug, dataSourceId, widgets }, extra: Extra) => {
       try {
@@ -623,14 +651,15 @@ export function registerSupalensTools(server: McpServer): void {
       title: 'Add dashboard widget',
       description:
         'Add ONE chart widget to an existing dashboard. supalens runs the SQL read-only, validates the chart against the real columns, and persists it.',
-      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
-      inputSchema: {
+      annotations: { title: 'Add dashboard widget', readOnlyHint: false, destructiveHint: false, openWorldHint: false, idempotentHint: false },
+      outputSchema: RESULT,
+      inputSchema: z.object({
         dashboard: z.string().describe('dashboard id or slug'),
         sql: z.string().describe('read-only SELECT/WITH for the widget data'),
         chart: ChartSpec,
         dataSourceId: z.string().optional(),
         source: z.string().optional().describe('provenance: repo path / git ref this KPI was derived from'),
-      },
+      }),
     },
     async ({ dashboard, sql, chart, dataSourceId, source }, extra: Extra) => {
       try {
@@ -690,8 +719,9 @@ export function registerSupalensTools(server: McpServer): void {
     {
       title: 'List dashboards',
       description: 'List dashboards in this workspace (id, slug, name, pinned).',
-      annotations: { readOnlyHint: true, openWorldHint: false },
-      inputSchema: {},
+      annotations: { title: 'List dashboards', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
+      inputSchema: z.object({}),
     },
     async (_args, extra: Extra) => {
       try {
@@ -714,8 +744,9 @@ export function registerSupalensTools(server: McpServer): void {
     {
       title: 'List dashboard widgets',
       description: 'List the widgets on a dashboard (id, title, chart type).',
-      annotations: { readOnlyHint: true, openWorldHint: false },
-      inputSchema: { dashboard: z.string().describe('dashboard id or slug') },
+      annotations: { title: 'List dashboard widgets', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
+      inputSchema: z.object({ dashboard: z.string().describe('dashboard id or slug') }),
     },
     async ({ dashboard }, extra: Extra) => {
       try {
@@ -750,11 +781,12 @@ export function registerSupalensTools(server: McpServer): void {
       // readOnlyHint despite the run-record insert: the analysis itself is strictly read-only
       // over the tenant DB and no workspace resource is mutated — the run row + metered-quota
       // increment are internal bookkeeping, same as an audit log.
-      annotations: { readOnlyHint: true, openWorldHint: false },
-      inputSchema: {
+      annotations: { title: 'Ask the analysis agent', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
+      inputSchema: z.object({
         question: z.string().max(4000).describe('the analytics question, in natural language'),
         dataSourceId: z.string().optional(),
-      },
+      }),
     },
     async ({ question, dataSourceId }, extra: Extra) => {
       try {
@@ -811,8 +843,9 @@ export function registerSupalensTools(server: McpServer): void {
     {
       title: 'Get analysis result',
       description: 'Poll the result of an ask() run. Returns {status, done, result, error}. result holds the agent prose + any visualizations once done.',
-      annotations: { readOnlyHint: true, openWorldHint: false },
-      inputSchema: { runId: z.string().describe('the runId returned by ask') },
+      annotations: { title: 'Get analysis result', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
+      inputSchema: z.object({ runId: z.string().describe('the runId returned by ask') }),
     },
     async ({ runId }, extra: Extra) => {
       try {
@@ -848,8 +881,9 @@ export function registerSupalensTools(server: McpServer): void {
       title: 'List alerts',
       description:
         "List this workspace's alerts (monitors that notify the team — email, Slack, Discord — when a metric query crosses a threshold).",
-      annotations: { readOnlyHint: true, openWorldHint: false },
-      inputSchema: {},
+      annotations: { title: 'List alerts', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
+      inputSchema: z.object({}),
     },
     async (_args, extra: Extra) => {
       try {
@@ -878,10 +912,11 @@ export function registerSupalensTools(server: McpServer): void {
     'create_alert',
     {
       title: 'Create alert',
-      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
+      annotations: { title: 'Create alert', readOnlyHint: false, destructiveHint: false, openWorldHint: false, idempotentHint: false },
+      outputSchema: RESULT,
       description:
         'Create an alert. PREFER A GOAL MONITOR: pass `goal` (the user\'s own words, e.g. "tell me when signups dip") plus a structured `condition`, and a metricSql that returns a DAILY series — one row per day, oldest→newest, the day first and the measure last, days with no activity as 0 (build the day axis with generate_series and end it at current_date - 1). condition.strategy: "anomaly" (no number given — {direction: down|up|both, sensitivity σ default 3, window trailing days default 28}), "relative" (a comparison — {direction: down|up, pct as a FRACTION e.g. 0.3, window trailing days}), "absolute" (ONLY when the user gave the number — {operator, threshold}). Never invent an absolute number the user did not give. The response includes a backtest (how often the rule would have fired over the returned history) — tell the user. LEGACY (no condition): THRESHOLD (default): metricSql returns ONE numeric scalar; email when it satisfies operator vs threshold. ANOMALY (type="anomaly"): metricSql returns a TIME SERIES (rows ordered oldest→newest, the measure as the LAST column, e.g. `select day, sum(amount) v from ... group by day order by day`) and it fires when the latest point deviates from the learned baseline by >= sensitivity standard deviations (default 3) — NO threshold needed, good for "tell me when it looks weird". For a RELATIVE threshold ("below last week\'s average"), encode the comparison INTO metricSql (e.g. `select today_total - last_week_avg`) and compare to 0. Author metricSql with get_schema + execute_sql first so it matches the real schema. operator is one of lt/lte/gt/gte/eq/neq.',
-      inputSchema: {
+      inputSchema: z.object({
         name: z.string().min(1).describe('human label, e.g. "일매출 1천만원 미만"'),
         metricSql: z.string().min(1).describe('read-only SELECT: one numeric scalar (threshold) OR an ordered numeric series (anomaly)'),
         type: z.enum(['threshold', 'change_rate', 'anomaly']).optional().describe('default threshold; "anomaly" for threshold-less outlier detection'),
@@ -894,7 +929,7 @@ export function registerSupalensTools(server: McpServer): void {
         condition: MonitorCondition.optional().describe(
           'goal monitor rule (v: 1). anomaly {direction, sensitivity, window} | relative {direction, pct, window} | absolute {operator, threshold}. Requires a DAILY series metricSql.',
         ),
-      },
+      }),
     },
     async (args, extra: Extra) => {
       try {
@@ -948,8 +983,9 @@ export function registerSupalensTools(server: McpServer): void {
     {
       title: 'Enable or disable alert',
       description: 'Enable or disable an alert by id.',
-      annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
-      inputSchema: { alertId: z.string(), enabled: z.boolean() },
+      annotations: { title: 'Enable or disable alert', readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+      outputSchema: RESULT,
+      inputSchema: z.object({ alertId: z.string(), enabled: z.boolean() }),
     },
     async (args, extra: Extra) => {
       try {
@@ -977,8 +1013,9 @@ export function registerSupalensTools(server: McpServer): void {
     {
       title: 'Delete alert',
       description: 'Delete an alert by id (soft delete).',
-      annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
-      inputSchema: { alertId: z.string() },
+      annotations: { title: 'Delete alert', readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+      outputSchema: RESULT,
+      inputSchema: z.object({ alertId: z.string() }),
     },
     async (args, extra: Extra) => {
       try {
@@ -1006,12 +1043,13 @@ export function registerSupalensTools(server: McpServer): void {
     'extract_kpis',
     {
       title: 'Extract KPI catalog',
-      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
+      annotations: { title: 'Extract KPI catalog', readOnlyHint: false, destructiveHint: false, openWorldHint: false, idempotentHint: false },
+      outputSchema: RESULT,
       description:
         'Kick off an AI KPI extraction for a connected SQL data source: the agent reads the schema (and, when a repo is attached, the code) and proposes a validated, runnable KPI catalog — each KPI is title + SQL + chart + optional alert + code/table evidence, and every SQL is executed before it is proposed. Runs on the Trigger.dev host and returns immediately with an extractionId; poll list_kpis until proposals appear, then apply_kpis to build the dashboard. Metered — counts toward your plan quota. (The demo source ships a built-in catalog instead; call list_kpis on it directly.)',
-      inputSchema: {
+      inputSchema: z.object({
         dataSourceId: z.string().optional().describe('omit if the workspace has exactly one data source'),
-      },
+      }),
     },
     async ({ dataSourceId }, extra: Extra) => {
       try {
@@ -1123,16 +1161,17 @@ export function registerSupalensTools(server: McpServer): void {
     'list_kpis',
     {
       title: 'List KPI catalog',
-      annotations: { readOnlyHint: true, openWorldHint: false },
+      annotations: { title: 'List KPI catalog', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
+      outputSchema: RESULT,
       description:
         "List the extracted KPI catalog for a connected SQL data source: the proposals from extract_kpis (or the demo source's built-in catalog). Returns the latest extraction status and the KPI rows (title, category, importance, SQL, chart, alert, evidence, status). Poll this after extract_kpis until proposals appear, then pass the ids you want to apply_kpis. (Preview sample rows are trimmed here; the full sample is kept in supalens.)",
-      inputSchema: {
+      inputSchema: z.object({
         dataSourceId: z.string().optional().describe('omit if the workspace has exactly one data source'),
         status: z
           .enum(['proposed', 'accepted', 'dismissed', 'stale'])
           .optional()
           .describe('filter to one status; omit for all'),
-      },
+      }),
     },
     async ({ dataSourceId, status }, extra: Extra) => {
       try {
@@ -1151,15 +1190,16 @@ export function registerSupalensTools(server: McpServer): void {
     'apply_kpis',
     {
       title: 'Apply KPIs to dashboard',
-      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
+      annotations: { title: 'Apply KPIs to dashboard', readOnlyHint: false, destructiveHint: false, openWorldHint: false, idempotentHint: false },
+      outputSchema: RESULT,
       description:
         'Turn a set of proposed KPIs into live artifacts in one call: a "핵심 KPI" dashboard (or a chosen existing one), a widget per KPI, and — when withAlerts — an alert per KPI that carries an alert config. Each KPI is re-validated (SQL runs read-only + chart columns checked) before anything is written; per-item failures are reported without undoing the KPIs that succeed. Get the ids from list_kpis first.',
-      inputSchema: {
+      inputSchema: z.object({
         kpiIds: z.array(z.string()).min(1).max(40).describe('catalog ids (from list_kpis) to apply'),
         dataSourceId: z.string().optional().describe('omit if the workspace has exactly one data source'),
         dashboardId: z.string().optional().describe('an existing dashboard id to add to; omit for the idempotent "핵심 KPI" dashboard'),
         withAlerts: z.boolean().optional().describe('also create alerts for KPIs that carry an alert config (default true)'),
-      },
+      }),
     },
     async ({ kpiIds, dataSourceId, dashboardId, withAlerts }, extra: Extra) => {
       try {

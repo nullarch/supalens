@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
+import type { McpServer } from '@modelcontextprotocol/server'
 
 import { registerSupalensTools } from './tools'
 

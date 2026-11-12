@@ -97,8 +97,26 @@ supabase/migrations/20260630150000_oauth.sql   oauth_clients, oauth_auth_codes, 
 ```
 
 Env: optional `API_KEY_PEPPER` (extra hash pepper), `NEXT_PUBLIC_APP_URL` (connect-URL origin).
-Dep note: `@modelcontextprotocol/sdk` pinned to **^1.29.0** (claude-agent-sdk peer); `mcp-handler`
-declares an exact 1.26.0 peer but runs fine on 1.29.0 (install used `--legacy-peer-deps`).
+Dep note: the endpoint runs on `mcp-handler` 2.x + `@modelcontextprotocol/server` 2.x (MCP SDK v2).
+`@modelcontextprotocol/sdk` 1.x stays installed only as the claude-agent-sdk peer (its in-process tool
+servers) — the endpoint does not import it.
+
+## Protocol and authorization (2026-07-28)
+
+- One stateless handler serves the **2026-07-28** revision natively (`server/discover`, per-request
+  `_meta`, no sessions) and falls back to 2025-era `initialize`. The HTTP+SSE transport is gone.
+- Every tool has a `title`, explicit `readOnlyHint` / `destructiveHint` / `idempotentHint`, and a loose
+  `outputSchema`; a result is one JSON document sent as a text block and as `structuredContent`.
+- `tools/list` and `server/discover` carry a one-hour **private** cache hint.
+- Clients identify themselves with a **Client ID Metadata Document** (`client_id` = an HTTPS URL;
+  `src/lib/mcp/client-metadata.ts` fetches it with SSRF checks). Dynamic registration, deprecated in
+  this revision, still works for clients connected before it.
+- `/api/oauth/revoke` (RFC 7009) ends a whole grant; a reused refresh token does the same.
+- Protected-resource metadata is served at the root and the path-suffixed well-known URL; a request
+  with no credential gets a 401 with no error code, so the client offers sign-in instead of
+  reporting an expired login.
+- A 2026-07-28 request needs the `Mcp-Method` header (and `Mcp-Name` on `tools/call`); a hand-written
+  probe without them gets an error, not a result.
 
 ## Phasing
 
