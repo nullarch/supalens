@@ -100,9 +100,10 @@ export function utcOffsetLabel(tz: string, at: Date = new Date()): string {
   try {
     const parts = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'longOffset' }).formatToParts(at)
     const name = parts.find((p) => p.type === 'timeZoneName')?.value ?? ''
-    // longOffset yields "GMT+09:00" (or plain "GMT" at zero offset) — restate it as UTC.
+    // longOffset yields "GMT+09:00"; at zero offset it is plain "GMT" or "GMT+00:00" depending on
+    // the runtime's ICU version — restate either as bare UTC.
     if (!name) return ''
-    return name === 'GMT' ? 'UTC' : name.replace('GMT', 'UTC')
+    return /^GMT(?:[+-]00:00)?$/.test(name) ? 'UTC' : name.replace('GMT', 'UTC')
   } catch {
     return ''
   }
