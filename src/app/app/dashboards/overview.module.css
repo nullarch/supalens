@@ -1,0 +1,531 @@
+/* ============================================================
+   Reports.
+
+   Index: serif title row with the primary "new report" action, then one table
+   shell (tinted head row, faint row lines): report name + pinned badge, slug,
+   quiet row actions; a footer row points at the KPI path. Empty states sit
+   centered inside a card.
+   Report: a small back link, the serif title row (pin toggle + secondary
+   actions), then the board (summary row + white widget cards, in the grid).
+   ============================================================ */
+
+/* ---------- shared: the management frame (index + report header) ---------- */
+.reportHeader {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* touch targets: every management control keeps a 44px box */
+.reportHeader button,
+.reportHeader > a,
+.reportHeader :global(.dx-btn-ghost),
+.reportDialog button {
+  min-width: 44px;
+  min-height: 44px;
+}
+.reportHeader button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.reportHeader :is(button, a):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.reportHeader :global(.dx-head-actions) {
+  flex-wrap: wrap;
+}
+.reportHeader > :global(.dx-btn-ghost) {
+  margin: 0 0 20px;
+}
+.reportDialog {
+  overflow-wrap: anywhere;
+}
+.reportNotice {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-2);
+}
+.reportNotice::before {
+  content: "";
+  position: relative;
+  top: -1px;
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--brand);
+}
+.reportNotice[data-error="true"],
+.reportNotice[data-error=""] {
+  color: var(--intent-negative);
+}
+.reportNotice[data-error="true"]::before,
+.reportNotice[data-error=""]::before {
+  background: var(--ax-err);
+}
+.reportDialog .reportNotice {
+  margin: 12px 0 0;
+}
+
+/* ---------- index ---------- */
+.newReport {
+  min-height: 44px;
+}
+.library {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+}
+.listHead {
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--line);
+  background: var(--ax-tint);
+  font-size: 12.8px;
+  font-weight: 500;
+  line-height: 19px;
+  color: var(--ink-3);
+}
+.reportList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.reportRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 200px) auto;
+  align-items: center;
+  gap: 4px 16px;
+  min-height: 60px;
+  padding: 6px 12px 6px 24px;
+  transition: background-color 120ms ease;
+}
+.reportRow + .reportRow {
+  border-top: 1px solid var(--ax-line-soft);
+}
+@media (hover: hover) {
+  .reportRow:hover {
+    background: var(--ax-fill-soft);
+  }
+}
+.reportMain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  min-width: 0;
+}
+.reportName {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+/* the whole row opens the report; the controls sit above this layer */
+.reportName::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.reportName:focus-visible {
+  outline: none;
+}
+.reportName:focus-visible::after {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}
+.pinnedTag {
+  position: relative;
+}
+.reportSlug {
+  min-width: 0;
+  font-family: var(--ax-mono);
+  font-size: 12.5px;
+  line-height: 20px;
+  color: var(--ink-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reportActions {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+.reportIconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-control);
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+.reportIconBtn[data-pinned="true"] {
+  color: var(--brand);
+}
+@media (hover: hover) {
+  .reportIconBtn:not(:disabled):hover {
+    background: var(--paper-3);
+    color: var(--ink);
+  }
+  .reportIconBtn[data-destructive]:not(:disabled):hover {
+    background: var(--intent-negative-bg);
+    color: var(--intent-negative);
+  }
+}
+.reportOpen {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin-left: 4px;
+  padding: 0 12px;
+  border-radius: var(--r-control);
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+.reportOpen svg {
+  transition: transform 150ms ease;
+}
+@media (hover: hover) {
+  .reportOpen:hover {
+    color: var(--ink);
+    background: var(--paper-3);
+  }
+  .reportOpen:hover svg {
+    transform: translateX(2px);
+  }
+}
+.reportEmpty {
+  margin: 0;
+  padding: 20px 24px;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+}
+.reportHint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 20px;
+  margin: 0;
+  padding: 4px 12px 4px 24px;
+  border-top: 1px solid var(--line);
+  background: var(--ax-tint);
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+}
+.reportHintLink {
+  min-height: 44px;
+  padding: 0 12px;
+}
+
+/* empty index: centered in the card */
+.emptyShell,
+.boardEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 56px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.emptyText {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+  text-wrap: balance;
+}
+.emptyActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+.emptyAction {
+  min-height: 44px;
+}
+
+/* ---------- report header ---------- */
+.reportHead {
+  margin-bottom: 24px;
+}
+.reportTitle {
+  display: block;
+}
+.reportTitle > span {
+  overflow-wrap: anywhere;
+}
+/* the pin toggle rides after the last word of the (balanced) title */
+.reportPin {
+  position: relative;
+  top: -2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: -8px 0 -8px 2px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-control);
+  background: transparent;
+  color: var(--ink-3);
+  vertical-align: middle;
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+.reportPin[data-pinned="true"] {
+  color: var(--brand);
+}
+@media (hover: hover) {
+  .reportPin:not(:disabled):hover {
+    background: var(--paper-3);
+    color: var(--ink);
+  }
+}
+.quietAction {
+  min-height: 44px;
+}
+.quietAction svg {
+  color: var(--ink-3);
+}
+@media (hover: hover) {
+  .quietAction[data-destructive]:not(:disabled):hover {
+    border-color: color-mix(in srgb, var(--intent-negative) 35%, var(--line-2));
+    background: var(--intent-negative-bg);
+    color: var(--intent-negative);
+  }
+  .quietAction[data-destructive]:not(:disabled):hover svg {
+    color: currentColor;
+  }
+}
+
+/* ---------- report view ---------- */
+.reportView {
+  min-width: 0;
+}
+
+/* Explicitly marks the unconfigured/local sample branch, never a real report. */
+.sampleBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+.sampleBadge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* sample stat cards (local sample mode only) */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.deltaNote {
+  margin-left: 2px;
+  color: var(--ink-3);
+}
+
+/* add widget: the design-system primary button, floating (the one creative path into a report) */
+.fab {
+  position: fixed;
+  right: clamp(16px, 3vw, 36px);
+  bottom: clamp(16px, 3vw, 36px);
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 16px 0 14px;
+  border: 1px solid var(--action);
+  border-radius: var(--r-control);
+  background: var(--action);
+  box-shadow: var(--shadow-lift-strong);
+  color: var(--on-action);
+  font-family: var(--ax-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 150ms ease, scale 100ms ease;
+}
+@media (hover: hover) {
+  .fab:hover {
+    opacity: 0.85;
+  }
+}
+.fab:active {
+  scale: 0.98;
+}
+.fab:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+.fabLabel {
+  display: inline-block;
+}
+
+/* a real report with no widgets: centered in the card */
+.boardEmpty h2 {
+  margin: 0;
+  font-family: var(--ax-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+}
+.boardEmpty p {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+  text-wrap: balance;
+}
+.boardEmptyRef {
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.boardEmpty a {
+  min-width: 44px;
+  min-height: 44px;
+  margin-top: 16px;
+}
+
+/* ---------- route skeletons ---------- */
+.skelRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  min-height: 60px;
+  padding: 6px 16px 6px 24px;
+}
+.skelRow + .skelRow {
+  border-top: 1px solid var(--ax-line-soft);
+}
+.skelCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 24px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+}
+
+/* ---------- Korean / Japanese ---------- */
+:global(html:lang(ko)) :is(.reportName, .emptyText, .boardEmpty p) {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+:global(html:lang(ja)) :is(.reportName, .emptyText, .boardEmpty p) {
+  line-break: strict;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 720px) {
+  .reportRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+    padding: 12px 8px 4px 20px;
+  }
+  .reportSlug {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .reportActions {
+    margin-left: -12px;
+  }
+  .reportOpen {
+    margin-left: auto;
+  }
+  .listHead,
+  .reportHint {
+    padding-left: 20px;
+  }
+  .reportHint {
+    padding-top: 12px;
+  }
+  .reportHintLink {
+    margin-left: -12px;
+  }
+}
+@media (max-width: 640px) {
+  .reportHead :global(.dx-head-actions) {
+    width: 100%;
+  }
+  .quietAction {
+    flex: 1 1 0;
+  }
+  .kpis {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .emptyShell,
+  .boardEmpty {
+    padding: 40px 20px;
+  }
+  .emptyActions,
+  .emptyActions > * {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reportRow,
+  .reportOpen svg,
+  .fab {
+    transition-duration: 0.01ms;
+  }
+}

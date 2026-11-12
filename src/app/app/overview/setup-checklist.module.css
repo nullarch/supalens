@@ -1,0 +1,184 @@
+/* ============================================================
+   Home onboarding checklist — one quiet card above the board.
+
+   Same idiom as the rest of the app surface: a 16px card with a fine line, a sans
+   title over hairline-divided rows, each row carrying its own ghost CTA. It is a
+   panel on the page, never an overlay: nothing here traps focus or covers content.
+   ============================================================ */
+
+.panel {
+  margin-bottom: 16px;
+  padding: 20px 0 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 0 24px;
+}
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--ink);
+}
+.progress {
+  font-family: var(--ax-mono);
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.headActions {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-left: auto;
+}
+.hide {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--ink-3);
+  font: inherit;
+  font-size: 13px;
+  line-height: 20px;
+  cursor: pointer;
+}
+.hide:hover {
+  color: var(--ink-2);
+}
+
+.lede {
+  margin: 6px 0 4px;
+  padding: 0 24px;
+  font-size: 13.5px;
+  line-height: 21px;
+  color: var(--ink-3);
+}
+
+/* ---------- rows ---------- */
+.list {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+/* Flex, not grid: a row carries a variable number of chips (next / recommended) before its
+   CTA, and a fixed column count would push the odd one out of the card. */
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  min-height: 44px;
+  padding: 7px 24px;
+  border-top: 1px solid var(--line);
+}
+.marker {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--line-2);
+  color: var(--paper-2);
+}
+.row[data-state="done"] .marker {
+  box-shadow: none;
+  background: var(--intent-positive);
+}
+.row[data-state="current"] .marker {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+.row[data-state="current"] .marker::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.rowTitle {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.row[data-state="current"] .rowTitle {
+  color: var(--ink);
+}
+.row[data-state="done"] .rowTitle {
+  color: var(--ink-3);
+}
+/* A recommendation reads one notch quieter than a required step. */
+.row[data-optional] .rowTitle {
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.badge {
+  flex: none;
+}
+.rowCta {
+  flex: none;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* ---------- recommendations ---------- */
+.suggested {
+  margin-top: 4px;
+  border-top: 1px solid var(--line);
+  background: var(--ax-fill-soft);
+}
+.suggested .list {
+  margin: 0;
+}
+.suggested .row:first-child {
+  border-top: none;
+}
+.suggestedNote {
+  margin: 0;
+  padding: 12px 24px 0;
+  font-size: 12.5px;
+  line-height: 19px;
+  color: var(--ink-3);
+}
+
+.viewerNote {
+  margin: 0;
+  padding: 12px 24px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Phone: keep the gutters narrow; the row's own wrapping handles the CTA. */
+@container overview (max-width: 560px) {
+  .head,
+  .lede,
+  .suggestedNote,
+  .viewerNote,
+  .row {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

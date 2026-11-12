@@ -1,0 +1,289 @@
+/* ============================================================
+   McpHub — Cursor feature band: text left, an AI-client
+   conversation window right (Claude Code / Cursor style).
+
+   The window plays a --loop conversation build:
+     user turn → execute_sql tool-call (SQL trace + result)
+     → assistant reply → add_widget tool-call → save
+     confirmation. Rows reuse ONE keyframe phase-shifted via
+     animation-delay: calc(--i × step) + fill backwards (the
+     hero recipe), gated by a .thread opacity cycle so the
+     per-row wrap-restart lands while the thread is faded out.
+     Base (unanimated) styles equal the finished conversation,
+     so prefers-reduced-motion shows it statically.
+   ============================================================ */
+.section {
+  overflow: hidden;
+}
+
+/* the grid IS the feature panel: container-width tonal card on paper */
+.grid {
+  row-gap: clamp(28px, 5vw, 44px);
+  align-items: stretch;
+  background: var(--cx-card);
+  border-radius: var(--cx-r-frame);
+  overflow: hidden;
+}
+
+/* stacked (text above media) by default; split into columns at 900 */
+.text,
+.media {
+  grid-column: 1 / -1;
+}
+
+.text {
+  padding: clamp(28px, 6vw, 40px) clamp(20px, 5vw, 32px) 0;
+}
+
+.lede {
+  margin-top: 12px;
+  color: var(--cx-text-sec);
+  word-break: keep-all;
+}
+.text :global(.cx-link) {
+  margin-top: 20px;
+  display: inline-block;
+}
+
+/* ---------------- media frame + window ---------------- */
+.media {
+  background: var(--cx-card-2);
+  padding: clamp(20px, 3vw, 34px);
+  display: flex;
+  align-items: center;
+}
+
+/* frosted product window (no wallpaper behind → opaque bg + lift shadow) */
+.window {
+  width: 100%;
+  background: var(--cx-bg);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 1px var(--cx-line-2),
+    var(--shadow-lift);
+  overflow: hidden;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--cx-line-3);
+}
+.dots {
+  display: inline-flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cx-line-4);
+}
+.addr {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cx-text-ter);
+}
+
+/* ---------------- conversation thread ---------------- */
+.thread {
+  --loop: 15s;
+  --step: 0.42s;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.8vw, 16px);
+  padding: clamp(18px, 2.6vw, 26px) clamp(16px, 2.4vw, 24px);
+  min-height: clamp(360px, 34vw, 440px);
+  /* gate: masks each row's wrap-restart (which lands in the
+     faded-out front of the cycle). Longhands on purpose: Turbopack dev's
+     CSS-modules pipeline doesn't scope the keyframe name inside an
+     `animation:` shorthand that also carries a var(), so the shorthand
+     silently never runs in dev. */
+  animation-name: threadGate;
+  animation-duration: var(--loop);
+  animation-iteration-count: infinite;
+}
+
+/* one shared entrance, phase-shifted per --i */
+.user,
+.tool,
+.assistant {
+  animation-name: msgIn;
+  animation-duration: var(--loop);
+  animation-iteration-count: infinite;
+  animation-fill-mode: backwards;
+  animation-delay: calc(var(--i, 0) * var(--step));
+}
+
+/* user turn — right-aligned tonal bubble */
+.user {
+  align-self: flex-end;
+  max-width: 82%;
+}
+.userText {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 14px 14px 4px 14px;
+  background: var(--cx-card-2);
+  box-shadow: inset 0 0 0 1px var(--cx-line-3);
+  color: var(--cx-fg);
+  font-size: 13.5px;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+/* tool call block */
+.tool {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toolHead {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.chev {
+  color: var(--cx-text-ter);
+  font-size: 10px;
+  line-height: 1;
+}
+.call {
+  padding: 3px 9px 4px;
+  border-radius: 6px;
+  background: var(--cx-card-2);
+  box-shadow: inset 0 0 0 1px var(--cx-line-3);
+  color: var(--cx-fg);
+}
+.server {
+  color: var(--cx-text-ter);
+}
+
+/* SQL trace — inset "tool output" panel */
+.sql {
+  display: block;
+  margin-left: 18px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border-left: 2px solid var(--cx-line-2);
+  background: color-mix(in srgb, var(--cx-fg) 3%, transparent);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.75;
+  color: var(--cx-text-sec);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* result rows */
+.result {
+  margin-left: 18px;
+  display: flex;
+  flex-direction: column;
+}
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 2px;
+  border-bottom: 1px solid var(--cx-line-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.row:last-child {
+  border-bottom: 0;
+}
+.rLabel {
+  color: var(--cx-text-ter);
+}
+.rVal {
+  margin-left: auto;
+  color: var(--cx-fg);
+}
+.rDelta {
+  min-width: 6ch;
+  text-align: right;
+  color: var(--cx-negative);
+}
+.rDelta[data-good] {
+  color: var(--cx-positive);
+}
+
+/* assistant turn — left-aligned prose */
+.assistant {
+  align-self: flex-start;
+  max-width: 88%;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--cx-fg);
+  word-break: keep-all;
+}
+
+@media (min-width: 900px) {
+  .text {
+    grid-column: 1 / 9;
+    align-self: center;
+    padding: clamp(44px, 6vw, 72px) clamp(20px, 2vw, 28px) clamp(44px, 6vw, 72px)
+      clamp(32px, 4vw, 52px);
+  }
+  .media {
+    grid-column: 9 / 25;
+  }
+}
+
+/* ============================================================
+   the 15s conversation loop
+   ============================================================ */
+
+/* thread visible for the back ~75%; hidden front masks the
+   staggered per-row wrap-restart (which recurs at each row's
+   animation-delay offset near loop start) */
+@keyframes threadGate {
+  0%,
+  14% {
+    opacity: 0;
+  }
+  20%,
+  95% {
+    opacity: 1;
+  }
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* rise + de-blur; stays visible to 100% so only the delayed
+   entrance is seen while the thread is faded in */
+@keyframes msgIn {
+  0%,
+  16% {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(3px);
+  }
+  22%,
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* ---------------- reduced motion ----------------
+   landing.css collapses animation duration/iterations under
+   `.cx`; zeroing the stagger delays snaps the scene to its
+   base styles = the finished conversation. */
+@media (prefers-reduced-motion: reduce) {
+  .thread *,
+  .thread {
+    animation-delay: 0s !important;
+  }
+}

@@ -1,0 +1,1079 @@
+/* ============================================================
+   /app/setup — the Golden Path in the app design system.
+
+   A ~760px column centered in the page: serif page title with the
+   progress badge on its row, a quiet segmented rail of four stages,
+   then ONE white card per stage (1px line, 16px radius): a small
+   step label, a DM Sans 18px/500 title and a muted description over
+   hairline-divided rows, with the primary action bottom right.
+   Warm neutral greys, one sky-deep accent, weight 500 for UI.
+   Rendered purely from ORG activation state, so an OAuth round-trip
+   lands back on the right stage.
+
+   These views are also mounted by dev previews; app-only tokens are
+   read through local fallbacks so they degrade outside the surface.
+   ============================================================ */
+
+.flow,
+.card,
+.slack,
+.scan {
+  --su-serif: var(--ax-serif, var(--font-serif));
+  --su-mono: var(--ax-mono, var(--font-mono));
+  --su-tint: var(--ax-tint, var(--paper-3));
+  --su-fill-soft: var(--ax-fill-soft, var(--paper-3));
+  --su-soft: var(--ax-line-soft, var(--line));
+  --su-ok: var(--ax-ok, var(--intent-positive));
+  --su-err: var(--ax-err, var(--intent-negative));
+  --su-warn: var(--ax-warn, var(--intent-warning));
+  --su-shadow-sm: var(--ax-shadow-sm, 0 1px 2px #0000001a);
+  --su-r-card: var(--r-card, 12px);
+  --su-r-seg: var(--r-segmented, 10px);
+  --su-r-control: var(--r-control, 8px);
+  --su-pad: 28px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- flow ---------- */
+.flow {
+  width: 100%;
+  max-width: 760px;
+  min-width: 0;
+  margin-inline: auto;
+}
+.head {
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+/* the progress badge sits on the title's first line, not the title + lede block's center */
+.head > :global(.dx-head-actions) {
+  padding-top: 6px;
+}
+.exit {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  padding: 0 4px;
+}
+
+/* ---------- stage rail (segmented, not interactive) ---------- */
+.rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 0 20px;
+  padding: 4px;
+  border-radius: var(--su-r-seg);
+  background: var(--paper-3);
+  list-style: none;
+}
+.railItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 36px;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--su-r-control);
+  color: var(--ink-3);
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 18.75px;
+}
+.railItem[data-state="current"] {
+  border-color: var(--line);
+  background: var(--paper-2);
+  color: var(--ink);
+  box-shadow: var(--su-shadow-sm);
+}
+.railItem[data-state="done"] {
+  color: var(--ink-2);
+}
+.railMarker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  flex-shrink: 0;
+  font-family: var(--su-mono);
+  font-size: 12.5px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+.railItem[data-state="done"] .railMarker {
+  color: var(--su-ok);
+}
+.railName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* "04 알림 · 권장": a stage made only of optional work says so instead of faking a ✓. */
+.railHint {
+  color: var(--ink-3);
+  font-weight: 400;
+}
+
+/* ---------- card ---------- */
+.card {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--su-r-card);
+  background: var(--paper-2);
+  overflow-wrap: anywhere;
+}
+.card + .card {
+  margin-top: 16px;
+}
+.cardHead {
+  padding: 24px var(--su-pad) 20px;
+}
+.eyebrow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 4px;
+  color: var(--ink-3);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+}
+.stepNo {
+  font-family: var(--su-mono);
+  font-size: 12.5px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+.cardTitle {
+  margin: 0;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+  overflow-wrap: normal;
+}
+.cardLede {
+  margin: 4px 0 0;
+  max-width: 62ch;
+  color: var(--ink-3);
+  font-size: 14px;
+  line-height: 22.75px;
+}
+.cardHint {
+  margin: 6px 0 0;
+  max-width: 62ch;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+/* hairline-divided rows, full bleed inside the card */
+.rows {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+.rows > li + li {
+  border-top: 1px solid var(--su-soft);
+}
+
+/* note left, actions bottom right */
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  padding: 16px var(--su-pad) 20px;
+  border-top: 1px solid var(--su-soft);
+}
+.footNote {
+  flex: 1 1 260px;
+  margin: 0;
+  max-width: 52ch;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 20px;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.note {
+  margin: 0;
+  max-width: 64ch;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 20px;
+}
+.note[data-tone="lead"] {
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 22px;
+}
+.note strong {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.notice {
+  margin: 16px var(--su-pad) 0;
+}
+.noticeLink {
+  color: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* ---------- stage step rows ---------- */
+.stepRow {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px 12px;
+  min-height: 52px;
+  padding: 12px var(--su-pad);
+}
+.stepMarker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--line-2);
+  color: var(--paper-2);
+}
+.stepRow[data-state="done"] .stepMarker {
+  box-shadow: none;
+  background: var(--su-ok);
+}
+.stepRow[data-state="current"] .stepMarker {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+.stepRow[data-state="current"] .stepMarker::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.stepRowTitle {
+  min-width: 0;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+.stepRow[data-state="current"] .stepRowTitle {
+  color: var(--ink);
+}
+.stepRow[data-state="done"] .stepRowTitle {
+  color: var(--ink-3);
+}
+
+/* ---------- completion summary ---------- */
+.figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.figure {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 24px var(--su-pad);
+}
+.figure + .figure {
+  border-left: 1px solid var(--su-soft);
+}
+.figureMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--intent-positive-bg);
+  color: var(--su-ok);
+}
+.figureText {
+  min-width: 0;
+  color: var(--ink);
+  font-family: var(--su-serif);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.26;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+/* a table-shell strip: tinted head cells over the values */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+.fact {
+  min-width: 0;
+}
+.fact + .fact {
+  border-left: 1px solid var(--su-soft);
+}
+.factLabel {
+  padding: 12.8px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--su-tint);
+  color: var(--ink-3);
+  font-size: 12.8px;
+  font-weight: 500;
+  line-height: 19.2px;
+}
+.factValue {
+  margin: 0;
+  padding: 14px 16px;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+.fact:first-child :is(.factLabel, .factValue) {
+  padding-left: var(--su-pad);
+}
+.factValue[data-mono="true"] {
+  font-family: var(--su-mono);
+  font-size: 13px;
+}
+
+/* ---------- Supabase project picker ---------- */
+.projectMain {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 4px 14px;
+  padding: 14px var(--su-pad);
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+.projectMain:has(input:disabled) {
+  cursor: default;
+}
+@media (hover: hover) {
+  .projectMain:not(:has(input:disabled)):hover {
+    background: var(--su-fill-soft);
+  }
+}
+.check {
+  position: relative;
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.checkInput {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--paper-2);
+  cursor: inherit;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.checkInput:checked {
+  border-color: var(--action);
+  background: var(--action);
+}
+.checkInput:disabled {
+  border-color: var(--line);
+  background: var(--paper-3);
+}
+.checkInput:disabled:checked {
+  border-color: transparent;
+  background: var(--intent-positive-bg);
+}
+.checkInput:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.checkIcon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--on-action);
+  opacity: 0;
+  pointer-events: none;
+}
+.checkInput:checked + .checkIcon {
+  opacity: 1;
+}
+.checkInput:disabled:checked + .checkIcon {
+  color: var(--su-ok);
+}
+.projectText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.projectName {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+.projectNameText {
+  min-width: 0;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+.project[data-state="disabled"] .projectNameText,
+.project:has(.wrapBadge) .projectNameText {
+  color: var(--ink-2);
+}
+.projectMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  color: var(--ink-3);
+  font-family: var(--su-mono);
+  font-size: 12.5px;
+  line-height: 18px;
+}
+.projectRef {
+  font-family: inherit;
+  font-size: inherit;
+  overflow-wrap: anywhere;
+}
+.projectRegion {
+  white-space: nowrap;
+}
+/* a sentence in a badge: keeps wrapping, loses the pill */
+.wrapBadge {
+  align-self: flex-start;
+  max-width: 100%;
+  margin-top: 2px;
+  border-radius: var(--su-r-control);
+  white-space: normal;
+}
+.projectState {
+  align-self: start;
+}
+.stateDot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
+  animation-name: setup-pulse;
+  animation-duration: 1.4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+/* observable provisioning stages — each maps to a row we actually write */
+.provStages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0;
+  padding: 0 var(--su-pad) 14px calc(var(--su-pad) + 30px);
+  list-style: none;
+}
+.stageRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-3);
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 18px;
+}
+.stageRow[data-on="true"] {
+  color: var(--ink-2);
+}
+.stageIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.25px var(--line-2);
+  color: var(--paper-2);
+}
+.stageRow[data-on="true"] .stageIcon {
+  box-shadow: none;
+  background: var(--su-ok);
+}
+.projectError {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin: 0 var(--su-pad) 14px calc(var(--su-pad) + 30px);
+  padding: 6px 6px 6px 14px;
+  border-radius: var(--su-r-control);
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+}
+.retry {
+  flex-shrink: 0;
+}
+
+/* ---------- unified scan (schema → business rules → KPIs) ----------
+   Progress is reported from measured values only, so every element has an
+   explicit "not known yet" state rather than an animated placeholder. */
+.scan {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.cardHead:has(+ .scan) {
+  padding-bottom: 0;
+}
+.scanLede {
+  margin: 0;
+  padding: 24px var(--su-pad) 20px;
+  max-width: calc(62ch + 2 * var(--su-pad));
+  color: var(--ink-3);
+  font-size: 14px;
+  line-height: 22.75px;
+}
+.cardHead + .scan > .scanLede {
+  padding-top: 4px;
+}
+.scanBody {
+  border-top: 1px solid var(--line);
+}
+.scanTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 14px var(--su-pad) 10px;
+}
+.scanStatus {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+.scanStatus[data-state="failed"] {
+  color: var(--intent-negative);
+}
+.scanStatus[data-state="unavailable"] {
+  color: var(--intent-warning);
+}
+.scanStatusDot {
+  position: relative;
+  top: -1px;
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--ink-3);
+}
+.scanStatusDot:is([data-state="submitting"], [data-state="waiting"], [data-state="running"]) {
+  box-shadow: none;
+  background: var(--brand);
+  animation-name: setup-pulse;
+  animation-duration: 1.4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.scanStatusDot[data-state="ready"] {
+  box-shadow: none;
+  background: var(--su-ok);
+}
+.scanStatusDot[data-state="empty"] {
+  box-shadow: none;
+  background: var(--ink-3);
+}
+.scanStatusDot[data-state="failed"] {
+  box-shadow: none;
+  background: var(--su-err);
+}
+.scanStatusDot[data-state="unavailable"] {
+  box-shadow: none;
+  background: var(--su-warn);
+}
+.scanFraction {
+  flex-shrink: 0;
+  color: var(--ink-3);
+  font-family: var(--su-mono);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+/* one meter segment per phase, filled by its reported state */
+.scanLine {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  margin: 0 var(--su-pad) 14px;
+}
+.scanLineSegment {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--paper-3);
+}
+.scanLineSegment:is([data-state="done"], [data-state="skipped"]) {
+  background: var(--brand);
+}
+.scanLineSegment[data-state="running"] {
+  background: color-mix(in srgb, var(--brand) 40%, var(--paper-3));
+}
+.scanLineSegment[data-state="failed"] {
+  background: var(--su-err);
+}
+.scanPhases {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.scanPhase {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0 12px;
+  min-height: 48px;
+  padding: 8px var(--su-pad);
+  border-top: 1px solid var(--su-soft);
+}
+.scanIndex {
+  color: var(--ink-3);
+  font-family: var(--su-mono);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+.scanDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--ink-3);
+}
+.scanDot[data-state="running"] {
+  box-shadow: none;
+  background: var(--brand);
+  animation-name: setup-pulse;
+  animation-duration: 1.4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.scanDot[data-state="done"] {
+  box-shadow: none;
+  background: var(--su-ok);
+}
+.scanDot[data-state="skipped"] {
+  box-shadow: inset 0 0 0 1.5px var(--su-ok);
+}
+.scanDot[data-state="failed"] {
+  box-shadow: none;
+  background: var(--su-err);
+}
+.scanPhaseName {
+  min-width: 0;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+.scanPhase:is([data-state="running"], [data-state="done"], [data-state="failed"]) .scanPhaseName {
+  color: var(--ink);
+}
+.scanPhaseState {
+  justify-self: end;
+}
+/* stat cells: sans label over a serif figure (muted while unknown) */
+.scanMetrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+.scanMetric {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 16px 16px 18px;
+}
+.scanMetric:first-child {
+  padding-left: var(--su-pad);
+}
+.scanMetric + .scanMetric {
+  border-left: 1px solid var(--su-soft);
+}
+.scanMetricLabel {
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+.scanMetricVal {
+  margin: auto 0 0;
+  padding-top: 6px;
+  color: var(--ink);
+  font-family: var(--su-serif);
+  font-size: clamp(22px, 1vw + 16px, 28px);
+  font-weight: 400;
+  line-height: 1.26;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.scanMetricVal[data-known="false"] {
+  color: var(--ink-3);
+}
+.scanFindings {
+  border-top: 1px solid var(--line);
+}
+.scanReveal + .scanReveal {
+  border-top: 1px solid var(--su-soft);
+}
+.scanRevealLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 10px var(--su-pad);
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  list-style: none;
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+.scanRevealLabel::-webkit-details-marker {
+  display: none;
+}
+.scanRevealLabel::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  margin: 0 2px 2px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 150ms ease;
+}
+.scanReveal[open] > .scanRevealLabel::before {
+  transform: rotate(45deg);
+}
+@media (hover: hover) {
+  .scanRevealLabel:hover {
+    color: var(--ink);
+  }
+}
+.scanRevealCount {
+  margin-left: auto;
+  color: var(--ink-3);
+  font-family: var(--su-mono);
+  font-size: 12.5px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+.scanChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0 var(--su-pad) 14px calc(var(--su-pad) + 20px);
+  list-style: none;
+}
+.scanChip {
+  max-width: 100%;
+  padding: 3px 10px;
+  border-radius: var(--su-r-control);
+  background: var(--paper-3);
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+.scanNotes {
+  display: grid;
+  gap: 4px;
+  padding: 14px var(--su-pad) 0;
+  border-top: 1px solid var(--line);
+}
+.scanNotes ~ .foot {
+  border-top: 0;
+}
+
+/* ---------- Slack step ---------- */
+.slack {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.slackRow {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 16px var(--su-pad);
+  border-top: 1px solid var(--su-soft);
+}
+.cardHead + .slackRow,
+.cardHead + .slack > .slackRow:first-child {
+  border-top-color: var(--line);
+}
+.slackRow[data-kind="connect"] {
+  justify-items: start;
+}
+.fieldLabel {
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+.testRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+.testRow > .note {
+  flex: 1 1 280px;
+}
+/* the real alert shape, so the test send is not the first sighting */
+.preview {
+  display: grid;
+  gap: 10px;
+  padding: 16px 18px;
+  border: 1px solid var(--su-soft);
+  border-radius: var(--su-r-seg);
+  background: var(--su-tint);
+}
+.previewTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+.previewDot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--su-err);
+}
+.previewBlock {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+}
+.previewBlock p {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 22px;
+}
+.previewButton {
+  justify-self: start;
+  padding: 4px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--su-r-control);
+  background: var(--paper-2);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+/* ---------- Korean / Japanese ---------- */
+:global(html:lang(ko)) :is(.cardTitle, .cardLede, .scanLede, .figureText, .note, .footNote) {
+  word-break: keep-all;
+}
+:global(html:lang(ja)) :is(.cardTitle, .cardLede, .scanLede, .figureText) {
+  line-break: strict;
+}
+:global(html:is(:lang(ko), :lang(ja))) .figureText {
+  font-size: 24px;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- motion ---------- */
+@keyframes setup-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stateDot,
+  .scanStatusDot,
+  .scanDot {
+    animation-name: none;
+  }
+  .projectMain,
+  .checkInput,
+  .scanRevealLabel,
+  .scanRevealLabel::before {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 768px) {
+  .actions :global(:is(.dx-btn, .dx-btn-ghost)),
+  .testRow :global(.dx-btn-ghost),
+  .exit :global(.dx-text-link),
+  .slackRow .channelSelect,
+  .retry {
+    min-height: 44px;
+  }
+}
+@media (max-width: 640px) {
+  .flow,
+  .card,
+  .slack,
+  .scan {
+    --su-pad: 20px;
+  }
+  /* compact rail: every stage keeps its number, only the stage in hand its name */
+  .rail {
+    display: flex;
+  }
+  .railItem {
+    flex: 0 0 auto;
+    justify-content: center;
+    min-width: 40px;
+    padding: 6px 10px;
+  }
+  .railItem[data-state="current"] {
+    flex: 1 1 auto;
+    justify-content: flex-start;
+  }
+  .rail:has([data-state="current"]) .railItem:not([data-state="current"]) .railName {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  /* nothing in hand (setup complete): a 2×2 of named, checked stages */
+  .rail:not(:has([data-state="current"])) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .rail:not(:has([data-state="current"])) .railItem {
+    justify-content: flex-start;
+  }
+  .cardHead {
+    padding-top: 20px;
+    padding-bottom: 16px;
+  }
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    margin-left: 0;
+  }
+  .actions > * {
+    width: 100%;
+  }
+  .figures,
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .figure {
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+  .figure + .figure,
+  .fact + .fact {
+    border-left: 0;
+    border-top: 1px solid var(--su-soft);
+  }
+  .fact :is(.factLabel, .factValue) {
+    padding-left: var(--su-pad);
+  }
+  .projectState {
+    grid-column: 2;
+    justify-self: start;
+  }
+  .provStages {
+    padding-left: var(--su-pad);
+  }
+  .projectError {
+    margin-left: var(--su-pad);
+  }
+  .scanMetrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .scanMetric,
+  .scanMetric:first-child {
+    padding: 14px 12px 16px var(--su-pad);
+  }
+  .scanMetric:nth-child(3) {
+    border-left: 0;
+  }
+  .scanMetric:nth-child(n + 3) {
+    border-top: 1px solid var(--su-soft);
+  }
+  .scanChips {
+    padding-left: var(--su-pad);
+  }
+  .testRow > :global(.dx-btn-ghost) {
+    width: 100%;
+  }
+  .exit {
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 420px) {
+  .stepRow :global(.dx-badge) {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

@@ -1,0 +1,215 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid transparent;
+  background: transparent;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+.header[data-scrolled="true"] {
+  border-bottom-color: var(--ed-line-soft);
+  background: color-mix(in srgb, var(--ed-bg) 72%, transparent);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+}
+/* A backdrop filter would become the containing block of the fixed menu,
+   collapsing it to the bar's height, so the open state is opaque instead. */
+.header[data-menu-open="true"] {
+  border-bottom-color: var(--ed-line-soft);
+  background: var(--ed-bg);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 56px;
+}
+.lead {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  min-width: 0;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  flex: none;
+  color: var(--ed-ink);
+}
+.wordmark {
+  font-family: var(--ed-serif);
+  font-size: 20px;
+  line-height: 1.5;
+  letter-spacing: -0.025em;
+}
+
+.nav {
+  display: none;
+  align-items: center;
+  gap: 26px;
+}
+.navLink {
+  color: var(--ed-copy);
+  font-size: 15px;
+  line-height: 1.5;
+  white-space: nowrap;
+  transition: color 180ms ease;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.wide {
+  display: none;
+  align-items: center;
+  gap: 2px;
+}
+.action {
+  white-space: nowrap;
+}
+.wideLogin {
+  display: none;
+}
+.language {
+  min-height: 44px;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: var(--ed-r-button);
+  background: transparent;
+  color: var(--ed-copy);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+/* Beats the Select root's 130px form-field minimum. */
+.actions .languageRoot,
+.menuFoot .languageRoot {
+  min-width: 0;
+}
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ed-r-button);
+  background: transparent;
+  color: var(--ed-copy);
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+.menuButton {
+  color: var(--ed-ink);
+}
+
+/* Full-height menu under the bar (mobile and tablet). */
+.menu {
+  position: fixed;
+  top: 57px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--ed-bg);
+  animation-name: menu-in;
+  animation-duration: 180ms;
+  animation-timing-function: var(--ed-ease);
+}
+.menu[hidden] {
+  display: none;
+}
+.menuNav {
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px;
+}
+.menuLink {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  border-bottom: 1px solid var(--ed-line-soft);
+  color: var(--ed-ink);
+  font-size: 17px;
+}
+.menuLogin {
+  width: 100%;
+  margin-top: 24px;
+}
+.menuFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-bottom: 32px;
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-7.5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (hover: hover) {
+  .navLink:hover,
+  .language:hover,
+  .iconButton:hover {
+    color: var(--ed-accent);
+  }
+}
+
+@media (min-width: 1080px) {
+  .nav,
+  .wide {
+    display: flex;
+  }
+  .wideLogin {
+    display: inline-flex;
+  }
+  .menuButton,
+  .menu {
+    display: none;
+  }
+}
+@media (max-width: 1079px) {
+  .bar {
+    min-height: 60px;
+  }
+  .menu {
+    top: 61px;
+  }
+  .action {
+    min-height: 40px;
+  }
+}
+@media (max-width: 380px) {
+  .action {
+    padding-inline: 10px;
+  }
+}
+@media (max-width: 360px) {
+  .wordmark {
+    display: none;
+  }
+}

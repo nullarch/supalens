@@ -1,0 +1,1057 @@
+/* ============================================================
+   Connections — the data-source management surface (app design system).
+   A card grid: one white card per source (1px line, 16px radius) — head
+   (engine tile, name, status-led meta, menu), the five-stage pipeline as
+   label/state rows, and a foot with the single next step — opened by a
+   pinned dashed "connect" tile. Tokens: src/app/app/dashboard.css.
+   ============================================================ */
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The page itself: a wide management surface (see SourcesClient). */
+.page {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* ---------- board: the card grid ----------
+   Three columns on the wide page, two at the 1024px reading width, one on phones. Cards in a row
+   stretch to the same height so their next-step buttons line up. The three-across step is a media
+   query, not a container query: .board declares its own container, so it cannot query itself. */
+.board {
+  container: board / inline-size;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 16px;
+}
+@media (min-width: 1360px) {
+  .board {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.source {
+  container: source / inline-size;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+  transition: box-shadow 150ms ease;
+}
+@media (hover: hover) {
+  .source:hover {
+    box-shadow: var(--ax-shadow-sm);
+  }
+}
+
+/* ---------- card head ---------- */
+.head {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 14px;
+  padding: 20px 16px 18px 24px;
+}
+.logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-control);
+  background: var(--paper-3);
+  color: var(--ink);
+}
+.identity {
+  min-width: 0;
+  padding-top: 1px;
+}
+.nameRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+.name {
+  margin: 0;
+  min-width: 0;
+  font-family: var(--ax-sans);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+/* Each item carries its own separator; the one that starts a wrapped line is clipped away,
+   so a wrapped meta line never begins with a dangling "·". */
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 2px 0 0 -16px;
+  clip-path: inset(0 0 0 16px);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.metaItem {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding-left: 16px;
+  white-space: nowrap;
+}
+.metaItem::before {
+  content: "·";
+  position: absolute;
+  left: 0;
+  width: 16px;
+  text-align: center;
+}
+.metaValue {
+  margin-left: 4px;
+  color: var(--ink-2);
+}
+/* A non-healthy connection state leads the meta line: dot + label, red when broken. */
+.metaStatus {
+  gap: 6px;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.metaStatus[data-status="error"] {
+  color: var(--intent-negative);
+}
+
+/* ---------- card foot: the ONE next step ---------- */
+.foot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding: 16px 24px 20px;
+  border-top: 1px solid var(--ax-line-soft);
+}
+.nextBtn svg {
+  transition: transform 150ms ease;
+}
+@media (hover: hover) {
+  .nextBtn:hover svg {
+    transform: translateX(2px);
+  }
+}
+.working {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+
+/* ---------- the dashed "connect" tile, pinned as the grid's first cell ----------
+   Beside a card it fills the cell; alone in a single column it folds into a slim row so it
+   never pushes the first source below the fold. */
+.addCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 220px;
+  padding: 24px;
+  border: 1px dashed var(--line-2);
+  border-radius: var(--r-card);
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+@media (hover: hover) {
+  .addCard:hover {
+    border-color: var(--ink-3);
+    background: var(--ax-fill-soft);
+    color: var(--ink);
+  }
+  .addCard:hover .addIcon {
+    background: var(--ink);
+    color: var(--paper-2);
+  }
+}
+.addCard:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.addIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--paper-3);
+  color: var(--ink);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.addTitle {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22px;
+}
+.addMarks {
+  display: flex;
+  gap: 6px;
+}
+.addMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--paper-3);
+}
+@container board (max-width: 775px) {
+  .addCard {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    min-height: 64px;
+    padding: 12px 16px;
+    text-align: left;
+  }
+  .addIcon {
+    width: 36px;
+    height: 36px;
+  }
+  .addTitle {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+@container board (max-width: 340px) {
+  .addMarks {
+    display: none;
+  }
+}
+
+/* row menu */
+/* A 44px target that sits optically in the card corner: the negative margin keeps the head
+   from growing around it. */
+.menuWrap {
+  position: relative;
+  justify-self: end;
+  margin: -2px -4px -6px 0;
+}
+.menuBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: var(--r-control);
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.menuBtn:hover,
+.menuBtn[aria-expanded="true"] {
+  background: var(--paper-3);
+  color: var(--ink);
+}
+.menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 30;
+  display: grid;
+  gap: 2px;
+  min-width: 208px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-segmented);
+  background: var(--paper-2);
+  box-shadow: var(--shadow-lift-strong);
+}
+.menuItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--ax-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.menuItem:hover,
+.menuItem:focus-visible {
+  background: var(--paper-3);
+  outline: none;
+}
+.menuItem[data-danger] {
+  color: var(--intent-negative);
+}
+.menuItem[data-danger]:hover,
+.menuItem[data-danger]:focus-visible {
+  background: var(--intent-negative-bg);
+}
+
+/* ---------- pipeline: label / state rows ----------
+   Full-bleed rows with a soft rule between them, like a table inside the card. The label column
+   is a share of the card so the states line up down the card; a row that leads somewhere
+   carries a chevron. */
+.pipe {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.row {
+  display: grid;
+  grid-template-columns: minmax(104px, min(38%, 200px)) minmax(0, 1fr) 14px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 20px 10px 24px;
+  border: 0;
+  border-top: 1px solid var(--ax-line-soft);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+.row[data-interactive] {
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+.row[data-interactive]:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}
+/* Without a foot, the last row meets the card's rounded bottom. */
+.source:not(:has(.foot)) .pipe > li:last-child > .row {
+  border-radius: 0 0 calc(var(--r-card) - 1px) calc(var(--r-card) - 1px);
+}
+.rowKey {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.rowValue {
+  display: flex;
+  min-width: 0;
+}
+.rowGo {
+  display: inline-flex;
+  color: var(--ink-3);
+  opacity: 0.6;
+  transition: opacity 150ms ease, transform 200ms var(--ax-ease);
+}
+@media (hover: hover) {
+  .row[data-interactive]:hover {
+    background: var(--ax-fill-soft);
+  }
+  .row[data-interactive]:hover .rowKey {
+    color: var(--ink);
+  }
+  .row[data-interactive]:hover .rowGo {
+    opacity: 1;
+    transform: translateX(2px);
+  }
+}
+.cellId {
+  max-width: 100%;
+  font-family: var(--ax-mono);
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.idPart {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* state pill + detail caption */
+.state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+.detail {
+  min-width: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.sep {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: var(--paper-3);
+  color: var(--ink-2);
+  font-family: var(--ax-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+}
+.tagDot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--ax-ok);
+}
+.tag[data-tone="idle"] {
+  border-color: var(--line);
+  background: transparent;
+  color: var(--ink-3);
+}
+.tag[data-tone="idle"] .tagDot {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.25px var(--ink-3);
+}
+.tag[data-tone="sync"] {
+  background: var(--brand-soft);
+  color: var(--brand-hover);
+}
+:global(html[data-theme="dark"]) .tag[data-tone="sync"] {
+  color: var(--brand);
+}
+.tag[data-tone="sync"] .tagDot {
+  background: var(--brand);
+  animation-name: tag-pulse;
+  animation-duration: 1.4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.tag[data-tone="warn"] {
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+}
+.tag[data-tone="warn"] .tagDot {
+  background: var(--ax-warn);
+}
+.tag[data-tone="error"] {
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+}
+.tag[data-tone="error"] .tagDot {
+  background: var(--ax-err);
+}
+.tag[data-tone="bloom"] {
+  background: var(--ax-bloom);
+  color: var(--ax-bloom-ink);
+}
+.tag[data-tone="bloom"] .tagDot {
+  background: color-mix(in srgb, var(--ax-bloom-ink) 55%, var(--ax-bloom));
+}
+@keyframes tag-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ---------- empty (no real source): centered in the shell ---------- */
+.empty {
+  display: grid;
+  justify-items: center;
+  padding: clamp(40px, 7vw, 64px) 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+  text-align: center;
+}
+.emptyMarks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+}
+.emptyMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-control);
+  background: var(--paper-3);
+  color: var(--ink-2);
+}
+.emptyTitle {
+  margin: 0;
+  font-family: var(--ax-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+}
+.emptyBody {
+  margin: 4px 0 20px;
+  max-width: 420px;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+}
+.emptyActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* ---------- notices (announcement banners) ---------- */
+.notice {
+  margin: 0 0 16px;
+}
+.noticeDot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--ax-ok);
+}
+.noticeDot[data-tone="err"] {
+  background: var(--ax-err);
+}
+.noticeDot[data-tone="warn"] {
+  background: var(--ax-warn);
+}
+.noticeText {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+.noticeAction {
+  margin-left: auto;
+}
+
+/* "Importing your Supabase projects…" — a live dot + an indeterminate sky-deep track */
+.provisioning {
+  position: relative;
+  margin: 0 0 16px;
+  padding-bottom: 12px;
+  overflow: hidden;
+}
+.provisioningBody {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.provisioningTrack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: color-mix(in srgb, var(--brand) 12%, transparent);
+  overflow: hidden;
+}
+.provisioningTrack::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 38%;
+  background: var(--brand);
+  animation-name: track-slide;
+  animation-duration: 1.25s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@keyframes track-slide {
+  0% {
+    transform: translateX(-105%);
+  }
+  100% {
+    transform: translateX(370%);
+  }
+}
+
+/* ---------- connect modal: chooser ---------- */
+.chooser {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.feature {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+}
+.featureHead {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+}
+.featureLogo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-control);
+  background: var(--paper-3);
+  color: #3ecf8e;
+}
+.featureText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.featureTitle {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+  color: var(--ink);
+}
+.featureSub {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+}
+.featureTag {
+  margin-top: 4px;
+}
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.trust li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.trust svg {
+  color: var(--ax-ok);
+}
+.featureCta {
+  justify-self: start;
+  min-height: 40px;
+}
+
+.others {
+  display: grid;
+  gap: 12px;
+}
+.othersToggle {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 0;
+  border: 0;
+  border-top: 1px solid var(--ax-line-soft);
+  background: none;
+  color: var(--ink);
+  font-family: var(--ax-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: left;
+  cursor: pointer;
+}
+.othersLabel {
+  transition: color 150ms ease;
+}
+.othersHint {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.chevron {
+  flex-shrink: 0;
+  color: var(--ink-3);
+  transition: transform 180ms var(--ax-ease);
+}
+.chevron[data-open] {
+  transform: rotate(90deg);
+}
+.engines {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.engine {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--ax-sans);
+  text-align: left;
+  cursor: pointer;
+  transition: box-shadow 150ms ease, border-color 150ms ease;
+}
+.engineLogo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-control);
+  background: var(--paper-3);
+  color: var(--ink);
+  transition: color 150ms ease;
+}
+.engineText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.engineName {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--ink);
+}
+.engineDesc {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+}
+.engineAction {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  margin-top: auto;
+  padding: 6px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-control);
+  background: var(--paper-2);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  transition: background-color 150ms ease;
+}
+@media (hover: hover) {
+  .othersToggle:hover .othersLabel {
+    color: var(--ink-2);
+  }
+  .engine:hover {
+    border-color: var(--line-2);
+    box-shadow: var(--ax-shadow-sm);
+  }
+  .engine:hover .engineLogo {
+    color: var(--engine, var(--ink));
+  }
+  .engine:hover .engineAction {
+    background: var(--ax-tint);
+  }
+}
+.engine:active {
+  scale: 0.99;
+}
+.githubHint {
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--ax-line-soft);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+
+/* connect modal: form step */
+.formStep {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.formTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ax-line-soft);
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  font-family: var(--ax-sans);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+.back:not(:disabled):hover {
+  color: var(--ink);
+}
+.back:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+.formEngine {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.formEngineLogo {
+  display: inline-flex;
+  color: var(--ink-2);
+}
+
+/* ---------- context (SUPALENS.md) viewer ---------- */
+.context {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+.contextBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+}
+.contextMeta {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  min-width: 0;
+}
+.contextRepo {
+  font-size: 13px;
+  color: var(--ink-3);
+  overflow-wrap: anywhere;
+}
+.contextErr {
+  padding: 10px 14px;
+  border-radius: var(--r-control);
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+  font-size: 14px;
+  line-height: 22px;
+  overflow-wrap: anywhere;
+}
+.doc {
+  margin: 0;
+  max-height: 60vh;
+  overflow: auto;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-segmented);
+  background: var(--ax-code);
+  color: var(--ink);
+  font-family: var(--ax-mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.contextNote {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.contextEmpty {
+  margin: 0;
+  padding: 32px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-segmented);
+  background: var(--ax-tint);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  text-align: center;
+  color: var(--ink-2);
+}
+
+/* ---------- Korean / Japanese ---------- */
+:global(html:lang(ko)) :is(.emptyBody, .contextEmpty, .featureSub, .engineDesc) {
+  word-break: keep-all;
+}
+:global(html:lang(ja)) :is(.emptyBody, .contextEmpty) {
+  line-break: strict;
+}
+
+/* ---------- responsive ----------
+   Card internals follow the CARD's width (container queries), not the viewport, so a card reads
+   the same in a two-column grid, a single column or a narrow phone. */
+@container source (max-width: 300px) {
+  .head {
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 16px 8px 14px 16px;
+  }
+  .logo {
+    width: 36px;
+    height: 36px;
+  }
+  .metaItem {
+    white-space: normal;
+  }
+  .row {
+    grid-template-columns: minmax(0, 1fr) 14px;
+    grid-template-areas:
+      "key go"
+      "value go";
+    gap: 6px 12px;
+    padding: 10px 14px 12px 16px;
+  }
+  .rowKey {
+    grid-area: key;
+  }
+  .rowValue {
+    grid-area: value;
+  }
+  .rowGo {
+    grid-area: go;
+  }
+  .foot {
+    padding: 14px 16px 16px;
+  }
+}
+@media (max-width: 768px) {
+  .nextBtn,
+  .noticeAction,
+  .menuItem,
+  .featureCta {
+    min-height: 44px;
+  }
+}
+@media (max-width: 640px) {
+  .engines {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .engine {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    align-items: center;
+    gap: 4px 14px;
+    padding: 14px 16px;
+  }
+  .engineLogo {
+    align-self: start;
+  }
+  .engineAction {
+    display: none;
+  }
+  .featureHead {
+    grid-template-columns: 36px minmax(0, 1fr);
+  }
+  .featureTag {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 0;
+  }
+  .featureCta {
+    justify-self: stretch;
+  }
+  .othersHint {
+    margin-left: 22px;
+    flex-basis: 100%;
+  }
+  .emptyActions > * {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .source,
+  .nextBtn svg,
+  .menuBtn,
+  .row,
+  .rowGo,
+  .addCard,
+  .addIcon,
+  .chevron,
+  .engine,
+  .engineLogo,
+  .engineAction,
+  .back {
+    transition-duration: 0.01ms;
+  }
+  .tag[data-tone="sync"] .tagDot {
+    animation-name: none;
+  }
+  .provisioningTrack::before {
+    animation-name: none;
+    width: 100%;
+    opacity: 0.45;
+  }
+}

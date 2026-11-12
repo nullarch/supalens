@@ -1,0 +1,403 @@
+/* ============================================================
+   Overview — the workspace's home dashboard, in the app design system.
+   Title row (board name, switch · make home · open) → the board's live
+   grid. Before the board
+   has widgets: one card that says what is happening (analyzing, a draft ready
+   to build, get KPI proposals, an empty board). An org with no source gets
+   the onboarding view: announcement strip → task cards → the activation
+   checklist (setup-checklist.module.css) → quick links.
+   ============================================================ */
+
+/* A wide page (data-page-width="wide"): the shell gives it up to 1600px, so the home board
+   fills the screen and the sections below re-flow on the page's own width. */
+.page {
+  container: overview / inline-size;
+  display: flex;
+  flex-direction: column;
+}
+
+.muted {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+}
+
+/* ---------- strips ---------- */
+.banner {
+  justify-content: space-between;
+  min-height: 54px;
+  margin-bottom: 16px;
+  padding-left: 26px;
+}
+.meta {
+  display: flex;
+  flex: 1 1 360px;
+  flex-wrap: wrap;
+  align-items: baseline;
+  min-width: 0;
+}
+.dot {
+  position: relative;
+  top: -1px;
+  width: 7px;
+  height: 7px;
+  margin: 0 10px 0 -16px;
+  flex-shrink: 0;
+  align-self: center;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.dot[data-state="normal"] { background: var(--ax-ok); }
+.dot[data-state="firing"],
+.dot[data-tone="negative"] { background: var(--ax-err); }
+.dot[data-state="degraded"],
+.dot[data-state="paused"] { background: var(--ax-warn); }
+.dot[data-state="pending"],
+.dot[data-state="analyzing"] {
+  background: var(--brand);
+  animation-name: overviewPulse;
+  animation-duration: 1.6s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@keyframes overviewPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.lead {
+  margin-right: 6px;
+  font-weight: 500;
+  color: var(--ax-announce-ink);
+}
+.note {
+  color: var(--ink-2);
+}
+.note[data-sep="true"]::before {
+  content: "·";
+  margin: 0 7px;
+  color: var(--ink-3);
+}
+
+.bannerCta {
+  flex-shrink: 0;
+  background: var(--paper-2);
+}
+
+/* ---------- task cards ---------- */
+.tasks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.task {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+  transition: box-shadow 150ms ease;
+}
+.task:hover {
+  box-shadow: var(--ax-shadow-sm);
+}
+.taskIcon {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+.taskTitle {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+  color: var(--ink);
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--paper-3);
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.badge[data-tone="bloom"] {
+  background: var(--ax-bloom);
+  color: var(--ax-bloom-ink);
+}
+.badge[data-tone="sky"] {
+  background: var(--brand-soft);
+  color: var(--brand-hover);
+}
+:global(html[data-theme="dark"]) .badge[data-tone="sky"] {
+  color: var(--brand);
+}
+.taskBody {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+}
+.taskFoot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: auto;
+  padding-top: 28px;
+}
+.taskLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.taskLink:hover {
+  color: var(--ink);
+}
+
+/* The activation checklist sitting between the connect cards and the quick links: it carries its
+   own bottom margin, so only the top gap is set here. */
+.checklistSlot {
+  margin-top: 16px;
+}
+
+/* ---------- quick links ---------- */
+.links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.linkCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 22px;
+  text-decoration: none;
+  transition: box-shadow 150ms ease, color 150ms ease;
+}
+.linkCard:hover {
+  color: var(--ink);
+  box-shadow: var(--ax-shadow-sm);
+}
+
+/* ---------- title-row actions ---------- */
+/* A flex item can't shrink below its content by default; let the controls wrap instead of
+   pushing the page wider than a phone. */
+.headActions {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* ---------- home: title-row board controls ---------- */
+.boardControls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+/* "show on Overview": a short visible label beside the picker (the full name is its accessible name) */
+.picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.pickerLabel {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.controlsError {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  text-align: right;
+  color: var(--intent-negative);
+}
+
+/* ---------- home: before the board has widgets ---------- */
+.emptyHome {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 760px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+}
+.emptyHome .taskIcon {
+  margin-bottom: 6px;
+}
+.emptyTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+  color: var(--ink);
+}
+.emptyBody {
+  margin: 0;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--ink-2);
+}
+.emptyNote {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.emptyActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.emptyError {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--intent-negative);
+}
+.proposalList {
+  align-self: stretch;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--ax-line-soft);
+}
+.proposalRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  border-bottom: 1px solid var(--ax-line-soft);
+}
+.proposalName {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+.proposalImportance {
+  display: inline-flex;
+  gap: 3px;
+}
+.proposalImportance span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--line-2);
+}
+.proposalImportance span[data-on="true"] {
+  background: var(--ink-2);
+}
+.analyzingList {
+  align-self: stretch;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.analyzingRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.analyzingRow .dot {
+  margin: 0;
+}
+.analyzingLogo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--paper-3);
+}
+
+/* ---------- Korean: never split a word across lines ---------- */
+:global(html:lang(ko)) :is(.taskBody, .note, .lead, .muted) {
+  word-break: keep-all;
+}
+
+/* ---------- responsive ---------- */
+@container overview (min-width: 1100px) {
+  .links {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .tasks,
+  .links {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  /* the picker's accessible name carries the meaning; the short label yields its width */
+  .pickerLabel {
+    display: none;
+  }
+  .pickerTrigger {
+    min-height: 44px;
+  }
+  .banner {
+    padding-left: 24px;
+  }
+  .task {
+    padding: 20px;
+  }
+  .taskFoot :global(.dx-btn),
+  .taskFoot :global(.dx-btn-ghost) {
+    min-height: 44px;
+  }
+  .bannerCta,
+  .boardControls :global(.dx-btn-ghost),
+  .emptyActions :global(.dx-btn),
+  .emptyActions :global(.dx-btn-ghost) {
+    min-height: 44px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    animation: none;
+  }
+}

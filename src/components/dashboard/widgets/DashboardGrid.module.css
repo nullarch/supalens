@@ -1,0 +1,777 @@
+/* Report board — a dependency-free resizable / draggable grid.
+   CSS Grid does the packing; pointer events do the drag + resize.
+
+   Design-system anatomy: a summary row (14px muted counts, state dot for anomalies) with
+   the layout control on the right, then the widgets as white 16px cards on the
+   canvas with 16px gutters. Edit mode turns the board into a layout surface: a
+   dashed tinted field with faint 12-column guides, a tinted frame per widget with a
+   handle row (grip · position · size) and a dashed sky drop zone.
+
+   Used inside /app (app tokens) and /dev previews that mount the app scope; app-only
+   tokens still carry fallbacks. */
+
+.wrap {
+  position: relative;
+  container-type: inline-size;
+}
+
+/* ---------- summary / layout row ---------- */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px 16px;
+  min-height: 36px;
+  margin-bottom: 16px;
+}
+.summary,
+.hintRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex: 1 1 280px;
+  min-width: 0;
+  margin: 0 auto 0 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.summary {
+  row-gap: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.summary > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.summary > span:first-child {
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.summary > span + span::before {
+  content: "·";
+  margin: 0 8px;
+  color: var(--ink-3);
+}
+.summaryAlert {
+  font-weight: 500;
+  color: var(--intent-negative);
+}
+.summaryDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ax-err, var(--intent-negative));
+  flex-shrink: 0;
+}
+.hintRow {
+  gap: 6px 10px;
+}
+.editTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-hover);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  white-space: nowrap;
+}
+:global(html[data-theme="dark"]) .editTag {
+  color: var(--brand);
+}
+.hint {
+  flex: 1 1 260px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- controls: Design-system secondary / primary buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 7px 14px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-control);
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, opacity 150ms ease, scale 100ms ease;
+}
+.btn svg {
+  flex-shrink: 0;
+  color: var(--ink-3);
+}
+.btnGhost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--ink-2);
+}
+.btnActive {
+  border-color: var(--action);
+  background: var(--action);
+  color: var(--on-action);
+}
+@media (hover: hover) {
+  .btn:not(:disabled):hover {
+    background: var(--ax-tint, var(--paper-3));
+  }
+  .btnGhost:not(:disabled):hover {
+    background: var(--paper-3);
+    color: var(--ink);
+  }
+  .btnActive:not(:disabled):hover {
+    background: var(--action);
+    opacity: 0.85;
+  }
+}
+.btn:not(:disabled):active {
+  scale: 0.98;
+}
+.btn:focus-visible,
+.kebabBtn:focus-visible,
+.editAction:focus-visible,
+.resizeHandle:focus-visible,
+.sqlRegion:focus-visible,
+.menuItem:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.btn:disabled,
+.editAction:disabled,
+.resizeHandle[aria-disabled='true'],
+.dragSurface[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.notice {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.notice .btn {
+  margin-inline-start: 8px;
+}
+.targetTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.editorError {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--intent-negative);
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- the board ---------- */
+.board {
+  position: relative;
+  isolation: isolate;
+}
+/* edit mode: a dashed tinted field drawn OUTSIDE the grid box, so toggling editing
+   never reflows the widgets */
+.board[data-editing='true']::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  z-index: -1;
+  border: 1px dashed var(--line-2);
+  border-radius: calc(var(--r-card) + 4px);
+  background: var(--ax-tint, var(--paper-3));
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: 64px;
+  gap: 16px;
+  grid-auto-flow: row;
+}
+/* faint 12-column guides behind the cards (one tile = column + gap) */
+.grid.editing {
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--ink) 4%, transparent) 0 calc(100% - 16px), transparent calc(100% - 16px));
+  background-size: calc((100% + 16px) / 12) 100%;
+  background-repeat: repeat-x;
+}
+
+.cell {
+  position: relative;
+  min-width: 0;
+}
+/* each widget becomes an opaque frame, so the guides read only in free space */
+.editing .cell {
+  border-radius: calc(var(--r-card) + 2px);
+  background: var(--paper-3);
+}
+.widgetWrap {
+  height: 100%;
+  min-width: 0;
+}
+.editing .widgetWrap {
+  /* Reserve a real handle row; action buttons must not cover long titles. */
+  margin-top: 54px;
+  height: calc(100% - 54px);
+  pointer-events: none; /* the drag surface owns the pointer while editing */
+}
+
+/* handle row: grip · position · size */
+.handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 54px;
+  padding: 0 12px 2px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  pointer-events: none;
+}
+.handle svg {
+  color: var(--ink-3);
+}
+.handleSize {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--paper-2);
+  font-family: var(--ax-mono, var(--font-mono));
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+/* full-cell drag surface shown in edit mode */
+.dragSurface {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  padding: 0;
+  border: 0;
+  border-radius: calc(var(--r-card) + 2px);
+  outline: 1px dashed var(--line-2);
+  outline-offset: -1px;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  transition: outline-color 150ms ease;
+}
+.dragSurface:hover {
+  outline: 1px solid var(--brand);
+}
+.dragSurface:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}
+.dragSurface:active {
+  cursor: grabbing;
+}
+
+/* ✎ / ✕ in the handle row */
+.editAction {
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  z-index: 7;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--paper-2);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+.editAction[data-offset='second'] {
+  right: 56px;
+}
+.editRemove {
+  color: var(--intent-negative);
+}
+@media (hover: hover) {
+  .editAction:not(:disabled):hover {
+    background: var(--ax-tint, var(--paper-3));
+    color: var(--ink);
+  }
+  .editRemove:not(:disabled):hover {
+    border-color: color-mix(in srgb, var(--intent-negative) 35%, var(--line));
+    background: var(--intent-negative-bg);
+    color: var(--intent-negative);
+  }
+}
+
+/* bottom-right resize handle */
+.resizeHandle {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--paper-2);
+  color: var(--ink-3);
+  cursor: nwse-resize;
+  touch-action: none;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+.resizeHandle:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+/* drop target while dragging: a dashed sky zone */
+.placeholder {
+  min-width: 0;
+  border: 1.5px dashed color-mix(in srgb, var(--brand) 60%, transparent);
+  border-radius: var(--r-card);
+  background: var(--brand-soft);
+}
+
+/* floating ghost that follows the cursor */
+.ghost {
+  position: fixed;
+  z-index: 80;
+  display: flex;
+  align-items: flex-start;
+  padding: 20px 24px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+  box-shadow: var(--shadow-lift-strong);
+  opacity: 0.96;
+  pointer-events: none;
+}
+.ghostTitle {
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--ink);
+}
+
+/* ---------- staff ⋯ menu ---------- */
+.menuAnchor {
+  position: relative;
+  display: inline-flex;
+}
+.kebabBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: var(--r-control);
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.kebabBtn:hover,
+.kebabBtn[aria-expanded='true'] {
+  background: var(--paper-3);
+  color: var(--ink);
+}
+.menuScrim {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  border: none;
+  background: transparent;
+  cursor: default;
+}
+/* absolute + high z-index so it escapes the card (.card is overflow:visible) */
+.menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 51;
+  display: grid;
+  gap: 2px;
+  min-width: 196px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-segmented, 12px);
+  background: var(--paper-2);
+  box-shadow: var(--shadow-lift-strong);
+}
+.menuItem {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--r-control);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+.menuItem:hover {
+  background: var(--paper-3);
+}
+
+/* ---------- admin debug panel (inside the dialog) ---------- */
+.debug {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  min-width: 0;
+}
+.debugTitle {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+  overflow-wrap: anywhere;
+}
+.debugBlock {
+  min-width: 0;
+}
+.debugHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.debugLabel {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.sqlRegion {
+  max-height: 48vh;
+  margin: 0;
+  padding: 14px 16px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  background: var(--ax-code, var(--paper-3));
+  color: var(--ink);
+  font-family: var(--ax-mono, var(--font-mono));
+  font-size: 12.5px;
+  line-height: 1.65;
+  white-space: pre;
+}
+.debugEmpty {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-3);
+}
+.debugMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--ax-line-soft, var(--line));
+}
+.debugMeta div {
+  display: grid;
+  gap: 2px;
+}
+.debugMeta dt {
+  font-size: 12.8px;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+.debugMeta dd {
+  margin: 0;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.debugActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 768px) {
+  .btn {
+    min-height: 44px;
+  }
+}
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* Keep editing available on mobile; width is retained for the desktop layout. */
+  .cell,
+  .placeholder {
+    grid-column: 1 / -1 !important;
+  }
+  .grid.editing {
+    background-image: none;
+  }
+}
+@container (max-width: 640px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cell,
+  .placeholder {
+    grid-column: 1 / -1 !important;
+  }
+  .grid.editing {
+    background-image: none;
+  }
+}
+@media (max-width: 640px) {
+  .board[data-editing='true']::before {
+    inset: -8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .dragSurface,
+  .editAction,
+  .resizeHandle,
+  .kebabBtn {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* ── monitoring strip (report boards) ─────────────────────────────────────────
+   Lives inside the widget card's footer slot: one faint-hairline row with a state
+   dot, the status word, the recorded check time, one link and the definition
+   dialog. Wraps rather than truncating so a narrow (3-col) widget keeps every
+   control reachable. */
+.mRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 44px;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  min-height: 44px;
+}
+.mSummary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 10px;
+  min-width: 0;
+}
+.mStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.mDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink-3);
+  flex-shrink: 0;
+}
+.mStatus[data-tone='incident'] {
+  color: var(--intent-negative);
+}
+.mStatus[data-tone='incident'] .mDot {
+  background: var(--ax-err, var(--intent-negative));
+}
+.mStatus[data-tone='paused'] {
+  color: var(--ink-3);
+}
+.mStatus[data-tone='paused'] .mDot {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--ink-3);
+}
+.mCheckedCompact {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--ink-3);
+}
+.mChecked {
+  font-size: 13px;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+  overflow-wrap: anywhere;
+}
+.mLinks {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 16px;
+  margin-left: auto;
+}
+.mLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: color 150ms ease;
+}
+.mLink:hover {
+  color: var(--ink);
+}
+.mLink svg {
+  transition: transform 150ms ease;
+}
+.mLink:hover svg {
+  transform: translateX(2px);
+}
+.mPrimary {
+  max-width: 150px;
+  padding: 0 8px;
+  border-radius: var(--r-control);
+}
+.mPrimary svg {
+  flex: none;
+}
+@container (max-width: 280px) {
+  .mPrimary {
+    width: 44px;
+    max-width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+  .mPrimary span {
+    display: none;
+  }
+}
+.mDefSummary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 44px;
+  min-height: 44px;
+  padding: 8px;
+  border: 0;
+  border-radius: var(--r-control);
+  background: none;
+  color: var(--ink-3);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.mDefSummary:hover {
+  background: var(--paper-3);
+  color: var(--ink);
+}
+.mDefSummary:focus-visible,
+.mLink:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* monitoring details dialog */
+.mDetails {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+.mDetails .mLinks {
+  margin-left: 0;
+  gap: 0 20px;
+  border-bottom: 1px solid var(--ax-line-soft, var(--line));
+}
+.mDetails h3 {
+  margin: 6px 0 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.mDefText {
+  margin: -8px 0 0;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.mEvidence {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mEvidence li {
+  padding: 12px 0;
+  border-top: 1px solid var(--ax-line-soft, var(--line));
+  overflow-wrap: anywhere;
+}
+.mEvidence code {
+  font-family: var(--ax-mono, var(--font-mono));
+  font-size: 12.5px;
+  color: var(--ink);
+}
+.mEvidence p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+}

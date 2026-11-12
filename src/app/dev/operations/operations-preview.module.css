@@ -1,0 +1,3 @@
+.simulationToggle { accent-color: var(--action); }
+.fixtureControls { display: grid; gap: 8px; min-width: 0; max-width: 100%; }
+.fixtureControls select { display: block; width: 100%; min-width: 0; max-width: 100%; }

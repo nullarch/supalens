@@ -1,0 +1,498 @@
+/* ============================================================
+   Settings · Team — Design-system surfaces.
+   Stat cards (members · your role · pending) with serif figures, the
+   invite form as a settings card, the roster in a 16px table shell with
+   a tinted head row, and pending invitations as a second shell. Every
+   control keeps a 44px target; row actions are quiet text buttons.
+   ============================================================ */
+.root {
+  display: grid;
+  gap: 32px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  container-type: inline-size;
+}
+.root h2 {
+  margin: 0;
+}
+.root :is(button, input),
+.root button[data-size],
+.modalActions button {
+  min-width: 44px;
+  min-height: 44px;
+}
+.root :is(button, a, [role="region"], [data-save-notice]):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+.root h2:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+.root :is(button, input):disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* ---------- notices ---------- */
+.notice {
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-2);
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 22px;
+}
+.noticeText {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.noticeText::before {
+  content: "";
+  position: relative;
+  top: -1px;
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--ax-ok, var(--intent-positive));
+}
+.notice[data-kind="err"] {
+  border-color: color-mix(in srgb, var(--intent-negative) 25%, var(--line));
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+}
+.notice[data-kind="err"] .noticeText::before {
+  background: var(--ax-err, var(--intent-negative));
+}
+.notice[data-kind="info"] {
+  border-color: color-mix(in srgb, var(--intent-warning) 25%, var(--line));
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+}
+.notice[data-kind="info"] .noticeText::before {
+  background: var(--intent-warning);
+}
+.reviewNote {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+  font-size: 14px;
+  line-height: 22px;
+}
+.reviewNote a {
+  color: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.copyRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.copyRow code {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 11px 12px;
+  border-radius: 10px;
+  background: var(--paper-3);
+  color: var(--ink);
+  font-family: var(--ax-mono);
+  font-size: 13px;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- stat cards ---------- */
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 16px;
+  margin: 0;
+}
+.figure {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-2);
+}
+.figure dt {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.figure dd {
+  margin: 0;
+}
+.figureValue {
+  font-family: var(--ax-serif);
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+/* ---------- invite card ---------- */
+.invite {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+  padding: 24px 28px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-2);
+}
+.inviteHead {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.cardTitle {
+  font-family: var(--ax-sans);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+  color: var(--ink);
+}
+.inviteHint {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+}
+.inviteForm {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.fieldLabel {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.inviteControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.input {
+  flex: 1 1 260px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--ax-sans);
+  font-size: 16px;
+  line-height: 1.4;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.input::placeholder {
+  color: var(--ink-3);
+}
+.root .input:focus,
+.root .input:focus-visible {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+.roleSelect {
+  flex: 0 0 auto;
+}
+.selectTrigger.selectTrigger {
+  min-height: 44px;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+.submit {
+  flex-shrink: 0;
+}
+
+/* ---------- sections ---------- */
+.section {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+.sectionTitle {
+  font-family: var(--ax-sans);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+  color: var(--ink);
+}
+.count {
+  font-size: 14px;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+
+/* ---------- roster table shell ---------- */
+.tableCard {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-2);
+}
+.tableScroll {
+  width: 100%;
+  overflow-x: auto;
+}
+.tableScroll:focus-visible {
+  outline-offset: -2px;
+}
+.tableScroll table {
+  min-width: 820px;
+}
+.table th {
+  padding: 12.8px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--ax-tint, var(--ax-panel));
+  font-family: var(--ax-sans);
+  font-size: 12.8px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-3);
+}
+.table td {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-bottom-color: var(--ax-line-soft);
+}
+.table th:first-child,
+.table td:first-child {
+  padding-left: 24px;
+}
+.table th:last-child,
+.table td:last-child {
+  padding-right: 12px;
+}
+.tableHint {
+  display: none;
+  margin: 0;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.empty {
+  margin: 0;
+  padding: 32px 24px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: center;
+  color: var(--ink);
+}
+.member {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 220px;
+}
+.member :global(.dx-avatar) {
+  width: 32px;
+  height: 32px;
+}
+.memberText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 176px;
+  max-width: 300px;
+  line-height: 20px;
+}
+.memberName {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.meSuffix {
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.memberEmail {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.date {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.thActions {
+  width: 56px;
+}
+.actionCell {
+  width: 56px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* quiet row action */
+.rowAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--ax-sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+.rowAction[data-tone="negative"] {
+  color: var(--intent-negative);
+}
+@media (hover: hover) {
+  .rowAction:not(:disabled):hover {
+    background: var(--paper-3);
+    color: var(--ink);
+  }
+  .rowAction[data-tone="negative"]:not(:disabled):hover {
+    background: var(--intent-negative-bg);
+    color: var(--intent-negative);
+  }
+}
+
+/* ---------- pending invitations ---------- */
+.inviteList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-2);
+}
+.inviteRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 60px;
+  padding: 8px 12px 8px 24px;
+}
+.inviteRow + .inviteRow {
+  border-top: 1px solid var(--ax-line-soft);
+}
+.inviteMain {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  flex: 1;
+  min-width: 0;
+}
+.inviteEmail {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.inviteExpiry {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+.inviteActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---------- dialog ---------- */
+.modalActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.modalError {
+  margin: 0;
+  color: var(--intent-negative);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+/* ---------- Korean / Japanese ---------- */
+:global(html:lang(ko)) .inviteHint {
+  word-break: keep-all;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 960px) {
+  .tableHint {
+    display: block;
+  }
+}
+@container (max-width: 560px) {
+  .invite {
+    padding: 20px;
+  }
+  .inviteRow {
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    padding: 12px 12px 12px 16px;
+  }
+  .inviteExpiry {
+    order: 3;
+    width: 100%;
+  }
+  .summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .figure {
+    padding: 16px 18px;
+  }
+  .figure:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+}
+@container (max-width: 440px) {
+  .inviteControls > * {
+    flex: 1 1 100%;
+  }
+  .roleSelect {
+    width: 100%;
+  }
+}

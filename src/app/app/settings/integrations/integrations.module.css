@@ -1,0 +1,1088 @@
+/* ============================================================
+   Settings · Integrations — one card per provider, grouped by what the
+   provider is for: Data (Supabase accounts, databases added directly), Code
+   (GitHub repositories), Messenger (Slack mentions).
+
+   A card is a one-line head — 40px mark tile, 15.5px/500 name + summary pill,
+   muted purpose, the connect action on the right — and, only when something
+   is connected, its body right under it, shaped by what the provider holds:
+     Supabase   account bar (tinted) → project rows
+     Databases  source rows (engine mark · name · engine · state)
+     GitHub     installation bar → permissions + cross-DB toolbar → repo rows
+     Slack      workspace bar → mention scope (state in words · chips · save)
+   No nested cards and no empty wells: nothing connected = the head alone.
+   ============================================================ */
+.page {
+  min-width: 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  container-type: inline-size;
+}
+.page :is(button, input, a):focus-visible,
+:is(.connectionActions, .channelScope, .repositorySection) :is(button, a):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+:is(.page, .connectionActions, .channelScope) button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* ---------- page notes + return notice ---------- */
+.stateHint,
+.roleHint {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  max-width: 720px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.stateHint::before,
+.roleHint::before {
+  content: "";
+  position: relative;
+  top: -1px;
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+.roleHint {
+  margin: -12px 0 28px;
+  color: var(--ink-2);
+}
+.stateHint {
+  margin-top: 36px;
+}
+.banner {
+  margin: 0 0 28px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--ax-tint, var(--ax-panel));
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 22px;
+}
+.banner[data-kind="error"] {
+  border-color: color-mix(in srgb, var(--intent-negative) 25%, var(--line));
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+}
+.banner p {
+  margin: 6px 0 0;
+}
+
+/* ---------- groups: a title over the provider cards ---------- */
+.group {
+  min-width: 0;
+}
+.group + .group {
+  margin-top: 36px;
+}
+.groupTitle {
+  margin: 0 0 12px;
+  font-family: var(--ax-sans);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--ink);
+}
+.cards {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* ---------- provider card ---------- */
+.provider {
+  --card-radius: var(--r-card, 16px);
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--card-radius);
+  background: var(--paper-2);
+}
+.providerHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 18px 20px;
+}
+.logoTile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper-2);
+  color: var(--ink);
+}
+.logo {
+  width: 20px;
+  height: 20px;
+}
+.providerText {
+  min-width: 0;
+}
+.providerTitleRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  min-width: 0;
+}
+.providerTitle {
+  margin: 0;
+  font-family: var(--ax-sans);
+  font-size: 15.5px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--ink);
+}
+.providerSub {
+  max-width: 640px;
+  margin: 2px 0 0;
+  font-size: 13.5px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.providerSub code {
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--paper-3);
+  font-family: var(--ax-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.providerAction {
+  justify-self: end;
+}
+.cta.cta {
+  gap: 6px;
+  white-space: nowrap;
+}
+.cta svg {
+  flex-shrink: 0;
+}
+
+/* ---------- state pill (dot + label) ---------- */
+.statusLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 9px 2px 8px;
+  border-radius: 999px;
+  background: var(--paper-3);
+  font-family: var(--ax-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  white-space: nowrap;
+  color: var(--ink-2);
+}
+.statusLabel::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+.statusLabel[data-intent="positive"] {
+  background: var(--intent-positive-bg);
+  color: var(--intent-positive);
+}
+.statusLabel[data-intent="warning"] {
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+}
+.statusLabel[data-intent="negative"] {
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+}
+.statusLabel[data-intent="positive"]::before {
+  background: var(--ax-ok, currentColor);
+  box-shadow: none;
+}
+.statusLabel[data-intent="negative"]::before {
+  background: var(--ax-err, currentColor);
+  box-shadow: none;
+}
+
+/* ---------- connection actions: quiet icon + label buttons ---------- */
+.connectionActions {
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+}
+.connectionActions:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+.rowActions button,
+.channelScope button,
+.repositorySection button[data-size],
+.repositorySection [role="option"] button {
+  min-width: 44px;
+  min-height: 44px;
+}
+.btnGhost,
+.btnDanger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--ax-sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.btnGhost svg,
+.btnDanger svg {
+  flex-shrink: 0;
+}
+@media (hover: hover) {
+  .btnGhost:not(:disabled):hover {
+    background: var(--paper-3);
+    color: var(--ink);
+  }
+  .btnDanger:not(:disabled):hover {
+    background: var(--intent-negative-bg);
+    color: var(--intent-negative);
+  }
+}
+.actionNote {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+  overflow-wrap: anywhere;
+}
+.connectionActions .actionNote {
+  max-width: 320px;
+  text-align: right;
+}
+.streamErr {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+  font-size: 13.5px;
+  line-height: 21px;
+}
+:global([role="dialog"]) .streamErr {
+  margin-top: 12px;
+}
+.actionTarget {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--paper-3);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+
+/* ---------- accounts: a tinted bar per connection, its body under it ---------- */
+.accounts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.account {
+  min-width: 0;
+  border-top: 1px solid var(--line);
+}
+.accountBar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  min-width: 0;
+  min-height: 52px;
+  padding: 4px 8px 4px 20px;
+  background: var(--ax-tint, var(--ax-panel));
+}
+/* a bar that ends the card keeps the card's rounded corners */
+.account:last-child > .accountBar:last-child {
+  border-radius: 0 0 var(--card-radius) var(--card-radius);
+}
+.accountIdent {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 6px 0;
+}
+.accountName {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.accountMeta {
+  font-size: 12.5px;
+  line-height: 18px;
+  color: var(--ink-3);
+}
+.accountActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 100%;
+  margin-left: auto;
+}
+.barLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: 10px;
+  color: var(--ink-2);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+@media (hover: hover) {
+  .barLink:hover {
+    background: var(--paper-3);
+    color: var(--ink);
+  }
+}
+.accountBody {
+  min-width: 0;
+  border-top: 1px solid var(--ax-line-soft, var(--line));
+}
+/* a body that is only a note (e.g. the Slack scope could not be read) keeps the row inset */
+.accountBody > .actionNote {
+  padding: 12px 20px;
+}
+.connNote {
+  margin: 12px 20px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--intent-warning-bg);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--intent-warning);
+}
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--brand);
+  font-weight: 500;
+  text-decoration: none;
+}
+.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.rowActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  flex-shrink: 0;
+  max-width: 100%;
+}
+/* summary pill beside a provider name (recorded accounts / sources, not a live check) */
+.summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--paper-3);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  white-space: nowrap;
+  color: var(--ink-3);
+}
+.summary[data-connected] {
+  background: var(--intent-positive-bg);
+  color: var(--intent-positive);
+}
+.summary[data-connected]::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ax-ok, currentColor);
+}
+.summary[data-warning] {
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+}
+
+
+/* ---------- rows: projects and sources ---------- */
+.items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--ax-line-soft, var(--line));
+}
+.itemsFlush {
+  border-top-color: var(--line);
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 52px;
+  padding: 10px 20px;
+}
+.item + .item {
+  border-top: 1px solid var(--ax-line-soft, var(--line));
+}
+.itemMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--paper-3);
+  color: var(--ink-2);
+}
+.itemName {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  flex: 1;
+  min-width: 0;
+}
+.itemTitle {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.engine {
+  font-size: 12.5px;
+  line-height: 18px;
+  color: var(--ink-3);
+  overflow-wrap: anywhere;
+}
+.itemsEmpty,
+.empty {
+  margin: 0;
+  padding: 14px 20px;
+  font-size: 13.5px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.cardFoot {
+  margin: 0;
+  padding: 12px 20px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+
+/* ---------- repositories: toolbar, then one row per repository ---------- */
+.repositorySection {
+  display: grid;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.repoNotes {
+  display: grid;
+  gap: 4px;
+  padding: 12px 20px 0;
+}
+.repoToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  min-width: 0;
+  padding: 6px 12px 6px 20px;
+}
+.crossRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+.crossRow [data-size] {
+  min-height: 44px;
+}
+.scopeLine {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0;
+  padding: 8px 0;
+}
+.scopeLine code {
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--paper-3);
+  font-family: var(--ax-mono);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.scopeLine span {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.repositorySection > .streamErr {
+  margin: 0 20px 12px;
+}
+.repoList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--ax-line-soft, var(--line));
+}
+.repoRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  min-width: 0;
+  min-height: 56px;
+  padding: 6px 8px 6px 20px;
+}
+.repoRow + .repoRow {
+  border-top: 1px solid var(--ax-line-soft, var(--line));
+}
+.repoIdentity {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 6px 0;
+}
+.repoName {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.repoBranch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  font-family: var(--ax-mono);
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0;
+  color: var(--ink-3);
+}
+.repoBranch svg {
+  flex-shrink: 0;
+}
+.repoBranch > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.repoRight {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  min-width: 0;
+  max-width: 100%;
+  margin-left: auto;
+}
+.repositorySection > :is(.scopeNotice, .link) {
+  margin: 12px 20px;
+}
+.repositorySection > .scopeNotice + .link {
+  margin-top: 0;
+}
+.analyzeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--ax-sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.analyzeBtn svg {
+  flex-shrink: 0;
+}
+@media (hover: hover) {
+  .analyzeBtn:not(:disabled):hover {
+    background: var(--paper-3);
+    color: var(--ink);
+  }
+}
+.analyzeBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.repoToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+  padding-left: 8px;
+  border-left: 1px solid var(--ax-line-soft, var(--line));
+}
+.toggleLabel {
+  min-width: 44px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: right;
+  color: var(--ink-2);
+}
+/* 44px hit area; the visible 40×22 switch is drawn by ::before + the knob. The off
+   track is muted ink (not a hairline) so it reads against the white row. */
+.toggle {
+  position: relative;
+  flex: none;
+  width: 48px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+}
+.toggle::before {
+  content: "";
+  position: absolute;
+  top: 11px;
+  left: 4px;
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--ink-3);
+  transition: background-color 180ms ease;
+}
+/* the whole 44px square is the hit area — the rounded corners only shape the focus ring */
+.toggle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.toggleOn::before {
+  background: var(--brand);
+}
+.toggleKnob {
+  position: absolute;
+  top: 13px;
+  left: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 2px #0000002e;
+  transition: transform 200ms ease;
+}
+.toggleOn .toggleKnob {
+  transform: translateX(18px);
+}
+:global(html[data-theme="dark"]) .toggleKnob {
+  background: var(--paper);
+}
+.toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.scopeNotice {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 21px;
+  color: var(--ink-2);
+}
+.scopeNotice::before {
+  content: "";
+  position: relative;
+  top: -1px;
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--ax-ok, var(--intent-positive));
+}
+.scopeNotice[data-kind="err"],
+.scopeNotice[data-kind="info"] {
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+.scopeNotice[data-kind="err"] {
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+}
+.scopeNotice[data-kind="err"]::before {
+  background: var(--ax-err, var(--intent-negative));
+}
+.scopeNotice[data-kind="info"] {
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+}
+.scopeNotice[data-kind="info"]::before {
+  background: var(--intent-warning);
+}
+.repoRun {
+  display: grid;
+  gap: 6px;
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--ax-line-soft, var(--line));
+}
+.repoRun h3 {
+  margin: 0;
+  font-family: var(--ax-sans);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--ink);
+}
+
+/* ---------- Slack mention scope: the saved scope in words, then chips + save ----------
+   Two columns that wrap by their own width (not a container query), so the scope reads the
+   same inside the page and in a standalone preview. */
+.channelScope {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px 28px;
+  min-width: 0;
+  padding: 16px 20px 18px;
+}
+.channelScope:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}
+.scopeHead {
+  display: grid;
+  gap: 2px;
+  flex: 1 1 200px;
+  max-width: 260px;
+  min-width: 0;
+}
+.scopeControls {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  flex: 999 1 300px;
+  min-width: 0;
+}
+.channelScope h3 {
+  margin: 0;
+  font-family: var(--ax-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+}
+.scopeState {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.scopeState[data-limited] {
+  color: var(--brand);
+}
+.scopeFilter {
+  width: 100%;
+  max-width: 320px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-2);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+}
+.scopeFilter::placeholder {
+  color: var(--ink-3);
+}
+.scopeFoot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  min-width: 0;
+}
+.scopeOptions {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.scopeLegend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.scopeChoices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.scopeOption {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 6px 16px 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper-2);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+/* the native checkbox stays the real control (keyboard, forms, tests) — invisible, covering the chip */
+.scopeOption input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+.check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border: 1.5px solid var(--line-2);
+  border-radius: 6px;
+  background: var(--paper-2);
+  color: transparent;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+.scopeOption:has(input:checked) {
+  border-color: color-mix(in srgb, var(--brand) 45%, var(--line));
+  background: var(--brand-soft);
+  color: var(--ink);
+}
+.scopeOption:has(input:checked) .check {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--on-action, #ffffff);
+}
+:global(html[data-theme="dark"]) .scopeOption:has(input:checked) .check {
+  color: var(--paper);
+}
+.scopeOption:has(input:focus-visible) {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.scopeOption:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+@media (hover: hover) {
+  .scopeOption:not(:has(input:disabled)):hover {
+    border-color: var(--line-2);
+    color: var(--ink);
+  }
+}
+.scopeOption code {
+  font-family: var(--ax-mono);
+  font-size: 12.5px;
+  overflow-wrap: anywhere;
+}
+.unlisted {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+.unlisted p {
+  flex-basis: 100%;
+}
+.channelScope :global(.dx-btn) {
+  min-height: 44px;
+}
+/* nothing to save yet: a quiet filled chip, not a heavy grey slab */
+.channelScope :global(.dx-btn):disabled {
+  border-color: transparent;
+  background: var(--paper-3);
+  color: var(--ink-3);
+  opacity: 1;
+}
+
+/* ---------- component previews (/dev/settings) ---------- */
+.providers {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.card {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card, 16px);
+  background: var(--paper-2);
+}
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  min-width: 0;
+  padding: 16px 20px;
+}
+.cardIdent {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+.cardTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--ink);
+}
+
+
+/* ---------- Korean / Japanese ---------- */
+:global(html:lang(ko)) :is(.providerSub, .stateHint, .roleHint, .connNote, .empty, .itemsEmpty, .cardFoot, .scopeLine span, .scopeState, .scopeHead .actionNote) {
+  word-break: keep-all;
+}
+:global(html:lang(ja)) :is(.providerSub, .stateHint, .connNote, .empty, .itemsEmpty, .cardFoot) {
+  line-break: strict;
+}
+
+/* ---------- responsive: by the column the page gets ---------- */
+@container (max-width: 640px) {
+  .providerHead {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 16px;
+  }
+  .providerAction {
+    grid-column: 2;
+    justify-self: start;
+  }
+  .accountBar,
+  .repoToolbar {
+    padding-left: 16px;
+  }
+  .item,
+  .repoRow,
+  .itemsEmpty,
+  .empty,
+  .cardFoot,
+  .accountBody > .actionNote {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .channelScope {
+    padding: 14px 16px 16px;
+  }
+  .scopeHead {
+    max-width: none;
+  }
+}
+@container (max-width: 520px) {
+  .accountActions {
+    margin-left: 0;
+  }
+  .connectionActions {
+    justify-items: start;
+  }
+  .connectionActions .actionNote {
+    text-align: left;
+  }
+  .repoRight {
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+  .repoToggle {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+@media (max-width: 768px) {
+  .cta.cta {
+    min-height: 44px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toggle::before,
+  .toggleKnob,
+  .scopeOption,
+  .check {
+    transition-duration: 0.01ms;
+  }
+}

@@ -1,0 +1,336 @@
+/* Widget chrome — the white card of the app dashboard: 16px radius (app
+   token), fine line, 24px padding, DM Sans 500 title at 16px, muted 14px
+   description, quiet states, a faint hairline above the footer strip.
+   Self-contained: reads token NAMES present in BOTH systems (globals.css and the
+   /app scope in dashboard.css), with fallbacks for app-only tokens, so a widget
+   renders correctly in /app, /demo, /share, the landing Showcase and the gallery. */
+
+.card {
+  container-type: inline-size;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  /* NOT overflow:hidden — tooltips, the staff ⋯ menu and grid handles escape the
+     card; the card's own background + radius keep the corners clean. */
+  overflow: visible;
+  transition: box-shadow 150ms ease;
+}
+/* Design-system cards lift a hair on hover — app surface only (public pages stay flat) */
+:global(html:has([data-surface="app"])) .card:hover {
+  box-shadow: var(--ax-shadow-sm);
+}
+.card.span2 {
+  grid-column: span 2;
+}
+/* fill the grid cell's height; flexbox then gives .body a definite height so the
+   chart's ResponsiveContainer height:100% resolves and reflows on resize. */
+.card.fill {
+  height: 100%;
+}
+
+/* ---------- header ---------- */
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4px;
+  min-width: 0;
+  padding: 12px 10px 0 24px;
+  flex-shrink: 0;
+}
+.titleWrap {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 8px 0 0;
+  overflow-wrap: anywhere;
+}
+.fill .titleWrap > .title,
+.fill .titleWrap > .desc,
+.fill .titleWrap > .refreshed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+}
+.fill .titleWrap > .desc,
+.fill .titleWrap > .refreshed {
+  -webkit-line-clamp: 1;
+}
+/* the service line above the title: which connected source this number belongs to.
+   A small mark tile (the same tinted tile the overview and connections draw a
+   service with) + the source name, one line, quiet ink. */
+.source {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 6px;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--ink-2);
+}
+.sourceMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: var(--paper-3);
+  color: var(--ink-2);
+}
+.sourceName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* no data source: the same line, receded, with a dashed (detached) mark */
+.source[data-none] {
+  color: var(--ink-3);
+}
+.source[data-none] .sourceMark {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink-3);
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--ink);
+}
+.desc {
+  margin-top: 2px;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+}
+.refreshed {
+  margin-top: 2px;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+.headRight {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.detailsButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: var(--r-control);
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.detailsButton:hover {
+  background: var(--paper-3);
+  color: var(--ink);
+}
+.body:focus-visible,
+.detailsButton:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* the details dialog body (fill cards clamp the header; the dialog has it all) */
+.fullDetails {
+  display: grid;
+  gap: 8px;
+  overflow-wrap: anywhere;
+}
+.fullTitle {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--ink);
+}
+.fullDesc {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+}
+
+/* ---------- body ---------- */
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0; /* allow the body to shrink + give chart fill a definite height */
+  padding: 16px 24px 24px; /* vertical sum = 40, matched by Widget.tsx bodyStyle */
+}
+.body.flush {
+  padding: 12px 16px 16px 12px; /* vertical sum = 28 */
+}
+.fill .body {
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+  scrollbar-gutter: stable;
+}
+/* a table is its own scroll region running edge to edge: the body stops scrolling
+   (no reserved gutter beside the tinted head row) and the region scrolls instead */
+.fill .body:has(> [role="region"]) {
+  overflow: hidden;
+  scrollbar-gutter: auto;
+}
+
+/* partial results: a small warning badge, not a band across the card */
+.truncated {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  max-width: calc(100% - 48px);
+  margin: 10px 24px 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+  flex-shrink: 0;
+}
+.truncatedDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* ---------- states: centered 14px/500 line + muted detail ---------- */
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1; /* fill the reserved body height so the message centers vertically */
+  gap: 4px;
+  min-height: 120px;
+  padding: 16px 8px;
+  text-align: center;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+.errorTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--intent-negative);
+}
+.errorDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ax-err, var(--intent-negative));
+  flex-shrink: 0;
+}
+.errorMsg {
+  max-width: 48ch;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--ink-3);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- loading skeleton ---------- */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+.skelBar,
+.skelChart {
+  background-color: var(--paper-3);
+  background-image: linear-gradient(90deg, transparent 25%, color-mix(in srgb, var(--line) 70%, transparent) 37%, transparent 63%);
+  background-size: 400% 100%;
+  animation-name: shimmer;
+  animation-duration: 1.4s;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+}
+.skelBar {
+  height: 14px;
+  border-radius: 6px;
+}
+.skelChart {
+  height: 100%;
+  min-height: 160px;
+  border-radius: var(--r-control);
+}
+@keyframes shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skelBar,
+  .skelChart {
+    animation-name: none;
+  }
+  .card {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* ---------- footer strip (monitoring status on a report board) ---------- */
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  flex-shrink: 0;
+  padding: 4px 10px 4px 24px;
+  border-top: 1px solid var(--ax-line-soft, var(--line));
+}
+
+:global(html:lang(ko)) .title {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}

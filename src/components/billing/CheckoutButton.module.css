@@ -1,0 +1,23 @@
+/* Checkout phase feedback under a plan CTA: a quiet line, tinted only when the outcome
+   needs attention. Recovery actions keep 44px targets. */
+.feedback {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-2);
+  color: var(--ink-2);
+  font-family: var(--ax-sans, var(--font-sans));
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.feedback p { margin: 0; }
+.feedback p + p { margin-top: 4px; }
+.failure { border-color: transparent; background: var(--intent-negative-bg); color: var(--intent-negative); }
+.unconfirmed { border-color: transparent; background: var(--intent-warning-bg); color: var(--intent-warning); }
+.confirmed { border-color: transparent; background: var(--intent-positive-bg); color: var(--intent-positive); }
+.recovery { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin-top: 8px; }
+.recovery a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.recovery button { min-height: 44px; padding: 0 12px; border: 1px solid currentColor; border-radius: 10px; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.recovery :is(a, button):focus-visible { outline: 2px solid var(--brand, var(--clay)); outline-offset: 3px; }

@@ -1,0 +1,12 @@
+.block { min-width: 0; margin-top: 12px; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--paper-2); }
+.toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--line); font-size: 12px; line-height: 1.6; color: var(--ink-2); }
+.toolbar button { min-height: 44px; border: 1px solid var(--line-2); border-radius: var(--r-control); padding: 8px 14px; background: var(--paper); color: var(--ink); font: 500 13px/1.5 var(--font-sans); cursor: pointer; }
+.toolbar button:hover { background: var(--paper-3); }
+.toolbar button:disabled { cursor: wait; opacity: .65; }
+.block pre { margin: 0; padding: 14px; overflow: auto; font: 13px/1.7 var(--font-mono); color: var(--ink); }
+.block :is(button, pre):focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+.notice, .failure { margin: 0; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; padding: 0 14px 12px; }
+.notice { color: var(--ink-2); }
+.notice[data-state='copied'] { color: var(--intent-positive); }
+.failure { color: var(--intent-warning); }
+.notice:empty { padding: 0; }

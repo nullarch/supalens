@@ -1,0 +1,752 @@
+/* ==========================================================================
+   Supalens product system — /app
+
+   The app design system:
+   warm neutral greys, one sky-deep accent, DM Sans interface text at weight
+   500, a regular-weight serif for page titles and headline figures, 16px cards
+   with a fine line, a tinted sidebar and table heads. Supalens keeps its own
+   name, logo, copy, DM Mono (for identifiers and nav group labels) and a dark
+   theme.
+
+   Scoping. The shell renders `data-surface="app"`; every token below is
+   published on <html> only while that surface is mounted, so marketing, login,
+   share and docs keep the global tokens in globals.css (never mutated), while
+   Radix portals (dialogs, menus) opened from the app inherit these. Widgets
+   keep reading the global variable names (--paper, --ink, --series-*), so they
+   re-theme without code changes.
+   ========================================================================== */
+
+html:has([data-surface="app"]) {
+  --ax-serif: "Iowan Old Style BT", "Iowan Old Style", Georgia, var(--ax-font-serif-ko), serif;
+  --ax-sans: var(--ax-font-sans), "Pretendard Variable", Pretendard, "Apple SD Gothic Neo",
+    "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  --ax-mono: var(--ax-font-mono), ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* surfaces */
+  --surface-canvas: #ffffff;
+  --paper: #ffffff;
+  --paper-2: #ffffff;
+  --paper-3: #f5f5f3; /* fill: hover, segmented track, meters */
+  --ax-tint: #fbfbfa; /* sidebar, table heads */
+  --ax-panel: var(--ax-tint);
+  --ax-fill-soft: #f9f9f7;
+  --ax-code: #f3f3f1;
+  --ax-current: #e6e6e4; /* current nav item */
+  --ax-line-soft: #f0f0ee;
+  --ax-tag-bg: #eef3fc;
+  --ax-header-glass: #ffffffd1;
+  --ax-mark: #b94d32; /* the logo's copper orbit is brand identity, not the UI accent */
+  --ax-scrim: #1a1a1a57;
+
+  /* text + lines */
+  --ink: #1a1a1a;
+  --ink-2: #585752;
+  --ink-3: #72706a; /* reference #8a8880, darkened to 4.5:1 on every surface */
+  --line: #e9e9e7;
+  --line-2: #ccccca;
+
+  /* the single accent: sky-deep for links, focus, selection and own data */
+  --brand: #2e64b8;
+  --brand-hover: #24508f;
+  --brand-soft: #eef3fc;
+  --on-brand: #ffffff;
+  --ax-sky: #bfd7ff;
+  --clay: var(--brand);
+  --clay-deep: var(--brand-hover);
+  --clay-tint: var(--brand-soft);
+  --action: #1a1a1a;
+  --action-hover: #3a3a39;
+  --on-action: #ffffff;
+
+  /* bloom badge (free / new / AI hypothesis) */
+  --ax-bloom: #eadcf8;
+  --ax-bloom-ink: #211e19;
+  --ax-bloom-bg: var(--ax-bloom);
+
+  /* announcement banner */
+  --ax-announce-from: #d9f7f8;
+  --ax-announce-mid: #e9fbfb;
+  --ax-announce-to: #f8ffff;
+  --ax-announce-ink: #211e19;
+
+  /* operational states: dots use ok/err, text uses the intent pairs */
+  --ax-ok: #3d8b4f;
+  --ax-err: #c24a3a;
+  --ax-warn: #c28a2a;
+  --intent-positive: #2f6f3e;
+  --intent-positive-bg: #eef6f0;
+  --intent-negative: #a83a2c;
+  --intent-negative-bg: #fcefed;
+  --intent-warning: #8a5a12;
+  --intent-warning-bg: #fbf3e2;
+  --intent-critical: #a83a2c;
+  --intent-target: #72706a;
+  --intent-neutral: #ccccca;
+
+  /* categorical series — Design-system chart hues, chroma raised to pass the dataviz
+     validator (light, surface #ffffff): CVD ΔE ≥ 8.7 adjacent, normal ≥ 18.6 */
+  --series-1: #2e64b8;
+  --series-2: #d07650;
+  --series-3: #0e9aad;
+  --series-4: #c29232;
+  --series-5: #ad5a95;
+  --series-6: #3d8b4f;
+  --series-7: #7766cc;
+  --series-8: #c9473a;
+
+  --panel: #1a1a1a;
+  --panel-2: #262625;
+  --on-panel: #ffffff;
+  --on-panel-2: #c9c8c3;
+
+  --font-sans: var(--ax-sans);
+  --font-mono: var(--ax-mono);
+  --font-serif: var(--ax-serif);
+  --font-display: var(--ax-serif);
+
+  --r-control: 10px;
+  --r-segmented: 12px;
+  --r-card: 16px;
+  --r-panel: 16px;
+  --r-tag: 999px;
+  --ax-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ax-gutter: clamp(20px, 3.4vw, 36px);
+  --ax-content: 1024px;
+  /* Opt-in wide pages (data-page-width="wide", e.g. the overview board) fill more of the screen. */
+  --ax-content-wide: 1600px;
+  --ax-shadow-sm: 0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a;
+  --shadow-lift: var(--ax-shadow-sm);
+  --shadow-lift-strong: 0 12px 32px -12px #1a1a1a29, 0 2px 6px #1a1a1a0f;
+  --shadow-clay: none;
+
+  /* shadcn/ui bridge (dialog, button) */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 10%;
+  --primary: 0 0% 10%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 60 9% 96%;
+  --secondary-foreground: 0 0% 10%;
+  --muted: 60 9% 96%;
+  --muted-foreground: 45 4% 43%;
+  --accent: 60 9% 96%;
+  --accent-foreground: 0 0% 10%;
+  --destructive: 6 58% 41%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 60 5% 91%;
+  --input: 60 2% 80%;
+  --ring: 217 60% 45%;
+  --radius: 0.625rem;
+}
+html:lang(ja):has([data-surface="app"]) {
+  --ax-serif: "Iowan Old Style BT", "Iowan Old Style", Georgia, var(--ax-font-serif-ja), serif;
+  --ax-sans: var(--ax-font-sans), "Hiragino Sans", "Yu Gothic", "Pretendard Variable", Pretendard,
+    system-ui, sans-serif;
+}
+html[data-theme="dark"]:has([data-surface="app"]) {
+  --surface-canvas: #161615;
+  --paper: #161615;
+  --paper-2: #1b1b1a;
+  --paper-3: #242422;
+  --ax-tint: #1b1b1a;
+  --ax-fill-soft: #1f1f1e;
+  --ax-code: #222220;
+  --ax-current: #2c2c2a;
+  --ax-line-soft: #252523;
+  --ax-tag-bg: #1f2a3a;
+  --ax-header-glass: #161615d9;
+  --ax-mark: #f08a65;
+  --ax-scrim: #000000a6;
+
+  --ink: #f3f3f1;
+  --ink-2: #c9c8c3;
+  --ink-3: #a3a19b;
+  --line: #2e2e2c;
+  --line-2: #45453f;
+
+  --brand: #8fb4f0;
+  --brand-hover: #b3ccf5;
+  --brand-soft: #1f2a3a;
+  --on-brand: #161615;
+  --ax-sky: #2a3a55;
+  --action: #f3f3f1;
+  --action-hover: #d6d6d3;
+  --on-action: #161615;
+
+  --ax-bloom: #2a2433;
+  --ax-bloom-ink: #e7d9f7;
+
+  --ax-announce-from: #15282a;
+  --ax-announce-mid: #16211f;
+  --ax-announce-to: #161615;
+  --ax-announce-ink: #f3f3f1;
+
+  --ax-ok: #6fbf84;
+  --ax-err: #e47a6b;
+  --ax-warn: #d9a74a;
+  --intent-positive: #8fcf9e;
+  --intent-positive-bg: #18251b;
+  --intent-negative: #f0a497;
+  --intent-negative-bg: #2e1c19;
+  --intent-warning: #e2c27f;
+  --intent-warning-bg: #2b2517;
+  --intent-critical: #f0a497;
+  --intent-target: #a3a19b;
+  --intent-neutral: #45453f;
+
+  /* validated dark (surface #161615): CVD ΔE ≥ 9.0, normal ≥ 18.7, all ≥ 3:1 */
+  --series-1: #6690e3;
+  --series-2: #d0785a;
+  --series-3: #12a2b4;
+  --series-4: #b08a36;
+  --series-5: #b86aa2;
+  --series-6: #4f9e62;
+  --series-7: #8a7dd6;
+  --series-8: #d65c50;
+
+  --panel: #0f0f0e;
+  --panel-2: #1b1b1a;
+  --on-panel: #f3f3f1;
+  --on-panel-2: #c9c8c3;
+
+  --ax-shadow-sm: 0 1px 3px 0 #00000066, 0 1px 2px -1px #00000066;
+  --shadow-lift-strong: 0 16px 40px -12px #000000b3, 0 2px 6px #00000066;
+
+  --background: 60 2% 8%;
+  --foreground: 60 6% 95%;
+  --card: 60 2% 10%;
+  --card-foreground: 60 6% 95%;
+  --popover: 60 2% 10%;
+  --popover-foreground: 60 6% 95%;
+  --primary: 60 6% 95%;
+  --primary-foreground: 60 2% 8%;
+  --secondary: 60 3% 14%;
+  --secondary-foreground: 60 6% 95%;
+  --muted: 60 3% 14%;
+  --muted-foreground: 45 3% 62%;
+  --accent: 60 3% 14%;
+  --accent-foreground: 60 6% 95%;
+  --destructive: 8 75% 77%;
+  --destructive-foreground: 60 2% 8%;
+  --border: 60 2% 18%;
+  --input: 60 5% 26%;
+  --ring: 217 76% 75%;
+}
+
+/* ---------- base ---------- */
+html:has([data-surface="app"]) body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--ax-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+html:has([data-surface="app"]) ::selection {
+  background: var(--ax-sky);
+  color: var(--ink);
+}
+html:has([data-surface="app"]) :where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Page structure
+   ========================================================================== */
+/* Title row: serif page title left, actions/filters right on the same row. */
+.dx-page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+  min-height: 36px;
+}
+.dx-page-head > div:first-child {
+  min-width: 0;
+  flex: 1 1 320px;
+}
+/* The app design system has no kicker tags; the prop is accepted but not shown. */
+.dx-kicker {
+  display: none;
+}
+.dx-title {
+  margin: 0;
+  font-family: var(--ax-serif);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.26;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+.dx-sub {
+  margin: 6px 0 0;
+  max-width: 640px;
+  font-size: 14px;
+  line-height: 1.625;
+  color: var(--ink-3);
+}
+.dx-head-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dx-section {
+  margin-top: 48px;
+}
+.dx-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.dx-section-title {
+  margin: 0;
+  font-family: var(--ax-sans);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: normal;
+  color: var(--ink);
+}
+.dx-section-sub {
+  margin: 2px 0 0;
+  max-width: 600px;
+  font-size: 14px;
+  line-height: 1.625;
+  color: var(--ink-3);
+}
+.dx-label,
+.dx-section-label {
+  font-family: var(--ax-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink-2);
+}
+.dx-section-label {
+  display: block;
+  margin-bottom: 10px;
+}
+.dx-mono {
+  font-family: var(--ax-mono);
+  font-size: 0.92em;
+  letter-spacing: 0;
+}
+.dx-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 150ms ease;
+}
+.dx-text-link svg {
+  transition: transform 150ms ease;
+}
+
+/* ==========================================================================
+   Surfaces
+   ========================================================================== */
+.dx-card {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+}
+.dx-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 24px 0;
+}
+.dx-card-title {
+  margin: 0;
+  font-family: var(--ax-sans);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--ink);
+}
+.dx-card-body {
+  padding: 16px 24px 24px;
+}
+.dx-panel {
+  background: var(--ax-tint);
+  border: 1px solid var(--line);
+  border-radius: var(--r-panel);
+}
+.dx-rows > * + * {
+  border-top: 1px solid var(--ax-line-soft);
+}
+/* Design-system announcement banner — state variants tint the gradient. */
+.dx-announce {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  padding: 10px 16px 10px 20px;
+  border-radius: var(--r-card);
+  background: linear-gradient(90deg, var(--ax-announce-from) 0%, var(--ax-announce-mid) 55%, var(--ax-announce-to) 100%);
+  color: var(--ax-announce-ink);
+  font-size: 14px;
+  line-height: 22px;
+}
+.dx-announce[data-tone="negative"] {
+  --ax-announce-from: #fbe3df;
+  --ax-announce-mid: #fdefed;
+  --ax-announce-to: #fffafa;
+}
+.dx-announce[data-tone="warning"] {
+  --ax-announce-from: #f8ecd2;
+  --ax-announce-mid: #fcf5e6;
+  --ax-announce-to: #fffdf8;
+}
+html[data-theme="dark"] .dx-announce[data-tone="negative"] {
+  --ax-announce-from: #3a1f1b;
+  --ax-announce-mid: #261a18;
+  --ax-announce-to: #161615;
+}
+html[data-theme="dark"] .dx-announce[data-tone="warning"] {
+  --ax-announce-from: #352a15;
+  --ax-announce-mid: #241f16;
+  --ax-announce-to: #161615;
+}
+
+/* stat card */
+.dx-kpi {
+  padding: 24px 28px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+}
+.dx-kpi-label {
+  font-family: var(--ax-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink-2);
+}
+.dx-kpi-value,
+.dx-figure {
+  font-family: var(--ax-serif);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+.dx-kpi-value {
+  margin-top: 4px;
+  font-size: 28px;
+  line-height: 35px;
+}
+.dx-kpi-delta {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  line-height: 16px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+.dx-up { color: var(--ink-2); } /* Direction alone does not imply business health. */
+.dx-down { color: var(--ink-3); }
+
+/* tables — Design-system table shell: tinted head row, faint row lines */
+.dx-table-shell {
+  overflow-x: auto;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+}
+.dx-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 20px;
+}
+.dx-table th {
+  text-align: left;
+  font-family: var(--ax-sans);
+  font-size: 12.8px;
+  font-weight: 500;
+  line-height: 19.2px;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink-3);
+  background: var(--ax-tint);
+  padding: 12.8px 16px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.dx-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--ax-line-soft);
+  color: var(--ink);
+  vertical-align: middle;
+  font-variant-numeric: tabular-nums;
+}
+.dx-table :is(th, td):first-child { padding-left: 24px; }
+.dx-table :is(th, td):last-child { padding-right: 24px; }
+.dx-table tr:last-child td { border-bottom: none; }
+.dx-table tbody tr { transition: background-color 120ms ease; }
+.dx-table tbody tr:hover { background: var(--ax-fill-soft); }
+.dx-card > .dx-table th:first-child { border-top-left-radius: calc(var(--r-card) - 1px); }
+.dx-card > .dx-table th:last-child { border-top-right-radius: calc(var(--r-card) - 1px); }
+
+/* segmented control */
+.dx-segmented {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: 4px;
+  border-radius: var(--r-segmented);
+  background: var(--paper-3);
+}
+.dx-segmented > :is(button, a) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 31px;
+  padding: 5px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--r-control);
+  background: transparent;
+  color: var(--ink-3);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 18.75px;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+.dx-segmented > :is(button, a):hover {
+  color: var(--ink);
+}
+.dx-segmented > :is([aria-pressed="true"], [aria-selected="true"], [aria-current="page"], [aria-current="true"], [data-active="true"]) {
+  border-color: var(--line);
+  background: var(--paper-2);
+  color: var(--ink);
+  box-shadow: var(--ax-shadow-sm);
+}
+
+/* ==========================================================================
+   Badges, states
+   ========================================================================== */
+.dx-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--paper-3);
+  color: var(--ink-2);
+  font-family: var(--ax-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+}
+.dx-badge-clay { color: var(--brand-hover); background: var(--brand-soft); }
+.dx-badge-solid { color: var(--on-brand); background: var(--brand); }
+.dx-badge-bloom { color: var(--ax-bloom-ink); background: var(--ax-bloom); }
+.dx-badge-error { color: var(--intent-negative); background: var(--intent-negative-bg); }
+.dx-badge-warning { color: var(--intent-warning); background: var(--intent-warning-bg); }
+.dx-badge-success { color: var(--intent-positive); background: var(--intent-positive-bg); }
+html[data-theme="dark"] .dx-badge-clay { color: var(--brand); }
+
+.dx-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.dx-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dx-dot-ok { background: var(--ax-ok); }
+.dx-dot-attention { background: var(--ax-err); }
+.dx-dot-warning { background: var(--ax-warn); }
+.dx-dot-idle { background: transparent; box-shadow: inset 0 0 0 1.5px var(--ink-3); }
+.dx-dot-sync {
+  background: var(--brand);
+  animation-name: dx-pulse;
+  animation-duration: 1.4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@keyframes dx-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+/* ==========================================================================
+   Controls
+   ========================================================================== */
+.dx-btn,
+.dx-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 8px 16px;
+  border-radius: var(--r-control);
+  font-family: var(--ax-sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: normal;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity 150ms ease, background-color 150ms ease, color 150ms ease, border-color 150ms ease, scale 100ms ease;
+}
+.dx-btn {
+  border: 1px solid var(--action);
+  background: var(--action);
+  color: var(--on-action);
+}
+.dx-btn-ghost {
+  border: 1px solid var(--line-2);
+  background: var(--paper-2);
+  color: var(--ink);
+}
+.dx-btn-sm {
+  min-height: 32px;
+  padding: 6px 12px;
+}
+@media (hover: hover) {
+  .dx-btn:not(:disabled):hover { opacity: 0.85; }
+  .dx-btn-ghost:not(:disabled):hover { background: var(--ax-tint); }
+  .dx-text-link:hover { color: var(--ink); }
+  .dx-text-link:hover svg { transform: translateX(2px); }
+}
+.dx-btn:not(:disabled):active,
+.dx-btn-ghost:not(:disabled):active { scale: 0.98; }
+.dx-btn:disabled, .dx-btn-ghost:disabled { opacity: .5; cursor: not-allowed; }
+
+.dx-meter {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--paper-3);
+  overflow: hidden;
+}
+.dx-meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--brand);
+}
+
+.dx-toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  border: none;
+  background: var(--line-2);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+  flex-shrink: 0;
+}
+.dx-toggle[data-on="true"] { background: var(--brand); }
+.dx-toggle::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: var(--ax-shadow-sm);
+  transition: transform 200ms var(--ax-ease);
+}
+html[data-theme="dark"] .dx-toggle[data-on="true"]::after { background: var(--on-brand); }
+.dx-toggle[data-on="true"]::after { transform: translateX(16px); }
+
+.dx-icon-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-control);
+  background: var(--paper-3);
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.dx-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--brand) 25%, transparent);
+  background: var(--ax-sky);
+  color: var(--brand);
+  font-family: var(--ax-mono);
+  font-size: 11px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.dx-dashed {
+  border: 1px dashed var(--line-2);
+  border-radius: var(--r-card);
+  background: transparent;
+}
+
+/* ==========================================================================
+   Korean / Japanese
+   ========================================================================== */
+html:is(:lang(ko), :lang(ja)):has([data-surface="app"]) .dx-title {
+  font-size: 26px;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+html:lang(ko):has([data-surface="app"]) :is(.dx-title, .dx-sub, .dx-section-sub) {
+  word-break: keep-all;
+}
+
+@media (max-width: 640px) {
+  .dx-page-head { margin-bottom: 20px; }
+  .dx-title { font-size: 26px; }
+  .dx-section { margin-top: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dx-btn, .dx-btn-ghost, .dx-toggle::after { transition-duration: 0.01ms; }
+  .dx-dot-sync { animation: none; }
+}

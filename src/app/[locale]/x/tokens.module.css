@@ -1,0 +1,19 @@
+/* X-ray colors that have no editorial token (the indigo plate, amber "needs data", soft green),
+   declared once for /x and /x/<owner>/<repo>, with dark values. */
+.tokens {
+  --xr-plate: #0f2b84;
+  --xr-plate-hover: #0a1f60;
+  --xr-plate-muted: #c7cdf0;
+  --xr-plate-soft: #d9ddf5;
+  --xr-warn: #8a5a12;
+  --xr-warn-soft: #fbf3e2;
+  --xr-good-soft: #eef6f0;
+  --xr-grid: #ffffff0f;
+}
+:global([data-theme='dark']) .tokens {
+  --xr-plate: #1c2b7a;
+  --xr-plate-hover: #24378f;
+  --xr-warn: #f0c47a;
+  --xr-warn-soft: #3a3020;
+  --xr-good-soft: #1b3326;
+}

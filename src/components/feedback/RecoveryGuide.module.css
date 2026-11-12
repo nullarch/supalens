@@ -1,0 +1,368 @@
+/* ============================================================
+   Recovery guide — one card on the monitors pages.
+   Title row (state dot, 18px/500 title, muted count) → one disclosure
+   row per failure group → inside: the reason, the numbered steps as
+   divided rows, the fix action, the affected monitors as divided rows,
+   and the read-only check on a tinted surface.
+   ============================================================ */
+
+.wrap {
+  margin-bottom: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card, 16px);
+  background: var(--paper-2);
+  color: var(--ink);
+  overflow: hidden;
+  scroll-margin-top: 88px;
+}
+
+/* ---------- title row ---------- */
+.heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  padding: 18px 24px;
+}
+.signal {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ax-warn, var(--intent-warning));
+}
+.headingTitle {
+  margin: 0;
+  min-width: 0;
+  font-family: var(--ax-sans, var(--font-sans));
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+  color: var(--ink);
+}
+.headingMeta {
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- group disclosure ---------- */
+.group {
+  border-top: 1px solid var(--line);
+}
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 60px;
+  padding: 12px 20px 12px 24px;
+  cursor: pointer;
+  list-style: none;
+  transition: background-color 120ms ease;
+}
+.summary::-webkit-details-marker {
+  display: none;
+}
+@media (hover: hover) {
+  .summary:hover {
+    background: var(--ax-fill-soft, var(--paper-3));
+  }
+}
+.summaryText {
+  display: grid;
+  gap: 0;
+  flex: 1;
+  min-width: 0;
+}
+.summaryTitle {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.summaryMeta {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+  overflow-wrap: anywhere;
+}
+.chevron {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-control, 10px);
+  color: var(--ink-3);
+  transition: transform 200ms var(--ax-ease, ease), background-color 120ms ease;
+}
+.group[open] > .summary .chevron {
+  transform: rotate(180deg);
+}
+
+.body {
+  padding: 0 24px 24px;
+  font-size: 14px;
+  line-height: 22.75px;
+}
+.description {
+  margin: 0 0 16px;
+  max-width: 76ch;
+  color: var(--ink-2);
+}
+
+/* ---------- numbered steps: divided rows ---------- */
+.steps {
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.steps li {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  padding: 14px 16px;
+}
+.steps li + li {
+  border-top: 1px solid var(--ax-line-soft, var(--line));
+}
+.stepIndex {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--paper-3);
+  color: var(--ink-2);
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stepTitle {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--ink);
+}
+.steps p {
+  margin: 1px 0 0;
+  color: var(--ink-3);
+}
+
+/* ---------- actions ---------- */
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.actions :global(:is(.dx-btn, .dx-btn-ghost)),
+.foot :global(:is(.dx-btn, .dx-btn-ghost)) {
+  white-space: normal;
+  text-align: center;
+}
+.muted {
+  margin: 0;
+  max-width: 72ch;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.copyStatus p {
+  margin: 12px 0 0;
+  color: var(--ink-2);
+}
+.fallback {
+  display: block;
+  width: 100%;
+  min-height: 100px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-control, 10px);
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--ax-mono, var(--font-mono));
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* ---------- affected monitors ---------- */
+.monitors {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.monitors li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+  align-items: center;
+  gap: 4px 24px;
+  min-height: 48px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--ax-line-soft, var(--line));
+  overflow-wrap: anywhere;
+}
+.monitors a {
+  justify-self: start;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .monitors a:hover {
+    color: var(--brand);
+  }
+}
+.result {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: right;
+  color: var(--ink-3);
+}
+.result::before {
+  content: "";
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+.result[data-tone="success"] {
+  color: var(--intent-positive);
+}
+.result[data-tone="success"]::before {
+  background: var(--ax-ok, currentColor);
+  box-shadow: none;
+}
+.result[data-tone="warning"] {
+  color: var(--intent-warning);
+}
+.result[data-tone="warning"]::before {
+  background: var(--ax-warn, currentColor);
+  box-shadow: none;
+}
+.result[data-busy]::before {
+  background: var(--brand);
+  box-shadow: none;
+  animation-name: recovery-pulse;
+  animation-duration: 1.4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@keyframes recovery-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+/* ---------- read-only check ---------- */
+.verify {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid var(--ax-line-soft, var(--line));
+  border-radius: 12px;
+  background: var(--ax-tint, var(--paper-3));
+}
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.consent input {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin: 3px 0 0;
+  accent-color: var(--brand);
+}
+.foot {
+  color: var(--ink-2);
+}
+.foot p {
+  margin: 14px 0 10px;
+}
+
+.wrap :is(button, a, input, textarea):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.summary:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}
+
+:global(html:lang(ko)) .wrap {
+  word-break: keep-all;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 768px) {
+  .heading {
+    padding: 16px;
+  }
+  .summary {
+    padding: 10px 8px 10px 16px;
+  }
+  .body {
+    padding: 0 16px 20px;
+  }
+  .headingMeta {
+    margin-left: 17px;
+    flex-basis: 100%;
+  }
+  .chevron {
+    width: 44px;
+    height: 44px;
+  }
+  .monitors li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+  .monitors a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .result {
+    justify-content: flex-start;
+    text-align: left;
+  }
+  .actions :global(:is(.dx-btn, .dx-btn-ghost)),
+  .foot :global(:is(.dx-btn, .dx-btn-ghost)) {
+    min-height: 44px;
+  }
+  .consent {
+    min-height: 44px;
+  }
+  .verify {
+    padding: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron,
+  .summary {
+    transition-duration: 0.01ms;
+  }
+  .result[data-busy]::before {
+    animation-name: none;
+  }
+}

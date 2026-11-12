@@ -1,0 +1,140 @@
+/* 질문하기 — a single centered column (~760px). Hierarchy is size +
+   opacity only; the one clay note is the 서울 bar inside the chart. */
+
+.col {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+.h1 {
+  color: var(--cx-fg);
+  margin-bottom: 22px;
+}
+
+/* ---------------- input panel ---------------- */
+.panel {
+  background: var(--cx-bg);
+  border-radius: var(--cx-r-window);
+  box-shadow: inset 0 0 0 1px var(--cx-line-2);
+  padding: 14px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.textarea {
+  border: none;
+  outline: none;
+  resize: none;
+  width: 100%;
+  background: transparent;
+  color: var(--cx-fg);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.55;
+  padding: 4px 4px 0;
+}
+.textarea::placeholder {
+  color: var(--cx-text-ter);
+}
+.panelFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--cx-line-2);
+}
+.sourceTag {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cx-text-mid);
+}
+
+/* ---------------- recent chips ---------------- */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.chip {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--cx-text-sec);
+  background: var(--cx-card);
+  border: none;
+  border-radius: var(--cx-r-frame);
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: background var(--cx-dur) var(--cx-ease), color var(--cx-dur) var(--cx-ease);
+}
+.chip:hover {
+  background: var(--cx-card-2);
+  color: var(--cx-fg);
+}
+
+/* ---------------- completed analysis ---------------- */
+.result {
+  margin-top: 46px;
+  padding-top: 30px;
+  border-top: 1px solid var(--cx-line-3);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.question {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--cx-fg);
+  margin: 0;
+}
+.qMark {
+  margin-right: 0.15em;
+  color: var(--cx-text-ter);
+}
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.blockTag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cx-text-ter);
+}
+.sql {
+  margin: 0;
+  background: var(--cx-card);
+  border-radius: var(--cx-r-window);
+  padding: 15px 16px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--cx-text-sec);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
+}
+.sqlLine {
+  display: block;
+}
+.kw {
+  color: var(--cx-fg);
+}
+.insight {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--cx-text-sec);
+  margin: 0;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.actionLink {
+  font-size: 14px;
+}

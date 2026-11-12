@@ -1,0 +1,173 @@
+/* Pure CSS tiles — no chart lib. Design-system stat figures: a regular-weight SERIF value
+   with tight tracking and tabular numerals directly under the card title, a quiet
+   delta; tables as the design-system table shell (tinted head row, faint row lines) running
+   edge to edge inside the card. Token names exist in both the global and the /app
+   systems; on public pages --font-serif resolves to the global sans. */
+
+/* ---------- KPI ---------- */
+.kpi {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 6px;
+  height: 100%;
+  min-width: 0;
+  container-type: inline-size; /* figures scale to the WIDGET, not the viewport */
+}
+.kpiValue {
+  max-width: 100%;
+  font-family: var(--font-serif, var(--font-sans));
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(24px, 11cqw, 28px);
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.kpiDelta {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  font-size: 13px;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+.deltaFigure {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 500;
+}
+.deltaFigure svg {
+  flex-shrink: 0;
+}
+/* Favorability follows the stored comparison definition, never the accent color. */
+.good {
+  color: var(--ink-2);
+}
+.bad {
+  color: var(--intent-negative);
+}
+.deltaNote {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.kpiTarget {
+  font-size: 13px;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+
+/* ---------- big number ---------- */
+.big {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 6px;
+  height: 100%;
+  min-width: 0;
+  container-type: inline-size;
+}
+.bigValue {
+  max-width: 100%;
+  font-family: var(--font-serif, var(--font-sans));
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(28px, 12cqw, 36px);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.bigCaption {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+}
+
+/* ---------- table (Design-system table shell inside the card) ---------- */
+.tableWrap {
+  /* both axes scroll, bounded by the widget body height; the tinted head stays
+     pinned. The negative margins run the shell to the card edges (the body keeps
+     24px padding for everything else); the radius clips the last row's hover. */
+  flex: 0 1 auto;
+  margin: -4px -24px -24px;
+  overflow: auto;
+  min-height: 0;
+  min-width: 0;
+  border-radius: 0 0 calc(var(--r-card) - 1px) calc(var(--r-card) - 1px);
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+}
+.tableWrap:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}
+.tableCaption {
+  caption-side: bottom;
+  padding: 12px 24px;
+  text-align: start;
+  font-size: 13px;
+  color: var(--ink-3);
+  border-top: 1px solid var(--ax-line-soft, var(--line));
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 20px;
+}
+.table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 10px 16px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--ax-tint, var(--paper-3));
+  font-family: var(--font-sans);
+  font-size: 12.8px;
+  font-weight: 500;
+  line-height: 19px;
+  text-align: left;
+  white-space: nowrap;
+  color: var(--ink-3);
+}
+.table td {
+  min-width: 90px;
+  max-width: 36ch;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--ax-line-soft, var(--line));
+  vertical-align: middle;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.table :is(th, td):first-child {
+  padding-left: 24px;
+}
+.table :is(th, td):last-child {
+  padding-right: 24px;
+}
+.table tr:last-child td {
+  border-bottom: none;
+}
+.table tbody tr {
+  transition: background-color 120ms ease;
+}
+.table tbody tr:hover {
+  background: var(--ax-fill-soft, var(--paper-3));
+}
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+:global(html:lang(ko)) .table td {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}

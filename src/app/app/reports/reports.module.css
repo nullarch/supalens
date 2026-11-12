@@ -1,0 +1,614 @@
+/* ============================================================
+   Report feed + report document (app design system).
+   Cards: white, 1px line, 16px radius. A report reads top-down like a memo
+   header: type badge · importance meter · service · time, then the title, one
+   summary line, and tags. Tokens: src/app/app/dashboard.css.
+   ============================================================ */
+
+.feed {
+  display: grid;
+  /* minmax(0, 1fr): the tab strip scrolls inside the column instead of widening the page. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+  min-width: 0;
+}
+
+/* ---------- "Needs you" shelf ---------- */
+.shelf {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+.shelfHead {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.shelfTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+  color: var(--ink);
+}
+.count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.shelfNote {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+}
+
+/* ---------- log toolbar ---------- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-bottom: 16px;
+}
+.toolbar :global(.dx-section-title) {
+  margin: 0;
+}
+.tabs {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+.tabs > button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.tabCount {
+  margin-left: 2px;
+  font-size: 12px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.tagBar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin: -4px 0 16px;
+}
+.tagActive {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-hover);
+  font-size: 13px;
+  font-weight: 500;
+}
+.clearTag {
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  font: inherit;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.clearTag:hover {
+  color: var(--ink);
+}
+
+/* ---------- day groups ---------- */
+.group + .group {
+  margin-top: 28px;
+}
+.groupHead {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- report card ---------- */
+.card {
+  position: relative;
+  min-width: 0;
+  padding: 16px 20px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+  transition: box-shadow 150ms ease, border-color 150ms ease;
+}
+@media (hover: hover) {
+  .card:hover {
+    box-shadow: var(--ax-shadow-sm);
+  }
+}
+/* An open critical decision carries a thin red rule on its leading edge. */
+.card[data-action][data-importance="critical"] {
+  box-shadow: inset 3px 0 0 var(--ax-err);
+}
+@media (hover: hover) {
+  .card[data-action][data-importance="critical"]:hover {
+    box-shadow: inset 3px 0 0 var(--ax-err), var(--ax-shadow-sm);
+  }
+}
+.cardHead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  min-width: 0;
+}
+.cardMeta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0 8px;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.cardMeta > span + span::before {
+  content: "·";
+  margin-right: 8px;
+}
+.newMark {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--brand);
+}
+.newMark::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand);
+}
+.cardTitle {
+  margin: 8px 0 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.cardTitle button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+/* The whole card opens the report; tags sit above this layer. */
+.cardTitle button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.cardTitle button:focus-visible {
+  outline: none;
+}
+.card:has(.cardTitle button:focus-visible) {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.cardSummary {
+  margin: 2px 0 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+/* Quiet period: one muted line (badge · title · "no anomaly recorded"). */
+.card[data-compact] {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 10px 16px;
+  border-color: var(--ax-line-soft);
+  background: transparent;
+}
+.card[data-compact] .cardTitle {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.card[data-compact] .cardSummary {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+@media (hover: hover) {
+  .card[data-compact]:hover {
+    border-color: var(--line);
+    background: var(--paper-2);
+    box-shadow: none;
+  }
+}
+.cardFoot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 12px;
+}
+
+/* ---------- type badge ---------- */
+.typeBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--paper-3);
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.typeBadge[data-type="urgent"] {
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+}
+.typeBadge[data-type="resolved"] {
+  background: color-mix(in srgb, var(--ax-ok) 14%, transparent);
+  color: var(--ax-ok);
+}
+.typeBadge[data-type="weekly"] {
+  background: var(--brand-soft);
+  color: var(--brand-hover);
+}
+.typeBadge[data-type="analysis"] {
+  background: var(--ax-bloom);
+  color: var(--ax-bloom-ink);
+}
+:global(html[data-theme="dark"]) .typeBadge[data-type="weekly"] {
+  color: var(--brand);
+}
+
+/* ---------- importance meter: four rising bars ---------- */
+.importance {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+.bars > span {
+  width: 3px;
+  border-radius: 1px;
+  background: var(--line-2);
+}
+.bars > span:nth-child(1) { height: 4px; }
+.bars > span:nth-child(2) { height: 7px; }
+.bars > span:nth-child(3) { height: 10px; }
+.bars > span:nth-child(4) { height: 12px; }
+.importance[data-level="critical"] { color: var(--intent-negative); }
+.importance[data-level="critical"] .bars > span[data-on] { background: var(--ax-err); }
+.importance[data-level="high"] { color: var(--intent-warning); }
+.importance[data-level="high"] .bars > span[data-on] { background: var(--ax-warn); }
+.importance[data-level="normal"] .bars > span[data-on] { background: var(--ink-2); }
+.importance[data-level="low"] .bars > span[data-on] { background: var(--ink-3); }
+
+/* ---------- tags ---------- */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  min-height: 24px;
+  padding: 2px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--paper-3);
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.tag:hover {
+  background: var(--ax-current);
+  color: var(--ink);
+}
+.tag:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
+}
+.tag[data-kind="ai"] {
+  background: var(--ax-bloom);
+  color: var(--ax-bloom-ink);
+}
+.tag[data-kind="action"] {
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+}
+
+/* ---------- acknowledge stamp ---------- */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border: 1.5px solid currentColor;
+  border-radius: 6px;
+  color: var(--ax-err);
+  font-size: 12px;
+  line-height: 16px;
+  transform: rotate(-4deg);
+  white-space: nowrap;
+}
+.stamp[data-kind="expected"] {
+  color: var(--ink-3);
+}
+.stampWord {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.stampDate {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+}
+
+/* ---------- empty ---------- */
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 40px 24px;
+  border: 1px dashed var(--line-2);
+  border-radius: var(--r-card);
+  text-align: center;
+}
+.empty p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+}
+
+/* ---------- report document (memo) ---------- */
+.doc {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+.docBadges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: -6px;
+}
+.docBadges .stamp {
+  margin-left: auto;
+}
+.memo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 16px;
+  margin: 0;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.memo dt {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--ink-3);
+}
+.memo dd {
+  margin: 2px 0 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.docSection {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+.docSectionTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.docIndex {
+  font-family: var(--ax-mono);
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.docText {
+  margin: 0;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--ink);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.docNote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.docError {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--intent-negative);
+}
+.figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 2px 0 0;
+}
+.figure {
+  min-width: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--paper-3);
+}
+.figure dt {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--ink-3);
+}
+.figure dd {
+  margin: 4px 0 0;
+  font-family: var(--ax-serif);
+  font-size: 22px;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.figure dd[data-tone="negative"] {
+  color: var(--intent-negative);
+}
+.figure dd[data-tone="positive"] {
+  color: var(--ax-ok);
+}
+.lines td {
+  vertical-align: middle;
+}
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.lineService {
+  display: block;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ink-3);
+}
+.docActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.docFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.copy {
+  margin-left: auto;
+}
+
+/* ---------- Korean / Japanese ---------- */
+:global(html:lang(ko)) :is(.cardSummary, .shelfNote, .docText, .docNote) {
+  word-break: keep-all;
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 14px 16px;
+  }
+  .memo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tag {
+    min-height: 32px;
+  }
+  .docActions :global(.dx-btn),
+  .docActions :global(.dx-btn-ghost),
+  .copy {
+    min-height: 44px;
+  }
+  .newMark {
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .tag {
+    transition-duration: 0.01ms;
+  }
+}

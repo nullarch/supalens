@@ -1,0 +1,377 @@
+/* Editorial landing system — home page only (`/`, `/ko`, `/ja`).
+   The editorial design system:
+   regular-weight serif headings, DM Sans UI, DM Mono labels, white space,
+   pale lavender panels and a restrained deep indigo accent.
+   Pixel tokens keep the reference proportions without changing the 16px root
+   that /app and the other public routes use. */
+.ed {
+  --ed-serif: "Iowan Old Style BT", "Iowan Old Style", Georgia, var(--ed-font-serif-ko), serif;
+  --ed-sans: var(--ed-font-sans), "Pretendard Variable", Pretendard, "Apple SD Gothic Neo",
+    "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  --ed-mono: var(--ed-font-mono), ui-monospace, "SFMono-Regular", Menlo, Consolas,
+    "Pretendard Variable", Pretendard, "Hiragino Sans", monospace;
+
+  --ed-bg: #ffffff;
+  --ed-ink: #1a1a1a;
+  --ed-copy: #5a5764;
+  --ed-muted: #716d7e;
+  --ed-line: #e6e4ed;
+  --ed-line-soft: #f0eff4;
+  --ed-panel: #f9f8fb;
+  --ed-fill: #f5f4f8;
+  --ed-accent: #0f2b84;
+  --ed-on-accent: #ffffff;
+  --ed-accent-soft: #e6e9f5;
+  --ed-tag-bg: #f3f5fc;
+  --ed-bloom: #dd7ef4;
+  --ed-bloom-ink: #604b7a;
+  --ed-band: #1a1a1a;
+  --ed-on-band: #ffffff;
+  --ed-on-band-muted: #b8b8c0;
+  --ed-on-band-line: #ffffff24;
+  /* Sample alert states only (monitoring section): fired / all-clear. */
+  --ed-signal: #b42318;
+  --ed-signal-soft: #fdf0ee;
+  --ed-positive: #1b7447;
+
+  --ed-content: 1080px;
+  --ed-wide: 1150px;
+  --ed-gutter: clamp(18.75px, 4vw, 45px);
+  --ed-section-gap: clamp(90px, 12vw, 135px);
+  --ed-content-gap: clamp(30px, 3.5vw, 45px);
+  --ed-card-pad: clamp(22.5px, 2.5vw, 30px);
+  --ed-r-button: 10px;
+  --ed-r-tag: 8px;
+  --ed-r-panel: 30px;
+  --ed-r-inset: 14px;
+  --ed-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  display: block;
+  overflow-x: clip;
+  background: var(--ed-bg);
+  color: var(--ed-ink);
+  font-family: var(--ed-sans);
+  font-size: 15px;
+  line-height: 1.625;
+  font-weight: 400;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.ed:lang(ja) {
+  --ed-serif: "Iowan Old Style BT", "Iowan Old Style", Georgia, var(--ed-font-serif-ja), serif;
+  --ed-sans: var(--ed-font-sans), "Hiragino Sans", "Yu Gothic", "Pretendard Variable", Pretendard,
+    system-ui, sans-serif;
+}
+[data-theme="dark"] .ed {
+  --ed-bg: #16171c;
+  --ed-ink: #f4f3f8;
+  --ed-copy: #c3c1ce;
+  --ed-muted: #a8a5b8;
+  --ed-line: #34353f;
+  --ed-line-soft: #2a2b33;
+  --ed-panel: #1d1e25;
+  --ed-fill: #23242c;
+  --ed-accent: #afbeff;
+  --ed-on-accent: #16171c;
+  --ed-accent-soft: #283152;
+  --ed-tag-bg: #1f2233;
+  --ed-bloom-ink: #e7c3f2;
+  --ed-band: #0e0f13;
+  --ed-on-band-muted: #b8b8c0;
+  --ed-signal: #ff9d91;
+  --ed-signal-soft: #3a2224;
+  --ed-positive: #7fd1a3;
+}
+
+/* Base rules use :where() so component classes always win. */
+.ed ::selection {
+  background: var(--ed-accent-soft);
+  color: var(--ed-ink);
+}
+:where(.ed) :where(h1, h2, h3, h4, p, ul, ol, dl, dd, figure) {
+  margin: 0;
+}
+:where(.ed) :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+:where(.ed) :where(h1, h2) {
+  font-family: var(--ed-serif);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+:where(.ed) :where(h3, h4, strong, b) {
+  font-weight: 400;
+}
+:where(.ed) :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+:where(.ed) :where(a, button, summary):focus-visible {
+  outline: 2px solid var(--ed-accent);
+  outline-offset: 2px;
+}
+:where(.ed) :where(section, article)[id] {
+  scroll-margin-top: 80px;
+}
+/* Korean and Japanese: no negative tracking, word-safe wrapping. */
+:where(.ed:is(:lang(ko), :lang(ja))) :where(h1, h2) {
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+}
+:where(.ed:lang(ko)) :where(p, li, dd, h3) {
+  word-break: keep-all;
+}
+
+/* ---------- layout ---------- */
+.ed-container {
+  width: min(100% - 2 * var(--ed-gutter), var(--ed-content));
+  margin-inline: auto;
+}
+.ed-wide {
+  width: min(100% - 2 * var(--ed-gutter), var(--ed-wide));
+  margin-inline: auto;
+}
+.ed-section {
+  margin-top: var(--ed-section-gap);
+}
+
+/* ---------- section heading ---------- */
+.ed-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: var(--ed-content-gap);
+}
+.ed-head--split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 15px 40px;
+}
+.ed-head--split > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.ed-title {
+  margin-top: 15px;
+  max-width: 22ch;
+  font-size: 46px;
+  line-height: 1.14;
+  white-space: pre-line;
+}
+.ed-title > span {
+  display: block;
+}
+.ed-lede {
+  margin-top: 15px;
+  max-width: min(690px, 100%);
+  color: var(--ed-copy);
+  font-size: 17px;
+  line-height: 1.625;
+}
+.ed-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  color: var(--ed-ink);
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: color 180ms ease;
+}
+.ed-text-link svg {
+  transition: transform 180ms ease;
+}
+
+/* ---------- tags ---------- */
+.ed-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 5px 10px;
+  border: 1px solid color-mix(in srgb, var(--ed-accent) 25%, transparent);
+  border-radius: var(--ed-r-tag);
+  background: var(--ed-tag-bg);
+  color: var(--ed-accent);
+  font-family: var(--ed-mono);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ed-tag--small {
+  padding: 3px 7px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+.ed-tag--neutral {
+  border-color: var(--ed-line);
+  background: var(--ed-bg);
+  color: var(--ed-copy);
+  font-weight: 400;
+  text-transform: none;
+}
+.ed-tag--bloom {
+  border-color: color-mix(in srgb, var(--ed-bloom) 62%, var(--ed-line));
+  background: color-mix(in srgb, var(--ed-bloom) 12%, transparent);
+  color: var(--ed-bloom-ink);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+/* Mono spaces read as gaps between Hangul/kana words: translated tags use the
+   UI sans; code identifiers (.ed-tag--code) stay mono in every locale. */
+.ed:is(:lang(ko), :lang(ja)) .ed-tag:not(.ed-tag--code) {
+  font-family: var(--ed-sans);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- buttons ---------- */
+.ed-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 47px;
+  padding: 11px 22px;
+  border: 1px solid var(--ed-line);
+  border-radius: var(--ed-r-button);
+  background-color: var(--ed-bg);
+  background-image: linear-gradient(var(--ed-accent), var(--ed-accent));
+  background-repeat: no-repeat;
+  background-size: 0 100%;
+  color: var(--ed-ink);
+  font-family: var(--ed-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-size 360ms var(--ed-ease),
+    color 180ms ease,
+    border-color 180ms ease;
+}
+.ed-button--primary {
+  border-color: var(--ed-ink);
+  background-color: var(--ed-ink);
+  color: var(--ed-bg);
+}
+.ed-button--small {
+  min-height: 33px;
+  padding: 5px 13px;
+  font-size: 13px;
+}
+.ed-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+}
+@media (hover: hover) {
+  .ed-button:hover {
+    border-color: var(--ed-accent);
+    background-size: 100% 100%;
+    color: var(--ed-on-accent);
+  }
+  .ed-text-link:hover {
+    color: var(--ed-accent);
+  }
+  .ed-text-link:hover svg {
+    transform: translateX(2px);
+  }
+}
+
+/* ---------- surfaces ---------- */
+.ed-panel {
+  border: 1px solid var(--ed-line-soft);
+  border-radius: var(--ed-r-panel);
+  background: var(--ed-panel);
+}
+/* Blurred indigo → violet field with SVG film grain (soft-light, .16). */
+.ed-film {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(55% 70% at 8% 72%, #070b3a 0%, transparent 70%),
+    radial-gradient(60% 80% at 34% 58%, #22308f 0%, transparent 72%),
+    radial-gradient(70% 90% at 86% 22%, #a592bb 0%, transparent 70%),
+    radial-gradient(60% 70% at 70% 100%, #7b6aa6 0%, transparent 70%),
+    linear-gradient(100deg, #0b1150 0%, #2c3590 36%, #6f64a2 68%, #9c8cb5 100%);
+}
+.ed-film::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.16;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* Reused product mocks keep the product typeface. */
+.ed-product {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: normal;
+}
+.ed-product :is(h2, h3) {
+  font-family: var(--font-sans);
+  letter-spacing: normal;
+}
+
+/* ---------- reveal (see RevealOnScroll) ---------- */
+.ed [data-reveal] {
+  transition:
+    opacity 520ms var(--ed-ease),
+    transform 520ms var(--ed-ease);
+}
+.ed [data-reveal="pending"] {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 640px) {
+  .ed-title {
+    font-size: 40px;
+    line-height: 1.14;
+  }
+  .ed-head--split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 380px) {
+  .ed-title {
+    font-size: 34px;
+  }
+}
+.ed:is(:lang(ko), :lang(ja)) .ed-title {
+  font-size: 42px;
+  line-height: 1.28;
+}
+@media (max-width: 640px) {
+  .ed:is(:lang(ko), :lang(ja)) .ed-title {
+    font-size: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ed *,
+  .ed *::before,
+  .ed *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .ed [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}

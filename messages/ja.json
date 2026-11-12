@@ -1,0 +1,5158 @@
+{
+  "appRecovery": {
+    "authorizationSaved": "認証更新済み · データ取得の確認が必要です",
+    "authorizationSavedBody": "最後の認証エラー以降に接続の認証が更新されました。再認証せず、以下でモニターのクエリを確認してください。以前のエラーは確認に成功すると解除されます。",
+    "feedback": {
+      "planLimited": "プランの接続上限により、一部のプロジェクトは追加されませんでした。認証の失敗ではありません。",
+      "billing": "プランの上限を確認",
+      "label": "Supabase 接続結果",
+      "checkingTitle": "認証結果を確認しています",
+      "checkingBody": "サーバーに保存された接続状態を確認しています。再認証せず、しばらくお待ちください。",
+      "authorizedTitle": "Supabase の認証が更新されました",
+      "authorizedBody": "保存された接続が有効であることを確認しました。モニターのデータ取得は別途確認が必要です。以下から読み取り専用の確認を行ってください。",
+      "connectedTitle": "Supabase の接続情報が保存されました",
+      "connectedBody": "有効なデータソースが登録されています。データソース画面で設定を続けてください。モニターのクエリ成功を意味するものではありません。",
+      "selectTitle": "Supabase 認証済み · プロジェクトを選択",
+      "selectBody": "接続は有効です。監視するプロジェクトを選択し、データソース設定を続けてください。",
+      "pendingTitle": "認証情報の保存状態を確認しています",
+      "pendingBody": "接続処理が進行中です。この画面で保存状態を自動的に確認します。",
+      "importingTitle": "認証済み · データソースを準備しています",
+      "importingBody": "接続は有効で、データソースの登録を待っています。準備が完了すると案内が自動的に更新されます。",
+      "delayedTitle": "接続の準備に時間がかかっています",
+      "delayedBody": "待機時間内に完了を確認できませんでした。再認証する前に、状態を再確認するか接続設定を確認してください。",
+      "unconfirmedTitle": "接続結果の確認が必要です",
+      "unconfirmedBody": "現在の保存状態を確認できませんでした。認証に失敗したとは限りません。状態を再確認してください。",
+      "unavailableBody": "保存された接続は有効ではありません。接続設定で現在の状態と必要な対応を確認してください。",
+      "verify": "モニターの復旧を確認",
+      "select": "プロジェクトを選択",
+      "sources": "データソースを確認",
+      "retry": "状態を再確認",
+      "dismiss": "接続結果の案内を閉じる"
+    },
+    "heading": "チェックエラーを解決",
+    "affected": "影響するモニター {count}件",
+    "count": "モニター {count}件",
+    "unknownSource": "データソースを要確認",
+    "stepIdentify": "影響範囲を確認",
+    "stepFix": "原因に対処",
+    "stepVerify": "データ取得を検証",
+    "shared": "同じ Supabase 接続を使用していることが確認されたモニターです。この接続を一度再認証してください。",
+    "isolated": "影響が確認されたのはこのモニターです。他の接続にも問題があるとは限りません。",
+    "verifyHint": "対処後、下で再チェックしてください。再認証だけではクエリの正常動作は確認できません。",
+    "reauthorize": "この接続を再認証",
+    "inspectConnection": "接続を確認",
+    "inspectSource": "データソースを確認",
+    "editQuery": "モニターのクエリを修正",
+    "preserved": "既存の接続・モニター・インシデント履歴は維持されます。対象プロジェクトが属する Supabase 組織を選択してください。",
+    "adminRequired": "ワークスペースのオーナーまたは管理者に変更を依頼してください。",
+    "copyRequest": "管理者への依頼をコピー",
+    "request": "Supalens モニターの復旧を依頼します。モニター: {names}。データソース: {source}。記録された問題: {reason}。既存の接続とクエリを確認し、対処後にデータ取得を検証してください。",
+    "copied": "依頼をコピーしました。ワークスペース管理者に共有してください。",
+    "copyFailed": "自動コピーに失敗しました。以下を選択してコピーしてください。",
+    "checking": "確認中…",
+    "paused": "一時停止中 — モニターを再開してから検証してください。",
+    "notVerified": "データ取得は未確認",
+    "verified": "クエリと保存を確認 · 値 {value}",
+    "verifiedCondition": "クエリと保存を確認 · 値 {value} はアラート条件に該当",
+    "consent": "次の {count}件を読み取り専用で順に実行します。成功した値と確認時刻を Supalens に保存します。通知送信やインシデント履歴の変更は行いません。",
+    "limit": "1回最大5件 · クエリごとに15秒まで · 再試行は30秒後",
+    "check": "{count}件の復旧を検証",
+    "retry": "残り{count}件を確認",
+    "progress": "有効なモニター{total}件中{count}件の取得・保存を確認。",
+    "incidentPreserved": "インシデント状態は維持されます。アラート発生・解消は定期チェックで判定します。",
+    "refresh": "保存された状態を更新",
+    "openMonitors": "モニターの復旧画面へ",
+    "kinds": {
+      "authorization": {
+        "title": "Supabase の再認証が必要です",
+        "body": "直近のチェックに認証エラーが記録されています。現在値は未確認です。過去の値は復旧の証拠ではありません。",
+        "fix": "既存の接続を再認証し、関連するすべてのプロジェクトへのアクセスを許可してください。権限がない場合はプロジェクト管理者に依頼してください。"
+      },
+      "scalar": {
+        "title": "クエリから数値を取得できません",
+        "body": "このモニターには条件と比較する数値が必要です。",
+        "fix": "SQL とデータソースを確認してください。COUNT(*) などの数値を返し、空の結果や NULL の扱いを明示してください。"
+      },
+      "seriesLong": {
+        "title": "観測データが多すぎます",
+        "body": "異常検知で使用できる時系列の上限を超えました。",
+        "fix": "取得期間を短くするか集計してください。時系列順に最大2,000件の観測値を返してください。"
+      },
+      "seriesShort": {
+        "title": "有効な観測データが不足しています",
+        "body": "異常検知で使用できる数値時系列を読み取れませんでした。",
+        "fix": "データソース・期間・数値列を確認し、時系列順の数値データを返してください。"
+      },
+      "sourceRemoved": {
+        "title": "データソースが見つかりません",
+        "body": "このモニターのデータソースをワークスペース内で確認できません。",
+        "fix": "利用可能なソースを確認してください。元のソースが削除された場合は、有効なソースで新しいモニターを設定してください。無関係なアカウントは再接続しないでください。"
+      },
+      "unknown": {
+        "title": "チェックを完了できませんでした",
+        "body": "原因は未確認です。このエラーだけで認証問題とは判断できません。",
+        "fix": "SQL とソースへのアクセスを確認し、対処後に再実行してください。繰り返す場合はモニターのリンクを管理者に共有してください。"
+      }
+    },
+    "failures": {
+      "authorization": "認証の問題が残っています。対象接続を再認証してください。",
+      "scalar": "数値がありません。クエリを修正してください。",
+      "seriesLong": "データが多すぎます。取得範囲を減らしてください。",
+      "seriesShort": "有効な時系列がありません。クエリを確認してください。",
+      "sourceRemoved": "ソースがありません。データソースを確認してください。",
+      "unknown": "原因は未確認です。クエリとソースを確認し再試行してください。",
+      "denied": "権限がありません。管理者に依頼してください。",
+      "unavailable": "モニターまたはソースを利用できません。更新してアクセス権を確認してください。",
+      "paused": "一時停止中です。再開後に確認してください。",
+      "changed": "確認中にモニターが変更されました。更新して再試行してください。",
+      "unconfirmed": "結果または保存を確認できませんでした。更新して再試行してください。",
+      "retryLater": "このモニターは30秒後に再試行してください。"
+    },
+    "returns": {
+      "authorized": "認証画面から戻りました。復旧はまだ未確認です。下の読み取り専用チェックでデータ取得を確認してください。",
+      "cancelled": "認証をキャンセルしました。この試行では接続は復旧していません。準備ができたら再認証してください。",
+      "expired": "認証セッションが期限切れか検証できませんでした。対象モニターから再認証を開始してください。",
+      "denied": "この接続を復旧する権限がありません。ワークスペースのオーナーまたは管理者に依頼してください。",
+      "unavailable": "認証を完了できませんでした。接続を確認して再試行してください。繰り返す場合は管理者に問い合わせてください。",
+      "projectMismatch": "選択した認証では関連する全プロジェクトにアクセスできません。対象プロジェクトが属する Supabase 組織で再認証してください。",
+      "cleanupPending": "以前の認証情報を整理中です。後で再試行し、続く場合は管理者に問い合わせてください。新しい認証情報は保存していません。",
+      "changed": "別の操作で接続が変更されました。保存状態を更新してから再試行してください。",
+      "unconfirmed": "認証情報の保存を確認できませんでした。接続状態を更新して再試行してください。復旧済みと判断しないでください。"
+    }
+  },
+  "proxyCheckout": {
+    "metadataTitle": "お支払い · Supalens Pay",
+    "eyebrow": "パートナーサービスのお支払い",
+    "title": "{partner}のお支払い",
+    "partnerFallback": "ご利用のサービス",
+    "description": "お支払いの前に、Paddleの決済画面で価格、通貨、請求条件をご確認ください。",
+    "reopen": "決済画面を再度開く",
+    "return": "{partner}に戻る",
+    "fulfillment": "サービスの利用権限は、お支払いの処理後にサービス側で確認されます。サービスに戻るだけでは、利用権限の準備完了を意味しません。",
+    "navigationFailed": "戻るリクエストを完了できませんでした。下のリンクからお戻りください。決済画面は再度開きません。",
+    "states": {
+      "loading": {
+        "title": "お支払いを準備しています",
+        "body": "決済サービスに接続しています。"
+      },
+      "opening": {
+        "title": "決済画面を開いています",
+        "body": "決済画面の読み込みを待っています。"
+      },
+      "open": {
+        "title": "決済画面が開きました",
+        "body": "Paddleの決済画面でお進みください。"
+      },
+      "closed": {
+        "title": "決済画面を閉じました",
+        "body": "このページでは完了の通知を受け取っていません。同じ決済画面を再度開くか、{partner}に戻って状況をご確認ください。"
+      },
+      "completed": {
+        "title": "決済画面での完了を確認しました",
+        "body": "Paddleから決済完了の通知が届きました。{partner}に戻ります…"
+      },
+      "error": {
+        "title": "決済画面を利用できません",
+        "body": "決済画面で続行できません。再試行する前に、{partner}に戻ってお支払い状況をご確認ください。"
+      }
+    }
+  },
+  "globalWorkflow": {
+    "eyebrow": "ビジネスの文脈から、次の確認へ",
+    "title": "探す時間を減らし、",
+    "titleMuted": "理解を深める。",
+    "description": "Supabase で事業を運営する創業者と小さなチームのために。インフラの指標だけでは見えないビジネスの変化を確認します。",
+    "rule": "決済後の権限未付与",
+    "approved": "人が承認する監視ルール",
+    "signal": "シグナルを検出",
+    "evidence": "根拠 → 仮説 → 次の確認",
+    "items": [
+      {
+        "title": "ビジネスの文脈から。",
+        "body": "データベースとリポジトリを接続し、Supalens が理解した内容を確認。実際の事業に合ったモニターの提案を受けられます。"
+      },
+      {
+        "title": "重要な指標を選ぶ。",
+        "body": "監視を始める前に定義としきい値を確認。ビジネスのルールを見える形に保ち、必要な指標を承認します。"
+      },
+      {
+        "title": "シグナルから根拠へ。",
+        "body": "観測された事実、まだ不確かな仮説、次の確認事項を区別。Slack やメールで変化を受け取れます。"
+      }
+    ],
+    "positioning": "インフラは正常でも、\n顧客体験はそうとは限りません。",
+    "useCases": [
+      "決済後の権限未付与",
+      "有料ジョブの失敗",
+      "転換率の変化"
+    ]
+  },
+  "connections": {
+    "tag": "接続先",
+    "title": "いま使っているデータベースをそのまま",
+    "lede": "読み取り専用の権限で数分で接続できます。Supalens に書き込み権限は不要で、認証情報は暗号化して保管します。",
+    "methods": {
+      "supabase": "ワンクリックの OAuth 接続。プロジェクトごとに読み取り専用ロールを自動で作成します。",
+      "postgresql": "読み取り専用ユーザーの接続情報で接続。セルフホスト、Neon、Amazon RDS に対応。",
+      "mysql": "読み取り専用ユーザーの接続情報で接続。セルフホスト、PlanetScale、Amazon RDS に対応。",
+      "firestore": "Datastore 閲覧者ロールを持つ Google サービスアカウントで接続します。"
+    },
+    "capabilities": {
+      "questions": "自然言語での質問",
+      "kpis": "KPI の自動提案",
+      "monitors": "モニターとアラート"
+    },
+    "supported": "対応",
+    "notSupported": "非対応",
+    "note": "GitHub のコード文脈はすべてのソースに追加できます。KPI の自動提案とモニターは SQL データベースでのみ動作します。"
+  },
+  "globalProduct": {
+    "eyebrow": "SUPABASE チームのための AI データオペレーター",
+    "headline": "ビジネスが発するシグナル。",
+    "headlineMuted": "重要な変化を見つける。",
+    "description": "プロダクトを支える重要な指標を監視。\n何が変わったのかを根拠とともに確認し、\n開発に集中できます。",
+    "connect": "Supabase を接続",
+    "how": "仕組みを見る",
+    "trust": "読み取り専用アクセス · 人が承認するモニター",
+    "connectsTo": "接続先",
+    "previewLabel": "製品プレビュー · サンプルデータ",
+    "tryDemo": "ライブデモを試す",
+    "sampleWorkspace": "サンプルワークスペース",
+    "overview": "概要",
+    "monitors": "モニター",
+    "investigation": "調査",
+    "readOnly": "読み取り専用接続",
+    "overviewTitle": "ビジネスの概要",
+    "overviewSub": "今、確認すべき変化を一目で。",
+    "signalTitle": "確認が必要なシグナルが1件あります",
+    "signalDescription": "決済完了の3件に有効な利用権限がありません。",
+    "active": "有効なモニター",
+    "healthy": "正常",
+    "attention": "要確認",
+    "priority": "主要モニター",
+    "orders": "{count}件",
+    "monitor": {
+      "access": "決済後の権限未付与",
+      "jobs": "有料ジョブの失敗率",
+      "conversion": "トライアルからの転換率"
+    },
+    "issue": "異常",
+    "sampleNote": "説明用のサンプルです。本番データベースには接続していません。",
+    "investigationTitle": "決済は完了。\nでも、権限がありません。",
+    "investigationDescription": "3件の注文に対応する有効な権限がありません。まず根拠を確認しましょう。",
+    "confirmed": "データで確認された事実",
+    "factPayment": "決済ステータス：完了",
+    "factAccess": "有効な利用権限：なし",
+    "nextCheck": "次に確認すること",
+    "hypothesis": "未検証の仮説：権限付与の遅延や漏れが考えられます。ジョブログと再試行履歴を確認してください。このデータだけでは原因を特定できません。"
+  },
+  "alertDemo": {
+    "eyebrow": "モニタリング · 原因調査",
+    "title": "重要なシグナルを、いつもの場所で。",
+    "lede": "承認したモニターが異常を検出すると、データと保存済みコードの文脈を調査。確認された事実と可能性のある原因を区別して Slack やメールに届け、指標が回復すると復旧を通知します。",
+    "confirmedTag": "データで確認済み",
+    "likelyTag": "可能性の高い原因",
+    "attribution": "Supalensが調査 · 原因は仮説であり確認が必要です",
+    "recoveryLabel": "回復したら",
+    "recoveryTime": "午後6:40",
+    "slack": {
+      "time": "午後2:14",
+      "alertTitle": "日次売上がベースラインを下回りました",
+      "baseline": "ベースライン ₩4.2M",
+      "metaMetric": "指標",
+      "metaCondition": "条件",
+      "metaSource": "ソース",
+      "sourceValue": "DailyCart · prod",
+      "facts": [
+        "決済失敗率 0.3% → 7.8%",
+        "更新売上 −31% · 新規サブスク −4%",
+        "日本 −52% · 米国 正常"
+      ],
+      "likely": "7/5に反映されたクーポン移行(0051_coupons.sql)以降、決済確定ステップでの失敗が増えた可能性が高いです。コードコンテキストに基づき、checkout確定ロジックを先に確認してください。",
+      "resolved": "異常が回復すると<b>正常化通知</b>が自動で続きます。"
+    },
+    "email": {
+      "chromeTitle": "メール",
+      "subjectLabel": "件名",
+      "subject": "[supalens] 日次売上の異常を検知",
+      "toLabel": "宛先",
+      "lede": "<b>日次売上</b>がベースライン ₩4.2M を下回りました。(₩3.1M · −26%)",
+      "facts": "確認済み — 決済失敗率 0.3% → 7.8%、更新売上 −31%。",
+      "cause": "仮説 — 7/5のクーポン移行以降、決済確定ステップの失敗。",
+      "button": "Supalensで開く"
+    }
+  },
+  "appAsk": {
+    "supabaseNotConfigured": "Supabase が設定されていません。",
+    "title": "AI 分析",
+    "historyLink": "分析履歴 →",
+    "lede": "接続したデータソースに質問すると、LLM が直接 SQL でクエリ・推論して回答します（読み取り専用）。",
+    "empty": {
+      "noSources": "接続されているデータソースがありません。",
+      "connectCta": "データソースを接続する →"
+    },
+    "history": {
+      "title": "分析履歴",
+      "sub": "最近の分析実行を会話単位でまとめて表示します。",
+      "newRun": "新しい分析 →",
+      "empty": "まだ分析履歴がありません。",
+      "emptyCta": "最初の質問をする →",
+      "col": {
+        "question": "質問",
+        "source": "データソース",
+        "status": "ステータス",
+        "time": "時刻"
+      },
+      "status": {
+        "queued": "待機中",
+        "running": "実行中",
+        "succeeded": "完了",
+        "failed": "失敗",
+        "cancelled": "キャンセル済み",
+        "unknown": "不明な状態"
+      },
+      "prev": "前へ",
+      "next": "次へ",
+      "origin": {
+        "web": "Web",
+        "slack": "Slack",
+        "mcp": "MCP",
+        "incident": "原因調査",
+        "digest": "ダイジェスト",
+        "system": "システム",
+        "monitor": "モニターの下書き"
+      },
+      "group": {
+        "runs": "{count}ターン",
+        "single": "1ターン"
+      },
+      "filter": {
+        "all": "すべて",
+        "investigations": "原因調査のみ",
+        "label": "表示"
+      },
+      "viewIncident": "インシデントを見る →",
+      "groupingNote": "データソース・作成者・時刻によるグループです。保存された会話スレッドではありません。",
+      "timezone": "すべての時刻は UTC です。",
+      "loadFailed": "履歴を読み込めませんでした。分析履歴がないという意味ではありません。",
+      "retry": "履歴を再読み込み",
+      "noInvestigations": "このページに調査履歴はありません。",
+      "emptyPage": "このページに分析履歴はありません。",
+      "duration": "所要時間: {value}",
+      "milliseconds": "{value} ms",
+      "seconds": "{value} 秒",
+      "pagination": "履歴ページ"
+    },
+    "run": {
+      "back": "← 分析履歴",
+      "failed": "実行失敗",
+      "noAnswer": "保存された回答がありません。",
+      "snapshot": "保存済みの結果です。このページで値は再取得されません。",
+      "recordedProgress": "リアルタイムの進捗ではなく、最後に保存された状態です。結果を確認するには再読み込みしてください。"
+    },
+    "share": {
+      "copied": "共有リンクをコピーしました",
+      "unshare": "共有を解除",
+      "retry": "失敗 — 再試行",
+      "creating": "作成中…",
+      "copy": "共有リンクをコピー",
+      "manage": "回答を共有",
+      "publicNotice": "リンクを持つ人はログインせずに保存された質問・回答・チャートを閲覧できます。公開リンクの作成前に機密情報がないか確認してください。",
+      "create": "公開リンクを作成",
+      "created": "公開リンクを用意しました。以下からコピーして共有できます。",
+      "urlLabel": "公開共有リンク",
+      "createFailed": "共有リクエストが拒否されました。再試行前に権限を確認してください。以前の公開リンクは有効な可能性があります。",
+      "createUnknown": "共有結果を確認できませんでした。利用できるリンクが返されなくても、公開リンクがすでに有効になっている可能性があります。",
+      "copyFailed": "リンクはありますが、クリップボードにコピーできませんでした。上のリンクを手動でコピーするか、コピーを再試行してください。",
+      "revokeFailed": "公開アクセスの解除が拒否されました。非公開になったと判断しないでください。再試行前に権限を確認してください。",
+      "revokeUnknown": "公開アクセスの解除を確認できませんでした。リンクはまだ有効な可能性があります。",
+      "retryUnshare": "公開アクセスの解除を要求",
+      "uncertainHint": "リンクの作成とコピーを一時停止しています。公開アクセスの解除を明示的に要求できます。この操作はリンクを作成しません。解除の応答を受け取った後、必要なら新しいリンクを作成してください。",
+      "revoked": "公開アクセス解除の応答を受け取りました。他の人が保存済みのコピーは回収できません。",
+      "revokeHint": "以前作成したリンクも共有解除できます。他の人が保存済みのコピーは回収できません。"
+    },
+    "cancel": {
+      "stopping": "停止中…",
+      "stop": "分析を停止",
+      "requested": "停止リクエストを受け付けました。処理が完了する場合もあるため、保存された状態を確認してください。",
+      "terminal": "停止リクエストの処理時点で分析はすでに終了していました。",
+      "failed": "サーバーが停止リクエストを拒否しました。再試行前にアクセス権と保存された状態を確認してください。",
+      "unknown": "停止結果を確認できませんでした。処理が続いている可能性があるため、保存された状態を確認するまで再要求を停止しています。",
+      "viewHistory": "保存された状態を見る"
+    },
+    "quota": {
+      "default": "今回の請求サイクルの利用量上限に達しました。",
+      "upgrade": "プランをアップグレード →"
+    },
+    "demo": {
+      "banner": "サンプルデータで体験中 — 気軽に質問してください（利用量は消費されません）。",
+      "tag": "デモ",
+      "connectCta": "自分の DB を接続する →"
+    },
+    "context": {
+      "note": "このソースは {kind} コンテキスト（SUPALENS.md）で回答の根拠を強化します。",
+      "code": "コード・スキーマ",
+      "schema": "スキーマ"
+    },
+    "repoHint": {
+      "note": "リポジトリを接続すると、実際のコードに基づいて回答します。",
+      "cta": "SetupでGitHubを接続 →"
+    },
+    "contextGate": {
+      "titleRepo": "このソースにはまだコードコンテキストがありません",
+      "titleSchema": "このソースにはまだコンテキストがありません",
+      "descRepo": "連携中のリポジトリを分析して SUPALENS.md コンテキストを作成すると、実際のコードを反映してより正確に回答できます。先に抽出しますか、それともこのまま進めますか？",
+      "descSchema": "スキーマを分析してコンテキストを作成すると、より正確に回答できます。先に生成しますか、それともこのまま進めますか？",
+      "extractRepo": "コンテキストを抽出してから続行",
+      "extractSchema": "コンテキストを生成してから続行",
+      "proceed": "そのまま続行",
+      "extractingRepo": "コンテキストを準備中です。結果の確認を待っています…",
+      "extractingSchema": "スキーマを分析中…",
+      "proceedNow": "待たずに続行",
+      "failed": "コンテキストが未準備か、結果を確認できませんでした。再試行するか、コンテキストなしで続行してください。",
+      "quota": "今サイクルの利用量を超えているため、今はコンテキストを抽出できません。",
+      "proceedAnyway": "コンテキストなしで続行",
+      "contextLimit": "無料プランのコンテキスト抽出1回分をすでに使用しています。再度抽出するにはプランをアップグレードしてください。",
+      "background": "続行しても、送信済みのコンテキストリクエストはキャンセルされません。"
+    },
+    "chat": {
+      "placeholder": "データについて何でも聞いてください…",
+      "send": "送信",
+      "sourceLabel": "データソース",
+      "thinking": "分析中…",
+      "sqlSteps": "SQL ツールへのリクエスト {count} 件",
+      "toolSteps": "ツールへのリクエスト {count} 件",
+      "welcomeTitle": "今日は何を分析しましょうか？",
+      "newChat": "新しい会話",
+      "demoChips": [
+        "先月の売上推移を見せて",
+        "一番売れた商品トップ5は?",
+        "国別の顧客数を教えて"
+      ],
+      "questionLabel": "質問",
+      "startUnconfirmed": "分析開始を確認できませんでした。質問はこの会話に保持されています。重複実行を避けるため、再試行の前に履歴を確認してください。",
+      "currentConversation": "現在の会話",
+      "resetHint": "ソースの変更や新しい会話は表示をリセットしますが、実行中の分析は停止しません。",
+      "demoChipsTitle": "サンプルの質問で試す",
+      "history": "履歴",
+      "disclaimer": "SupalensはSQLでデータを照会して回答しますが、誤る場合があります。重要な数値は実行したSQLを確認してください。"
+    },
+    "view": {
+      "streamError": "ストリームエラー: {error}",
+      "ranSqlLabel": "{tool} — リクエストした SQL",
+      "interrupted": "分析が中断されました。以下の結果は不完全な可能性があります。"
+    },
+    "shared": {
+      "label": "共有された分析",
+      "noResult": "結果はまだありません。",
+      "footer": "<link>Supalens</link> で生成 — データベースに自然言語で質問しましょう。"
+    },
+    "errors": {
+      "supabase_not_configured": "Supabaseが設定されていません。",
+      "unauthorized": "再度サインインしてください。",
+      "invalid_body": "リクエストの形式が正しくありません。",
+      "missing_fields": "データソースと質問を入力してください。",
+      "question_too_long": "質問が長すぎます。",
+      "lookup_failed": "データソースを確認できませんでした。",
+      "forbidden": "このデータソースへのアクセス権限がありません。",
+      "duplicate_run": "すでに処理中のリクエストです。",
+      "run_create_failed": "分析の実行を開始できませんでした。",
+      "trigger_failed": "分析ジョブを開始できませんでした。",
+      "generic": "問題が発生しました。もう一度お試しください。"
+    },
+    "monitor": {
+      "cta": "モニターにする",
+      "ctaDraft": "モニターの下書きを作る",
+      "hint": "もう一度尋ねる代わりに、この数値を定期的に監視します。"
+    },
+    "kpiChips": {
+      "title": "承認済みKPIから",
+      "templates": [
+        "{title} 先週との比較",
+        "{title} をセグメント別に分解",
+        "{title} は何が変わりましたか？"
+      ]
+    }
+  },
+  "appAuth": {
+    "notice": "Supabaseが設定されていません。<file>.env.local</file>に<url>NEXT_PUBLIC_SUPABASE_URL</url> / <key>ANON_KEY</key>を追加してください。",
+    "redirecting": "移動中…",
+    "continueGoogle": "Googleで続ける",
+    "continueKakao": "Kakaoで続ける",
+    "continueGithub": "GitHubで続ける",
+    "orEmail": "またはメールで",
+    "emailAria": "メールアドレス",
+    "sending": "送信中…",
+    "sendLink": "ログインリンクをメールで受け取る",
+    "sentSuccess": "{email} にログインリンクを送信しました。受信トレイをご確認ください。",
+    "review": {
+      "emailAcknowledged": "{email} へのログインリンク送信をリクエストしました。受信トレイと迷惑メールをご確認ください。まだログインは完了していません。",
+      "redirectReady": "外部アカウントのログイン画面への移動を開始しました。画面が開かない場合は再試行できます。まだログインは完了していません。",
+      "emailUnknown": "ログインリンクのリクエスト結果を確認できませんでした。リンクが届く可能性があるため、再試行する前に受信トレイをご確認ください。",
+      "redirectUnknown": "ログインリクエストの結果を確認できませんでした。再試行するか、別のログイン方法を選択してください。",
+      "rateLimited": "ログインリクエストが多すぎます。しばらく待ってから再試行してください。",
+      "invalidRequest": "ログインリクエストが受け付けられませんでした。入力内容を確認して再試行してください。",
+      "unavailable": "このログイン方法は現在利用できません。別の方法を選択するか、後でもう一度お試しください。",
+      "redirectingProvider": "{provider} のログイン画面へ移動中…",
+      "retry": "ログイン方法を選び直す"
+    },
+    "login": {
+      "metaTitle": "無料で始める / サインイン · Supalens",
+      "metaDescription": "無料で始めるかサインインしてください。Supabase + GitHub を接続すると、Supalens がビジネスを理解し、KPI を検証して監視します。",
+      "homeAria": "Supalensホーム",
+      "backHome": "← ホームへ",
+      "headline1": "プロダクトは<em>あなた</em>が作る。",
+      "headline2": "ビジネスは私たちが見守ります。",
+      "point1": "<b>Supabase + GitHub を接続</b> — DB は何があるかを、コードは何を数えるべきかを知っています。",
+      "point2": "<b>ビジネスルールと KPI 定義を確認</b> — 監視が始まる前にあなたが承認します。",
+      "point3": "<b>普段の業務でシグナルを確認</b> — 観測された根拠と次の確認事項を確認できます。設定済みの場合は Slack に通知します。",
+      "title": "無料で始める / サインイン",
+      "subtitle": "アカウントで続行してください。お持ちでない場合は自動的に作成されます。",
+      "legal": "続行すると <terms>利用規約</terms> および <privacy>プライバシーポリシー</privacy> に同意したものとみなされます。",
+      "errorNotConfigured": "ログインサービスがまだ設定されていません。しばらくしてからもう一度お試しください。",
+      "errorAuthFailed": "認証に失敗しました。リンクの有効期限が切れている可能性があります。もう一度お試しください。",
+      "errorMissingCode": "認証情報がありません。最初からログインし直してください。",
+      "errorGeneric": "ログイン中に問題が発生しました。もう一度お試しください。",
+      "eyebrow": "SUPABASE スタートアップのための AI DATA OPERATOR",
+      "brandFoot": "READ-ONLY BY DESIGN",
+      "formEyebrow": "無料で始める · サインイン",
+      "point4": "<b>設計上リードオンリー</b> — 書き込みツールは存在せず、資格情報は封印されます。",
+      "selfTitle": "ログイン",
+      "selfSubtitle": "管理者が作成したアカウントでログインしてください。",
+      "selfMetaTitle": "ログイン · Supalens"
+    },
+    "githubLoginNote": "GitHub ログインは本人確認のみです。リポジトリの接続はログイン後、Connections で GitHub App から行います。",
+    "password": {
+      "label": "パスワード",
+      "signIn": "ログイン",
+      "signUp": "アカウントを作成",
+      "working": "処理中…",
+      "toSignUp": "アカウントがない場合は作成",
+      "toSignIn": "アカウントをお持ちの場合はログイン",
+      "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。",
+      "weakPassword": "パスワードは{min}文字以上にしてください。",
+      "confirmEmail": "受信トレイでメールアドレスを確認してからログインしてください。",
+      "alreadyRegistered": "このメールアドレスのアカウントは既に存在します。ログインしてください。",
+      "signupDisabled": "このワークスペースでは新規登録が無効です。管理者に招待を依頼してください。",
+      "rateLimited": "試行回数が多すぎます。しばらくしてからもう一度お試しください。",
+      "failed": "リクエストを完了できませんでした。もう一度お試しください。"
+    },
+    "setup": {
+      "metaTitle": "Supalens のセットアップ",
+      "eyebrow": "初回セットアップ",
+      "headline": "管理者アカウントを作成します。",
+      "note": "この画面は一度だけ表示されます。以降のアカウントは管理者が 設定 → チーム で作成します。",
+      "title": "このインストールを設定",
+      "subtitle": "このアカウントがワークスペースの所有者になります。",
+      "workspaceLabel": "ワークスペース名",
+      "workspacePlaceholder": "会社またはチーム名",
+      "confirmLabel": "パスワード(確認)",
+      "submit": "アカウントを作成して続行",
+      "errors": {
+        "unavailable": "セットアップを実行できません。サーバーに Supabase のサービスロールキーが設定されているか確認してください。",
+        "already_setup": "このインストールは設定済みです。ログインしてください。",
+        "invalid_email": "有効なメールアドレスを入力してください。",
+        "weak_password": "パスワードは{min}文字以上にしてください。",
+        "email_exists": "このメールアドレスのアカウントは既に存在します。",
+        "mismatch": "2つのパスワードが一致しません。",
+        "failed": "セットアップを完了できませんでした。もう一度お試しください。"
+      }
+    },
+    "noWorkspace": {
+      "title": "アクセス権がありません",
+      "body": "このアカウントはワークスペースのメンバーではありません。管理者に追加を依頼してください。",
+      "signOut": "ログアウト"
+    }
+  },
+  "appBilling": {
+    "title": "お支払い",
+    "subtitle": "現在のプランと今回の請求サイクルの利用状況。",
+    "supabaseNotConfigured": "Supabase が設定されていません。",
+    "loadFailed": "お支払い情報を読み込めませんでした。",
+    "currentPlan": "現在のプラン",
+    "free": "無料",
+    "perMonth": "/月",
+    "status": {
+      "active": "有効",
+      "trialing": "トライアル",
+      "pastDue": "支払い失敗",
+      "paused": "一時停止",
+      "canceled": "解約済み"
+    },
+    "scheduled": {
+      "cancel": "解約予定 · {date}",
+      "change": "変更予定 · {date}",
+      "pause": "一時停止予定 · {date}",
+      "resume": "再開予定 · {date}"
+    },
+    "nextBill": "次回請求日 · {date}",
+    "freeNoBill": "無料プラン · カード不要",
+    "usageTitle": "今サイクルの利用状況",
+    "usage": {
+      "queries": "質問（フェアユース）",
+      "connections": "データソース",
+      "dashboards": "ダッシュボード",
+      "members": "メンバー",
+      "alerts": "モニター"
+    },
+    "overage": {
+      "exceeded": "上限超過 <b>{count}件</b> · 追加請求見込み <b>${est}</b> <muted>(1件あたり ${rate} · 次回請求日に合算)</muted>",
+      "available": "上限を超えても 1件あたり <b>${rate}</b> で利用を継続できます（ハードブロックなし）。"
+    },
+    "transactionsTitle": "最近のお支払い",
+    "noTransactions": "お支払い履歴はありません。",
+    "table": {
+      "date": "日付",
+      "amount": "金額",
+      "status": "ステータス"
+    },
+    "footNote": "お支払いは Paddle を通じて安全に処理されます（Merchant of Record — 消費税・請求書を含む）。",
+    "checkoutInitFailed": "決済モジュールを初期化できませんでした",
+    "checkoutOpenFailed": "チェックアウトを開けませんでした",
+    "opening": "開いています…",
+    "manageSubscription": "サブスクリプション管理",
+    "unlimited": "無制限",
+    "plans": {
+      "free": "Free",
+      "basic": "Basic",
+      "standard": "Standard",
+      "premium": "Premium"
+    },
+    "trialEnds": "トライアル終了 · {date}",
+    "pastDueNotice": "直近のお支払いに失敗しました。プランを維持するには「サブスクリプション管理」でお支払い方法を更新してください。",
+    "pausedNotice": "サブスクリプションは一時停止中です。再開までは無料プランの上限が適用されます。",
+    "limitsReduced": "サブスクリプションが無効のため、有料プランの上限は停止され、無料プランの上限が適用されています。",
+    "confirming": "決済を確認しています…",
+    "upgraded": "プランがアップグレードされました。",
+    "viewPlans": "プランを見る",
+    "checkoutState": {
+      "openLabel": "決済の手続き中",
+      "open": "Paddleで合計金額を確認し、決済を進めるか画面を閉じてください。このページではプランの変更はまだ確認されていません。",
+      "confirmedLabel": "プラン変更を確認済み",
+      "unconfirmedLabel": "決済状況の確認が必要",
+      "unconfirmed": "プランの変更を確認できていません。重複決済を避けるため、新しい決済を始める前に請求情報を確認してください。",
+      "closed": "決済画面が閉じられました。支払いを送信した場合は、再試行する前に請求情報を確認してください。",
+      "retryConfirmation": "同じ取引の確認を再試行",
+      "reviewBilling": "請求情報を確認"
+    },
+    "planCards": {
+      "title": "プラン",
+      "monthly": "月間",
+      "yearly": "年間",
+      "billedYearly": "年間請求 — 合計金額はチェックアウトで表示されます。",
+      "current": "現在のプラン",
+      "choose": "アップグレード",
+      "changeViaPortal": "サブスクリプション管理で変更",
+      "notConfigured": "決済はまだ準備中です — 近日中にご購入いただけます。",
+      "adminTestTitle": "内部テスト決済（$1/月）",
+      "adminTestDesc": "運営スタッフ専用 — 本番決済フローを最後まで検証し、Premium権限が適用されます。",
+      "adminTestCta": "テスト決済 · $1",
+      "recommended": "おすすめ"
+    },
+    "txStatus": {
+      "completed": "支払い済み",
+      "paid": "支払い済み",
+      "billed": "請求済み",
+      "refunded": "返金済み",
+      "chargeback": "チャージバック",
+      "pastDue": "支払い失敗",
+      "canceled": "キャンセル"
+    },
+    "errors": {
+      "generic": "問題が発生しました。もう一度お試しください。",
+      "invalid_plan": "無効なプランです。",
+      "not_configured": "決済はまだ設定されていません。",
+      "price_not_configured": "このプランの価格はまだ設定されていません。",
+      "unconfigured": "サービスが設定されていません。",
+      "unauthorized": "再度サインインしてください。",
+      "forbidden": "権限がありません（owner/admin のみ）。",
+      "no_billing_profile": "この組織に紐づく請求情報がまだありません。",
+      "portal_url_missing": "請求ポータルの URL を取得できませんでした。",
+      "portal_failed": "請求ポータルを開けませんでした。",
+      "invalid_transaction_id": "無効な取引参照です。",
+      "transaction_not_found": "取引が見つかりません。",
+      "transaction_pending": "決済はまだ確定しておらず、最終結果を確認できていません。",
+      "sync_failed": "プランの変更を確認できませんでした。請求情報を確認するか、同じ取引の確認を再試行してください。"
+    },
+    "cadence": {
+      "label": "チェック間隔",
+      "hours": "{n}時間ごと",
+      "minutes": "{n}分ごと"
+    },
+    "fairUse": "質問数はフェアユース範囲の補助的な上限です。プランの中核はモニタリングと原因調査です。",
+    "figures": {
+      "price": "料金",
+      "period": "現在の期間"
+    }
+  },
+  "appChrome": {
+    "navigation": "メインナビゲーション",
+    "jobs": {
+      "title": "実行中",
+      "running": "実行中 {count}",
+      "justEnded": "最近のアクティビティ",
+      "stale": "遅延",
+      "view": "表示",
+      "justStarted": "たった今",
+      "minutesElapsed": "{count}分",
+      "kindAnalysis": "分析",
+      "kindCode": "コード分析",
+      "kindKpi": "KPI抽出",
+      "kindContext": "コンテキスト生成"
+    },
+    "nav": {
+      "settings": "設定",
+      "settingsBilling": "請求",
+      "settingsIntegrations": "連携",
+      "ask": "質問",
+      "monitoring": "モニタリング",
+      "monitors": "モニター",
+      "workspace": "ワークスペース",
+      "reports": "報告",
+      "connections": "接続",
+      "settingsGeneral": "一般",
+      "settingsNotifications": "通知チャンネル",
+      "settingsTeam": "チーム",
+      "settingsDeveloper": "開発者",
+      "overview": "概要",
+      "businessModel": "ビジネスモデル",
+      "setup": "セットアップ",
+      "incidents": "インシデント",
+      "dashboards": "ダッシュボード",
+      "allDashboards": "すべてのダッシュボード",
+      "operations": "運用",
+      "watch": "監視",
+      "settingsSections": "設定メニュー"
+    },
+    "org": {
+      "menuLabel": "組織",
+      "empty": "所属している組織がありません",
+      "new": "新しい組織",
+      "fallbackName": "ワークスペース",
+      "createTitle": "新しい組織を作成",
+      "createDescription": "新しいワークスペース（組織）を作成し、オーナーとして追加されます。",
+      "namePlaceholder": "組織名",
+      "createFailed": "組織を作成できませんでした"
+    },
+    "dashboard": {
+      "createTitle": "新しいダッシュボードを作成",
+      "createDescription": "空のダッシュボードを作成し、質問画面からウィジェットを追加します。",
+      "namePlaceholder": "ダッシュボード名",
+      "createFailed": "ダッシュボードを作成できませんでした",
+      "deleteConfirm": "「{name}」ダッシュボードを削除しますか？",
+      "renamePrompt": "新しいダッシュボード名",
+      "pinAdd": "お気に入りに追加",
+      "pinRemove": "お気に入りから削除",
+      "rename": "ダッシュボード名を変更",
+      "delete": "ダッシュボードを削除"
+    },
+    "plan": {
+      "manage": "管理",
+      "upgrade": "アップグレード",
+      "unlimited": "無制限",
+      "monitors": "モニター {used} / {limit}"
+    },
+    "user": {
+      "fallbackName": "ユーザー",
+      "signout": "ログアウト"
+    },
+    "topbar": {
+      "menu": "メニューを開く",
+      "watching": "監視中 {count}件"
+    },
+    "common": {
+      "cancel": "キャンセル",
+      "create": "作成",
+      "creating": "作成中…"
+    },
+    "errors": {
+      "unconfigured": "Supabaseが設定されていません"
+    },
+    "meta": {
+      "title": "Supalens — ダッシュボード",
+      "description": "データソース・ダッシュボード・アラートを一か所で。"
+    },
+    "loading": "読み込み中…",
+    "error": {
+      "title": "問題が発生しました",
+      "body": "ページを読み込めませんでした。再試行してください。直前の操作を繰り返す前に、完了したかを確認してください。",
+      "retry": "再試行",
+      "overview": "概要に移動"
+    },
+    "notFound": {
+      "body": "ページが見つかりません。",
+      "hint": "アドレスを確認するか、質問画面に戻ってください。",
+      "publicHint": "アドレスを確認するか、ホームに戻ってください。",
+      "back": "質問に戻る"
+    },
+    "sidebar": {
+      "collapse": "サイドバーを折りたたむ",
+      "expand": "サイドバーを展開"
+    },
+    "account": {
+      "menu": "アカウント",
+      "terms": "利用規約",
+      "privacy": "プライバシーポリシー"
+    },
+    "boards": {
+      "home": "ホーム",
+      "more": "さらに{count}件を表示",
+      "less": "折りたたむ"
+    }
+  },
+  "appCommon": {
+    "close": "閉じる",
+    "confirm": "OK",
+    "cancel": "キャンセル",
+    "processing": "処理中...",
+    "theme": {
+      "switchToLight": "ライトモードに切り替え",
+      "switchToDark": "ダークモードに切り替え",
+      "light": "ライトモード",
+      "dark": "ダークモード"
+    }
+  },
+  "appDashboards": {
+    "management": {
+      "rename": "ダッシュボード名を変更",
+      "delete": "ダッシュボードを削除",
+      "name": "ダッシュボード名",
+      "deleteConfirm": "「{name}」ダッシュボードを削除しますか？",
+      "save": "名前を保存",
+      "renamed": "ダッシュボード名を変更しました。",
+      "renameFailed": "ダッシュボード名を変更できませんでした。入力した名前は保持されています。",
+      "deleteFailed": "ダッシュボードを削除できませんでした。現在のダッシュボードに留まります。",
+      "pinFailed": "お気に入り設定を保存できませんでした。以前の設定を保持しています。",
+      "pinned": "お気に入りに追加しました。",
+      "unpinned": "お気に入りから削除しました。",
+      "createFailed": "ダッシュボードを作成できませんでした。入力した名前は保持されています。",
+      "removeFailed": "ダッシュボードを削除できませんでした。ダッシュボードを一覧に残しています。",
+      "removed": "ダッシュボードを削除しました。",
+      "created": "ダッシュボードを作成しました。",
+      "unconfirmed": "変更結果を確認できないため、追加の変更を一時停止しました。表示が最新ではない可能性があります。ダッシュボードまたは一覧を再読み込みして確認してください。",
+      "viewUpdateFailed": "変更は保存されましたが、画面を更新できませんでした。同じ変更を繰り返さず、最新のダッシュボードまたは一覧を開いてください。",
+      "reviewLatest": "最新のダッシュボードまたは一覧を開く"
+    },
+    "debug": {
+      "open": "クエリをデバッグ（管理者）",
+      "title": "指標の計算方法",
+      "sql": "実行SQL",
+      "noSql": "このウィジェットのクエリ情報は表示できません。",
+      "copying": "コピー中…",
+      "copyFailed": "コピーできませんでした。下のSQLを選択して手動でコピーするか、再試行してください。",
+      "copy": "コピー",
+      "copied": "コピーしました",
+      "chartType": "チャート種別",
+      "refresh": "更新間隔",
+      "seconds": "{count}秒",
+      "manual": "手動",
+      "rows": "行数",
+      "close": "閉じる"
+    },
+    "sampleBadge": "サンプルデータ",
+    "kpiVsLastMonth": "前月比",
+    "sampleKpiLabels": [
+      "総売上",
+      "新規登録",
+      "アクティブユーザー",
+      "コンバージョン率"
+    ],
+    "boardEmptyTitle": "最初のチャートを追加",
+    "boardEmpty": "まだウィジェットがありません。<link>分析</link>でチャートを作成し、「ウィジェットを追加」でこのボードに追加してください。",
+    "addWidget": "ウィジェットを追加",
+    "newDashboardName": "新しいダッシュボード",
+    "list": {
+      "emptyTitle": "ダッシュボードはまだありません",
+      "emptyText": "KPI抽出が終わると、AIが重要なKPIからダッシュボードの下書きを作成します。KPIを承認するとモニターもオンになります。",
+      "creating": "作成中…",
+      "createBoard": "空のダッシュボードから始める",
+      "goAnalyze": "分析へ",
+      "emptyPrimary": "KPI提案をレビュー"
+    },
+    "grid": {
+      "refreshHint": "更新間隔は15秒以上の整数で指定してください（空欄の場合は手動更新）",
+      "updateFailed": "変更を保存できませんでした",
+      "removeConfirm": "このウィジェットをダッシュボードから削除しますか？",
+      "dragHint": "ドラッグで移動、角でサイズ変更。キーボードでは移動・サイズ変更ボタンで矢印キーを使います。Home/Endで先頭・末尾へ移動。モバイルでの幅変更はデスクトップ配置に適用されます。",
+      "untitled": "無題のウィジェット",
+      "moved": "{title}: 全{total}件中{position}番目。",
+      "resized": "{title}: 幅{w}列、高さ{h}行。",
+      "removing": "削除中…",
+      "removed": "ダッシュボードからウィジェットを削除しました。",
+      "removeFailed": "ウィジェットを削除できませんでした。再試行できます。",
+      "changeUnknown": "変更結果を確認できませんでした。次の変更前にダッシュボードを確認してください。",
+      "review": "再読み込みしてダッシュボードを確認",
+      "refreshFailed": "変更の応答を受け取りましたが、画面を更新できませんでした。再読み込みして確認してください。",
+      "layoutSaving": "配置を保存中…",
+      "layoutSaved": "配置保存の応答を受け取りました。",
+      "layoutFailed": "配置全体を保存できませんでした。画面上の配置は保持されていますが、一部は保存済みの可能性があります。",
+      "layoutUnknown": "配置の保存結果を確認できませんでした。画面上の配置は保持されています。",
+      "retryLayout": "現在の配置の保存を再試行",
+      "reset": "リセット",
+      "done": "完了",
+      "editLayout": "レイアウトを編集",
+      "moveWidget": "ウィジェットを移動",
+      "resizeWidget": "サイズ変更",
+      "editWidget": "ウィジェットを編集",
+      "removeWidget": "ウィジェットを削除",
+      "editorTitle": "ウィジェットを編集",
+      "fieldTitle": "タイトル",
+      "fieldSql": "SQL（読み取り専用SELECTのみ · 保存すると次回読み込みから新しいクエリで実行）",
+      "fieldRefresh": "自動更新間隔（秒 · 空欄で手動、最小15）",
+      "refreshPlaceholder": "例: 300",
+      "cancel": "キャンセル",
+      "saving": "保存中…",
+      "save": "保存",
+      "summaryWidgets": "ウィジェット {count}件",
+      "summaryMonitored": "監視中 {count}件",
+      "summaryAnomalies": "異常検知 {count}件"
+    },
+    "add": {
+      "needsSupabase": "Supabase 接続後に利用できます",
+      "addFailed": "可視化を保存できませんでした。再試行する前にダッシュボードを確認してください。",
+      "added": "ダッシュボードに追加しました",
+      "addedNew": "新しいダッシュボードに追加しました",
+      "noSaved": "保存済みのダッシュボードはまだありません。",
+      "toNew": "ダッシュボードを作成して保存",
+      "description": "可視化の保存先を選択してください。既存のダッシュボードは置き換えません。",
+      "loading": "ダッシュボードを読み込み中…",
+      "loadFailed": "ダッシュボードを読み込めませんでした。もう一度お試しください。",
+      "retryLoad": "ダッシュボードを再読み込み",
+      "chooseReport": "ダッシュボードを選択",
+      "savedTo": "「{name}」に保存しました。",
+      "createdPending": "ダッシュボード「{name}」を作成しました。可視化の保存はまだ確認できていません。",
+      "retryCreated": "作成済みダッシュボードへの保存を再試行",
+      "saveUnconfirmed": "保存を確認できませんでした。重複を避けるため、再試行の前にダッシュボードを確認してください。",
+      "createUnconfirmed": "ダッシュボードの作成を確認できませんでした。再作成の前に一覧を確認してください。",
+      "reviewBeforeRetry": "この可視化の保存を一時停止しました。ダッシュボードを開いて保存結果を確認してください。この画面を閉じても結果は確定しません。",
+      "reviewReports": "ダッシュボードを確認"
+    },
+    "widget": {
+      "justNow": "たった今更新",
+      "minutesAgo": "{count}分前に更新",
+      "hoursAgo": "{count}時間前に更新",
+      "daysAgo": "{count}日前に更新",
+      "menu": "ウィジェットメニュー",
+      "truncated": "上位の行のみ表示（一部の結果）",
+      "empty": "データなし",
+      "error": "このウィジェットを表示できません",
+      "invalidTitle": "ウィジェット",
+      "invalidSpec": "無効なウィジェット仕様（spec検証に失敗）",
+      "missingColumns": "クエリ結果に存在しない列: {columns}。スキーマが変更された可能性があります — ウィジェットのSQLを編集してください。",
+      "vsPrevious": "前回比",
+      "target": "目標 {value}",
+      "needsNumericColumns": "数値型のx・y列が必要です",
+      "needsNumericValues": "描画できる数値データがありません。値が0という意味ではありません。",
+      "needsNonNegativeValues": "円グラフのすべての値は0以上の数値である必要があります。結果を確認するか、別のグラフを使用してください。",
+      "zeroTotal": "渡されたすべての値が0のため、比率を描画できません。",
+      "invalidData": "結果がないか、構造が正しくありません。クエリ結果が空という意味ではありません。",
+      "loading": "可視化を読み込み中",
+      "details": "ウィジェットのタイトルと説明",
+      "content": "ウィジェットの内容",
+      "references": {
+        "title": "基準線",
+        "description": "破線は設定された基準値であり、現在の状態を示すものではありません。",
+        "unnamed": "基準線 {number}",
+        "target": "目標基準",
+        "warning": "警告基準",
+        "critical": "重大基準",
+        "neutral": "参考基準",
+        "coincident": "基準線 {numbers} と値が同じため、線が重なっています。",
+        "exact": "正確な基準値を表示",
+        "exactDescription": "表示用の丸め・単位変換前の、グラフ定義に含まれる数値です。パーセント形式では0.01が1%を表します。"
+      },
+      "recordedAt": "記録日時 {time}",
+      "timeUnavailable": "記録日時を確認できません",
+      "tableRegion": "{title}: データ表、スクロールしてさらに表示",
+      "visibleRows": "渡された{total}行のうち{shown}行を表示",
+      "source": "サービス",
+      "sourceNone": "接続されたサービスなし"
+    },
+    "index": {
+      "title": "ダッシュボード",
+      "subtitle": "KPIとチャートをまとめたボードです。ホームに指定したダッシュボードが概要に表示されます。",
+      "newReport": "+ 新しいダッシュボード",
+      "pinned": "ピン留め",
+      "open": "開く",
+      "emptyHint": "KPI抽出が終わると、AIが「コアKPI」ダッシュボードの下書きを作成します。"
+    },
+    "saveToReport": "ダッシュボードに保存",
+    "monitor": {
+      "watching": "監視中",
+      "incident": "異常検知",
+      "paused": "一時停止",
+      "checkedNever": "未確認",
+      "checkedAt": "記録された確認: {time}",
+      "details": "モニタリングの詳細",
+      "checkedJustNow": "たった今確認",
+      "checkedMinutes": "{count}分前に確認",
+      "checkedHours": "{count}時間前に確認",
+      "checkedDays": "{count}日前に確認",
+      "viewMonitor": "モニターを見る",
+      "viewIncident": "インシデントを見る",
+      "askChange": "変化の理由を聞く",
+      "askQuestion": "{title}はなぜ変化しましたか？最近の推移とともに要因を分解してください。",
+      "definition": "定義",
+      "noDefinition": "このウィジェットに保存された定義はありません。"
+    },
+    "home": {
+      "badge": "ホーム",
+      "set": "ホームに設定",
+      "done": "ホームダッシュボードに設定しました。",
+      "adminOnly": "ホームダッシュボードはオーナーと管理者のみ設定できます。",
+      "migrationPending": "最新のアップデートが適用されるまで、ホームダッシュボードは設定できません。"
+    }
+  },
+  "appIntegrations": {
+    "viewLede": "ビジネスモニターの基盤となるデータ・コード・連絡チャネルを管理します。",
+    "recordedStateHint": "状態は保存済みの接続記録です。直近の接続テストの結果や、すべてのモニターの正常性を示すものではありません。",
+    "repoConnectionUnavailable": "この接続は有効として記録されていません。接続を確認するまで、リポジトリ設定の変更や新しい分析は利用できません。",
+    "slackWorkspace": "Slack ワークスペース",
+    "manageSources": "データソースを管理",
+    "viewSources": "データソースを表示",
+    "status": {
+      "active": "有効",
+      "pending": "保留中",
+      "error": "エラー",
+      "revoked": "アクセス権取消",
+      "expired": "接続承認の期限切れ",
+      "disabled": "無効",
+      "unknown": "不明"
+    },
+    "recovery": {
+      "reconnect": "保存済みの承認が取り消されたか期限切れです。アクセスを復元するには接続を確認して再承認してください。",
+      "pending": "接続設定は保留中として記録されています。認証をやり直す前に、再読み込みして進行状況を確認してください。",
+      "error": "接続記録にエラーがあります。接続とデータソースの状態を確認してください。再承認が必要な場合があります。",
+      "unknown": "現在の接続状態を解釈できませんでした。追加の操作を行う前に再読み込みして確認してください。"
+    },
+    "repoSection": "リポジトリ分析",
+    "repoReadOnly": "現在のロールではリポジトリを閲覧できますが、分析設定は変更できません。",
+    "repoAnalyzeLabel": "{repo} を分析",
+    "repoSaved": "{repo} の自動分析設定を保存しました。",
+    "repoSaveFailed": "設定を保存できませんでした。以前の設定は維持され、再試行できます。",
+    "repoUnconfirmed": "保存結果を確認できませんでした。再読み込みして保存済みの設定を確認してから再試行してください。",
+    "repoRefreshFailed": "設定は保存されましたが、画面を更新できませんでした。再読み込みして最新の一覧を確認してください。",
+    "repoQueued": "分析リクエストを受け付けました。進行状況の報告を待っています。完了した結果ではありません。",
+    "repoStartUnconfirmed": "分析の開始を確認できませんでした。既に実行中の可能性があります。再読み込みして作業履歴を確認してから再開してください。",
+    "repoRunUnconfirmed": "分析の完了を確認できませんでした。実行状況の確認または再読み込み後に再開してください。接続エラーだけではジョブの停止は確認できません。",
+    "repoRunFinished": "分析ジョブから完了が報告されました。以下の結果を確認してください。",
+    "repoRunTitle": "分析 · {repo}",
+    "repoSourceUnavailable": "選択したデータソースは利用できなくなりました。別のソースかコードのみの分析を選択してください。",
+    "repoErrors": {
+      "quota": "分析の上限に達しました。プランと使用量を確認してから再試行してください。",
+      "forbidden": "このアカウントではリポジトリまたはデータソースを利用できません。再読み込みして権限を確認してください。",
+      "rejected": "分析リクエストが拒否されました。リポジトリとデータソースを確認してから再試行してください。"
+    },
+    "returnNotice": {
+      "returned": "{provider} の接続手続きから戻りました。以下で現在の接続状態を確認してください。この案内だけでは接続完了や通知の受信は保証されません。",
+      "importing": "コールバックからバックグラウンドでのプロジェクト取り込みが報告されました。再読み込み後に一覧を確認してください。取り込み完了はここでは検証されていません。",
+      "plan": "コールバックからプランによる接続制限が報告されました。接続済みソースとプランを確認してください。",
+      "cancelled": "接続の承認がキャンセルまたは拒否されました。既存の接続は以下に表示されています。",
+      "restart": "認証セッションを確認できませんでした。接続手続きを最初からやり直してください。",
+      "claimed": "このインストールまたはワークスペースは既に別の場所に接続されています。既存の接続を確認してから再試行してください。",
+      "failed": "接続結果を確認できませんでした。現在の一覧を確認してから再試行してください。"
+    },
+    "pageTitle": "連携",
+    "connectSupabase": "Supabase を接続",
+    "actionReadOnly": "この接続を管理できるのはオーナーと管理者のみです。",
+    "actionFinished": "リクエストの処理が終了しました。再読み込みして接続とプロジェクトの状態を確認してください。すべての外部クリーンアップの完了を示すものではありません。",
+    "actionUnconfirmed": "処理結果を確認できませんでした。一部の手順は完了した可能性があります。この画面を閉じて再読み込みしてから再試行してください。",
+    "reloadSettings": "設定を再読み込み",
+    "resyncConfirm": "新しいプロジェクトを取り込み、既存の接続設定を更新しますか？新しいプロジェクトに読み取り専用のアクセス権が設定される場合があります。",
+    "scopeChoices": "許可するチャネルを選択",
+    "scopeUnavailable": "利用可能なチャネルまたは保存済みの範囲を確認できないため、ここでは変更できません。Slack 接続を確認して再読み込みしてください。空の一覧は全チャネル許可を意味しません。",
+    "scopeUnlisted": "利用可能な一覧に表示されない保存済みのチャネル ID です。明示的に解除しない限り選択を維持します。",
+    "scopeResetTitle": "すべてのチャネルを許可",
+    "scopeResetDescription": "チャネル制限を解除しますか？ボットがアクセスできるすべてのチャネルのメンションに応答できるようになり、現在より範囲が広がります。",
+    "scopeUnconfirmed": "保存結果を確認できませんでした。選択は保持されています。再読み込みして保存済みの範囲を確認してから再試行してください。",
+    "scopeRefreshFailed": "サーバーは保存成功を報告しましたが、表示の更新に失敗しました。再読み込みして保存済みの範囲を確認してください。",
+    "empty": "アクセス可能なリポジトリがありません。GitHub でこの App にリポジトリを追加してください。",
+    "crossDbLabel": "クロス分析 DB",
+    "codeOnly": "— コードのみ —",
+    "analyze": {
+      "starting": "開始中…",
+      "codeAndDb": "コード+DB 分析",
+      "code": "分析"
+    },
+    "toggle": {
+      "on": "分析オン",
+      "off": "分析オフ",
+      "ariaOn": "{repo} の自動分析をオンにする",
+      "ariaOff": "{repo} の自動分析をオフにする"
+    },
+    "errors": {
+      "triggerRequired": "Trigger.dev が設定されていません（コード分析に必要）"
+    },
+    "page": {
+      "notConfigured": "Supabaseが設定されていません。",
+      "lede": "データソースとGitHubリポジトリを接続すると、supalensがDBとコードを合わせて分析し、Slackで通知や質問を受け取れます。",
+      "bannerErrorPrefix": "接続に失敗しました:",
+      "bannerConnecting": "Supabaseアカウントが接続されました。プロジェクトを取り込み中です — まもなくデータソースに表示されます。",
+      "bannerConnectedSupabase": "Supabaseアカウントが接続されました。データソースを{count}件取り込みました。",
+      "bannerConnectedGithub": "GitHubが接続されました。{count}件のリポジトリにアクセスできます。",
+      "bannerConnectedSlack": "Slackワークスペース <strong>{team}</strong> が接続されました。これでSlackで通知を受け取り、<code>@supalens</code> のメンションで質問できます。",
+      "disconnect": "接続解除",
+      "github": {
+        "sub": "リポジトリを接続してコードを分析し、コミット(push)を自動追跡します。",
+        "connect": "GitHub を接続",
+        "add": "インストールを追加",
+        "repoMeta": "リポジトリ {repos}件 · 自動分析有効 {on}件",
+        "manage": "GitHub で管理",
+        "disconnectConfirm": "GitHub連携を解除すると、保存されたインストール・リポジトリへのアクセスが削除され、コード分析が停止します。続けますか?",
+        "notRegistered": "このインストールには GitHub App が登録されていないため、リポジトリを接続できません。追加するにはセルフホスティングガイドを参照してください。"
+      },
+      "slack": {
+        "sub": "ワークスペースを接続すると、Slackで通知を受け取り、<code>@supalens</code> のメンションで指標を質問できます。",
+        "connect": "Slack を接続",
+        "add": "ワークスペースを追加",
+        "notConfiguredBadge": "未設定",
+        "notConfigured": "Slack Appがまだ設定されていません (SLACK_CLIENT_ID/SECRET/SIGNING_SECRET)。",
+        "disconnectConfirm": "Slack連携を解除すると、保存されたボットトークンが破棄され、通知・メンション応答が停止します。続けますか?",
+        "alertsNote": "アラートを受け取る Slack チャンネルは通知チャンネルで設定します。",
+        "alertsLink": "通知チャンネルを開く"
+      },
+      "supabaseCard": {
+        "sub": "OAuthでアカウントを接続し、プロジェクトDBへの読み取り専用アクセスを委任します。",
+        "resync": "プロジェクトを再同期",
+        "disconnectConfirm": "Supabase連携を解除すると、保存された認証情報が破棄され、接続されたデータソースへのクエリが停止します。続けますか?",
+        "reconnect": "再接続",
+        "revokedNote": "この認証は無効になっているため、対象プロジェクトのクエリ・モニター・分析は停止しています。再接続すればそのまま復旧します。",
+        "projectMeta": "{count, plural, =0 {取り込んだプロジェクトなし} other {プロジェクト #件}}",
+        "noProjects": "このアカウントから取り込んだプロジェクトはありません。プロジェクトを再同期して取り込んでください。",
+        "notRegistered": "このインストールには Supabase OAuth アプリが登録されていません。接続画面からデータベースを直接接続してください。"
+      },
+      "slackScope": {
+        "emptyPrefix": "ボットが参加しているチャンネルがないため、許可チャンネルを選べません。チャンネルで <code>/invite @supalens</code> を実行してから再読み込みしてください。",
+        "label": "メンション許可チャンネル",
+        "labelHint": "未選択の場合は、すべてのチャンネルで @supalens のメンションに応答します。",
+        "save": "許可チャンネルを保存",
+        "savedLimited": "許可チャンネルを{count}件に制限しました",
+        "savedReset": "全チャンネルで使用可能にリセットしました",
+        "saveFailed": "保存に失敗しました",
+        "noPermission": "権限がありません (owner/admin)。",
+        "notConnected": "先にSlackワークスペースを接続してください。",
+        "stateAll": "すべてのチャンネルで @supalens に応答します",
+        "stateLimited": "{count}件のチャンネルでのみ応答します",
+        "filter": "チャンネルを検索"
+      },
+      "bannerSkippedForPlan": "プランの接続数上限に達したため、{count}件のプロジェクトは取り込みませんでした。",
+      "bannerSkippedForPlanCta": "プランを見る →",
+      "databases": {
+        "title": "直接接続したデータベース",
+        "sub": "接続情報やサービスアカウントで登録した PostgreSQL・MySQL・Firestore です。追加と管理は接続画面で行います。",
+        "connect": "データベースを接続"
+      }
+    },
+    "scope": "Contents: read · Metadata: read",
+    "scopeNote": "読み取り専用です。取得したコードをビルド・インストール・実行することはありません。",
+    "groups": {
+      "data": "データ",
+      "code": "コード",
+      "messenger": "メッセンジャー"
+    },
+    "summary": {
+      "connected": "{count}件接続済み",
+      "none": "未接続",
+      "sources": "ソース{count}件",
+      "attention": "{count}件 要確認"
+    }
+  },
+  "appKpis": {
+    "back": "← データソース",
+    "loading": "KPIを読み込み中…",
+    "loadFailed": "KPIリストの読み込みに失敗しました。",
+    "supabaseNotConfigured": "Supabase が設定されていません。",
+    "category": {
+      "revenue": "売上",
+      "growth": "成長",
+      "engagement": "エンゲージメント",
+      "ops": "運用",
+      "funnel": "ファネル",
+      "custom": "カスタム"
+    },
+    "extractError": {
+      "trigger_required": "バックグラウンド実行環境が準備できていないため、抽出を開始できません。",
+      "trigger_failed": "抽出ジョブの開始に失敗しました。しばらくしてからもう一度お試しください。",
+      "engine_not_supported": "KPI 抽出は SQL データソースのみ対応しています。",
+      "demo_not_supported": "デモソースには既定の KPI カタログが用意されています。",
+      "supabase_not_configured": "サーバー設定エラーにより抽出を開始できませんでした。"
+    },
+    "applyFailed": "適用に失敗しました ({status})",
+    "proposalSaveFailed": "提案の変更を保存できなかったため、以前の状態に戻しました。",
+    "proposalSaving": "提案の変更を保存中…",
+    "preview": {
+      "title": "承認前の確認",
+      "loading": "適用予定を更新しています。以下の件数は推定です。",
+      "ready": "適用予定を確認しました。承認時に上限を再確認します。",
+      "error": "適用予定を読み込めませんでした。件数は推定で、上限は未確認です。",
+      "retry": "適用予定を再確認",
+      "cadenceUnknown": "チェック間隔はプランの適用予定を読み込んだ後に表示されます。"
+    },
+    "quotaReached": "今回の請求サイクルの利用量上限に達しました。",
+    "extractStartFailed": "抽出の開始に失敗しました ({status})",
+    "heading": "コア KPI の提案 — {name}",
+    "sub": {
+      "withRows": "提案 {count} 件 · 定義と根拠を確認してから承認してください。",
+      "empty": "コードとスキーマを分析し、コア指標を自動で提案します。"
+    },
+    "selectAll": "すべて選択",
+    "deselectAll": "すべて解除",
+    "extractingShort": "抽出中…",
+    "reExtract": "再抽出",
+    "runningBanner": "新しい KPI を抽出しています。完了するとリストが更新されます。",
+    "dismissedNote": "KPI を提案リストから非表示にしました。",
+    "undo": "元に戻す",
+    "result": {
+      "added": "ダッシュボードに {count} 件追加しました",
+      "title": "承認結果",
+      "scheduleNote": "各モニターで直近のチェックとスケジュールを確認してください。",
+      "failedSuffix": " · {count} 件失敗",
+      "viewDashboard": "ダッシュボードを見る →",
+      "summary": "ダッシュボード {widgets} · モニター {monitors}",
+      "nextCheck": "次回チェック {time}",
+      "cadence": "{cadence}チェック",
+      "baseline": "異常検知モニター {count} 件のサンプルは {need} 件未満でした。監視画面でベースラインの準備状況を確認してください。",
+      "nextSlack": "次: Slack を連携 →",
+      "viewDashboardSecondary": "ダッシュボードを見る",
+      "item": {
+        "monitor": "ウィジェット + モニター",
+        "widget": "ウィジェットのみ"
+      }
+    },
+    "upgradePlan": "プランをアップグレード →",
+    "picker": {
+      "label": "ダッシュボード",
+      "new": "新規「コア KPI」",
+      "existing": "既存のダッシュボード"
+    },
+    "includeAlerts": "アラートを含める",
+    "includeAlertsHint": "· アラート設定のあるKPIのみモニターが作成されます",
+    "alertsAriaOn": "アラートを含めるをオン",
+    "alertsAriaOff": "アラートを含めるをオフ",
+    "applying": "適用中…",
+    "setupCta": "選択した {count} 件を一括セットアップ →",
+    "viewOnly": "閲覧のみ — KPI の適用はメンバー以上が必要です。",
+    "runningTitle": "KPI を抽出中…",
+    "runningDesc": "コードとスキーマを読み取り、コア指標を提案しています。通常 1〜3 分ほどかかり、完了すると自動的に表示されます。",
+    "emptyTitle": "まだ提案された KPI はありません",
+    "emptyDesc": "コードとスキーマを分析し、売上・成長・エンゲージメントなどのコア指標を自動で提案して、一度にダッシュボードを作成します。",
+    "lastFailed": "前回の抽出に失敗しました: {error}",
+    "starting": "開始中…",
+    "startExtract": "抽出を開始",
+    "extractMemberOnly": "抽出はメンバー以上のみ実行できます。",
+    "selectAria": "{title} を選択",
+    "badge": {
+      "recommended": "おすすめ",
+      "stale": "古い",
+      "accepted": "適用済み"
+    },
+    "alertTag": {
+      "anomaly": "異常検知アラート",
+      "threshold": "しきい値アラート"
+    },
+    "excludeAria": "{title} を除外",
+    "excludeTitle": "この KPI を除外",
+    "approveCta": "承認して {count}件の監視を開始 →",
+    "approveCtaDashboardOnly": "{count}件を承認 · ダッシュボードのみ →",
+    "summary": {
+      "selected": "選択 {count}",
+      "monitors": "モニター {count}",
+      "dashboardOnly": "ダッシュボードのみ {count}"
+    },
+    "tag": {
+      "dashboardOnly": "ダッシュボードのみ",
+      "anomaly": "異常検知モニター",
+      "threshold": "しきい値モニター"
+    },
+    "advanced": "詳細 · ダッシュボードの対象",
+    "cadenceNote": "モニターは{cadence}チェックします。",
+    "current": {
+      "label": "直近のサンプル",
+      "vs": "比"
+    },
+    "evidence": {
+      "file": "ファイル",
+      "table": "テーブル",
+      "event": "イベント"
+    },
+    "cadence": {
+      "hours": "{n}時間ごとに",
+      "minutes": "{n}分ごとに"
+    },
+    "noMonitor": {
+      "not_time_series": "比較する日次系列がありません",
+      "categorical": "単一の測定値ではなく内訳指標です",
+      "snapshot_only": "時点の状態のため履歴比較が無意味です",
+      "low_signal": "データが疎で外れ値に意味がありません",
+      "alerts_off": "アラートがオフになっています",
+      "legacy_no_config": "モニター必須化より前に提案されました"
+    },
+    "plan": {
+      "why": "{selected}件中{count}件にモニターがない理由",
+      "capWarning": "現在のプランのモニター上限は{limit}件のため、うち{count}件はダッシュボードのみに追加されます。",
+      "capWidgets": "ダッシュボードあたりのウィジェット上限に達したため、KPI {count}件が除外されます。",
+      "alreadyApplied": "適用済み{count}件"
+    },
+    "lastFailedReconnect": "Supabase 接続の再認証が必要なため、前回の抽出は中断されました。",
+    "title": "コア KPI の提案",
+    "figures": {
+      "proposed": "提案",
+      "recommended": "おすすめ",
+      "selected": "選択"
+    },
+    "importance": "重要度 {value}/5"
+  },
+  "appMcp": {
+    "copying": "コピー中…",
+    "copyFailed": "コピー失敗 · 再試行",
+    "unknownDate": "日時を確認できません",
+    "mintConfirmed": "キーが発行されました。このメッセージを閉じる前に安全に保管してください。",
+    "mintUnconfirmed": "キーの発行結果を確認できませんでした。すでに発行された可能性があります。一覧を更新して確認してから再発行してください。秘密の値を受け取れなかったキーは失効させてください。",
+    "mintRefreshFailed": "キーは発行されましたが、一覧を更新できませんでした。以下のキーを保管し、重複して発行しないでください。",
+    "revokeConfirmed": "キーの失効が確認されました。",
+    "revokeUnconfirmed": "失効を確認できませんでした。この画面を閉じて一覧を更新し、状態を確認してから再試行してください。",
+    "revokeRefreshFailed": "失効は確認されましたが、一覧を更新できませんでした。以下は更新前の一覧です。",
+    "refreshFailed": "キー一覧を更新できませんでした。以前の一覧を保持しています。もう一度更新してください。",
+    "listRefreshed": "キー一覧を更新しました。次の変更の前に現在のキーを確認してください。",
+    "staleList": "この一覧は最新ではない可能性があります。更新に成功するまでキーの変更を一時停止します。",
+    "refreshList": "キー一覧を更新",
+    "title": "開発者 · MCP & API",
+    "subtitle": "Claude Code や Cursor などの MCP クライアントをこのワークスペースに接続します。AI は supalens を通じてモニター、承認済み KPI 定義、接続済みデータベースを読み取ります。認証情報は supalens 内にとどまり、発行されるのはキーだけです。",
+    "copy": "コピー",
+    "copied": "コピーしました",
+    "mintFailed": "キーの発行に失敗しました",
+    "revokeConfirm": "このキーを失効させますか？このキーを使用している接続は直ちに切断されます。",
+    "step1": {
+      "heading": "1. API キーを発行",
+      "minting": "発行中…",
+      "mint": "+ 新しい sl_ キーを発行",
+      "onceWarning": "⚠️ このキーは今この一度だけ表示されます。安全な場所に保管してください。",
+      "colKey": "キー",
+      "colLastUsed": "最終使用",
+      "colStatus": "ステータス",
+      "unused": "未使用",
+      "revoked": "失効済み",
+      "active": "有効",
+      "revoke": "失効",
+      "empty": "API キーがまだありません — キーを発行して AI クライアントを接続してください。",
+      "dismiss": "閉じる",
+      "revokeTitle": "このキーを失効しますか？"
+    },
+    "step2": {
+      "heading": "2. AI クライアントに接続",
+      "description": "コマンドをローカルの Claude Code ターミナルに貼り付けてください。キー発行後は <code>.mcp.json</code> の例にキーが含まれます。キーを含むコマンドや設定は非公開で保管し、秘密のキーをリポジトリにコミットしないでください。",
+      "claudeCode": "Claude Code",
+      "cursor": "Cursor / VS Code (.mcp.json)"
+    },
+    "step3": {
+      "heading": "3. 接続後に AI ができること",
+      "description": "<code>get_setup_status</code> から始めると AI がワークスペースを把握します。その後、指標について質問したり監視中の項目を確認したりできます。すべてのクエリは SELECT 専用で、認証情報が supalens を離れることはありません。",
+      "showAll": "すべてのツール (+{count})",
+      "hideAll": "折りたたむ",
+      "examples": {
+        "listMonitors": {
+          "prompt": "今何を監視していて、発火しているものはある？",
+          "tool": "list_alerts"
+        },
+        "askMetric": {
+          "prompt": "昨日の日次売上はなぜ下がった？",
+          "tool": "ask"
+        },
+        "reuseKpi": {
+          "prompt": "MRR の定義そのままで先月を再計算して",
+          "tool": "execute_sql"
+        }
+      }
+    },
+    "endpointEyebrow": "MCP エンドポイント",
+    "viewerNote": "キーの発行・失効はオーナー・管理者・メンバーのみ可能です。"
+  },
+  "appMembers": {
+    "tableScrollHint": "表を横にスクロールすると、役割・日付・操作を確認できます。キーボードでは表にフォーカスして矢印キーを使ってください。",
+    "unconfirmed": "処理結果を確認できませんでした。すでに完了した可能性があります。ページを再読み込みし、チームの状態を確認してから再試行してください。",
+    "refreshFailed": "サーバーは成功を報告しましたが、ページの更新に失敗しました。再読み込みして現在のチームを確認してください。",
+    "reviewRequired": "再読み込みして現在のチームを確認するまで、追加の変更を一時停止します。",
+    "reload": "チームを再読み込み",
+    "copied": "コピーしました",
+    "copyFailed": "コピー失敗 · 再試行",
+    "emptyMembers": "この一覧に表示するメンバーはいません。",
+    "cancelInviteTitle": "招待を取り消す",
+    "confirmLeave": "このワークスペースから退出しますか？データへのアクセスを失い、ワークスペース用の認証キーは失効します。最後のオーナーは先に所有権を移譲する必要があります。",
+    "confirmCancelInvite": "{email} の保留中の招待を取り消しますか？このリンクでは参加できなくなります。",
+    "unknownDate": "日時を確認できません",
+    "supabaseNotConfigured": "Supabaseが設定されていません。",
+    "page": {
+      "title": "チーム",
+      "subtitle": "メンバーと権限を管理します。"
+    },
+    "role": {
+      "owner": "オーナー",
+      "admin": "管理者",
+      "member": "メンバー",
+      "viewer": "閲覧者"
+    },
+    "myRole": "自分の役割 · {role}",
+    "membersLabel": "メンバー",
+    "invite": {
+      "cardTitle": "メンバーを招待",
+      "emailPlaceholder": "招待するメールアドレス",
+      "send": "招待を送信",
+      "hint": "招待された人が同じメールアドレスでログインすると組織に参加します。",
+      "sent": "{email} に招待メールを送信しました",
+      "sendFailedLink": "{email} にメールを送信できませんでした。下のリンクを直接共有してください。",
+      "failed": "招待を送信できませんでした",
+      "copy": "コピー"
+    },
+    "table": {
+      "cardTitle": "メンバー",
+      "count": "合計 {count} 人",
+      "colMember": "メンバー",
+      "colRole": "役割",
+      "colJoined": "参加日",
+      "colActions": "操作",
+      "noName": "名前なし",
+      "meSuffix": "（自分）"
+    },
+    "actions": {
+      "leave": "退出",
+      "transferOwnership": "オーナー権限を委譲",
+      "remove": "削除",
+      "cancel": "キャンセル"
+    },
+    "confirm": {
+      "transfer": "{name} にオーナー権限を委譲しますか？あなたは管理者に降格します。",
+      "remove": "{name} を組織から削除しますか？"
+    },
+    "toast": {
+      "actionFailed": "リクエストを処理できませんでした",
+      "roleChanged": "役割を変更しました",
+      "left": "組織から退出しました",
+      "ownershipTransferred": "オーナー権限を委譲しました",
+      "removed": "メンバーを削除しました",
+      "inviteRevoked": "招待をキャンセルしました"
+    },
+    "invites": {
+      "sectionLabel": "保留中の招待",
+      "expires": "有効期限 {date}"
+    },
+    "accept": {
+      "cannotAccept": "招待を承認できません",
+      "unknownError": "不明なエラー",
+      "home": "ホームへ",
+      "title": "チームへの招待",
+      "invitedTo": "{org}に{role}として招待されました。",
+      "confirmGeneric": "この招待を承認してチームに参加しますか？",
+      "confirm": "招待を承認",
+      "accepting": "承認中…",
+      "confirmHelp": "承認するとチームのメンバーになります。ボタンで確認するまで招待は承認されません。",
+      "accepted": "招待を承認しました。メンバーページで参加したチームと役割を確認してください。",
+      "viewMembers": "チームメンバーを確認",
+      "opening": "メンバーページを開いています…",
+      "navigationFailed": "招待は承認されましたが、画面の移動リクエストを完了できませんでした。メンバーページが開いていない場合は、もう一度開いてください。承認は再送されません。",
+      "unconfirmed": "招待が承認されたか確認できませんでした。まだ再承認しないでください。再読み込みして状態を確認するか、招待者に参加状況を確認してください。",
+      "rejected": "承認リクエストが拒否されました。アカウントと招待を確認して再試行するか、再読み込みして最新の状態を確認してください。",
+      "sessionUnavailable": "ログイン状態を確認できませんでした。再読み込みし、必要に応じて再ログインしてから承認してください。",
+      "serviceUnavailable": "現在、招待を承認できません。しばらくしてから再読み込みしてください。",
+      "reload": "招待を再読み込み",
+      "reloading": "招待を再読み込みしています…",
+      "reloadFailed": "招待ページを再読み込みできませんでした。ブラウザーの再読み込みボタンで最新の状態を確認してください。",
+      "previewTitle": "招待の詳細を確認できません",
+      "previewUnavailable": "招待の詳細を読み込めませんでした。再読み込みしてチームと役割を確認してから承認してください。招待が取り消された、または存在しないという意味ではありません。",
+      "notFound": "招待が見つからないか、無効になっています。",
+      "processed": "この招待はすでに処理されたか、取り消されています。",
+      "expired": "この招待は期限切れです。招待した方に再送を依頼してください。",
+      "mismatch": "この招待は{invited}宛てに送信されましたが、現在{current}でログインしています。招待されたアカウントでログインし直してからリンクを開いてください。",
+      "joinTitle": "{org}に参加しましょう"
+    },
+    "myRoleLabel": "自分の役割",
+    "accounts": {
+      "createTitle": "アカウントを作成",
+      "createHint": "初期パスワードを設定して本人に伝えてください。本人が設定で変更できます。",
+      "email": "メールアドレス",
+      "initialPassword": "初期パスワード",
+      "create": "アカウントを作成",
+      "created": "{email} のアカウントを作成しました。",
+      "resetTitle": "パスワードをリセット",
+      "resetHint": "ログインできなくなったメンバー向けです。新しいパスワードを本人に伝えてください。",
+      "pickMember": "メンバーを選択",
+      "newPassword": "新しいパスワード",
+      "reset": "パスワードを設定",
+      "resetDone": "パスワードを変更しました。",
+      "weak": "パスワードは{min}文字以上にしてください。",
+      "failed": "リクエストを完了できませんでした。もう一度お試しください。"
+    }
+  },
+  "appOnboarding": {
+    "pill": {
+      "demo": "デモ体験",
+      "connect": "自分のDBを接続",
+      "kpi": "KPI抽出",
+      "connectCta": "自分のDBを接続 →",
+      "kpiCta": "KPIを抽出 →",
+      "dismiss": "セットアップガイドを閉じる",
+      "guideLabel": "ワークスペースの設定を続ける",
+      "done": "完了",
+      "repo": "コードを接続",
+      "repoCta": "コードを接続 →",
+      "optional": "任意",
+      "understand": "理解の生成",
+      "monitors": "モニター",
+      "continueCta": "設定を続ける →"
+    }
+  },
+  "appWizard": {
+    "aria": "はじめに",
+    "close": "ガイドを閉じる",
+    "step": "STEP {n} / {total}",
+    "act1": {
+      "title": "ビジネス指標から根拠の確認へ",
+      "sub": "サンプルデータによる再生例です。実際の分析は実行されていません。",
+      "replayTag": "Replay · サンプルDB",
+      "q": "売上は時間とともにどう変化しましたか？",
+      "a": "売上の推移を比較し、関連する記録を確認してください。このチャートだけでは変化の原因を断定できません。",
+      "skip": "スキップ",
+      "next": "次へ: 自分のデータで →",
+      "startTour": "はじめる"
+    },
+    "act2": {
+      "title": "次は自分のデータで試しますか?",
+      "sub": "データを接続し、提案された KPI 定義を確認して、重要な指標の監視を設定しましょう。",
+      "supabase": "Supabaseで接続",
+      "postgres": "PostgreSQL",
+      "mysql": "MySQL",
+      "firestore": "Firestore",
+      "back": "← 他の方法を選ぶ",
+      "trust1": "構造的に読み取り専用 · Supabase は専用の読み取り専用ロールを発行",
+      "trust2": "書き込みツール自体が存在しない",
+      "trust3": "認証情報はエンベロープ暗号化",
+      "later": "あとで",
+      "next": "次へ →",
+      "connected": "{name} を接続しました — 次にコードを接続すると精度が上がります"
+    },
+    "act3": {
+      "title": "このDBの意味が書かれたコードを接続しましょう",
+      "sub": "スキーマは何があるかを、コードは何を数えるべきかを教えてくれます。リポジトリを付けると、返金除外・内部アカウント除外などの実際のルールを読んでKPIを提案します。",
+      "why1": "コードからビジネスルールを抽出",
+      "why2": "実行検証済みのKPI定義",
+      "why3": "読み取り専用 · ビルド・実行なし",
+      "limit": "コードなしで続けるとスキーマのみで提案します。ステータス値やフィルタが抜け、KPI定義が不正確になることがあります。",
+      "attach": "リポジトリを接続 →",
+      "later": "あとで · スキーマのみで続行"
+    },
+    "act4": {
+      "titleExtract": "{name} の KPI 提案を作成しますか？",
+      "subExtract": "スキーマと接続したコードから、バックグラウンドで KPI 定義を提案します。監視を承認する前に、定義と検証結果を確認してください。",
+      "hint1": "売上推移",
+      "hint2": "登録転換率",
+      "hint3": "リピート購入率",
+      "hint4": "離脱リスク顧客",
+      "hintMore": "+ スキーマに合わせてさらに提案",
+      "startExtract": "抽出を開始して入る →",
+      "starting": "抽出をリクエスト中…",
+      "reviewSources": "データソースを確認",
+      "outcome": {
+        "running": "抽出はすでに進行中です。データソースで記録された状態を確認してください。新しい抽出は開始していません。",
+        "quota": "抽出の利用上限に達しました。使用量を確認してから再試行してください。",
+        "rejected": "抽出リクエストは受け付けられませんでした。データソースを確認してから再試行してください。",
+        "unknown": "抽出が開始されたか確認できませんでした。再度リクエストする前に、データソースで記録された状態を確認してください。"
+      },
+      "skip": "スキップ",
+      "titleSample": "KPIダッシュボードはこんな形です",
+      "subSample": "サンプルデータを使ったレイアウト例です。実際の KPI はデータソース接続後に定義を生成し、確認する必要があります。",
+      "browse": "見て回る",
+      "connect": "自分のDBを接続"
+    }
+  },
+  "appSettings": {
+    "save": {
+      "pending": "保存中…",
+      "unconfirmed": "保存結果を確認できませんでした。再試行する前に保存済みの設定を確認してください。",
+      "reload": "保存済みの設定を再読み込み"
+    },
+    "notConfigured": "Supabaseが設定されていません。",
+    "title": "設定",
+    "subtitle": "組織 · 言語 · メール · 危険ゾーン。",
+    "orgInfo": {
+      "cardTitle": "組織情報",
+      "nameLabel": "組織名",
+      "slugLabel": "スラッグ",
+      "saving": "保存中…",
+      "save": "変更を保存",
+      "renamed": "組織名を変更しました",
+      "renameFailed": "変更できませんでした",
+      "desc": "メンバーがsupalensやワークスペースのメールで目にする名前です。"
+    },
+    "danger": {
+      "review": {
+        "orgDescription": "このワークスペースと全メンバーが共有するリソースを削除しますか？元に戻せません。このワークスペースを削除する場合のみ続行してください。",
+        "accountDescription": "現在のアカウントと単独で所有するワークスペースを削除しますか？選択中のワークスペース以外にも影響し、元に戻せません。先に所有権の移譲と有料契約を確認してください。",
+        "confirmed": "サーバーから削除リクエストの完了が報告されました。外部リソースのすべての処理完了を個別に検証したものではありません。",
+        "unknown": "削除結果を確認できませんでした。一部の変更は既に行われた可能性があります。再試行する前に再読み込みして現在の状態を確認してください。",
+        "teardown": "一部のワークスペース処理は完了した可能性がありますが、アカウント削除は確認できませんでした。追加操作の前に再読み込みして確認してください。",
+        "finalStep": "サーバーからワークスペース処理が報告されましたが、アカウント削除は完了できませんでした。再試行の前に再読み込みして現在の状態を確認してください。",
+        "notOwner": "ワークスペースを削除できるのは所有者のみです。このリクエストでは削除を開始していません。",
+        "subscription": "所有するワークスペースに有効な有料契約があります。削除前に該当ワークスペースの請求設定を確認してください。",
+        "otherMembers": "他のメンバーがいるワークスペースの所有権を移譲してからアカウントを削除してください。",
+        "unconfigured": "サービスの設定が完了していないため削除できません。このリクエストでは削除を開始していません。",
+        "unauthorized": "ログイン状態を確認できませんでした。変更前にもう一度ログインしてください。",
+        "reload": "再読み込みして現在の状態を確認",
+        "goBilling": "請求設定を確認",
+        "goMembers": "ワークスペースのメンバーを確認",
+        "goLogin": "ログイン",
+        "finishing": "ログアウトまたは画面移動を完了しています…",
+        "handoffFailed": "削除リクエストの完了は確認しましたが、ログアウトまたは画面移動を完了できませんでした。続行ではこの最後の手順だけを再試行し、削除は再送信しません。",
+        "handoffReady": "続行してこの画面を離れられます。削除は再送信しません。",
+        "continue": "続行"
+      },
+      "cardTitle": "危険ゾーン",
+      "deleteOrg": {
+        "instruction": "組織とすべてのデータソース・ダッシュボード・アラート・連携が削除されます。元に戻せません。削除するには組織名(<b>{name}</b>)を入力してください。",
+        "deleting": "削除中…",
+        "button": "組織を削除",
+        "failed": "組織を削除できませんでした",
+        "notOwner": "組織の削除はオーナーのみ行えます。",
+        "activeSubscription": "有料プランが有効です。請求設定で解約してから削除してください。"
+      },
+      "deleteAccount": {
+        "instruction": "アカウントを削除(退会)します。単独で所有する組織は一緒に削除され、他のメンバーがいる組織は先に所有権を移譲する必要があります。続行するには<b>{word}</b>を入力してください。",
+        "processing": "処理中…",
+        "button": "退会",
+        "failed": "退会を処理できませんでした",
+        "keyword": "削除",
+        "hasOtherMembers": "他のメンバーがいる組織のオーナーです。所有権を移譲するか組織を整理してから退会してください。",
+        "activeSubscription": "有料プランが有効な組織があります。先に解約してください。",
+        "teardownFailed": "一部の組織の削除に失敗しました。もう一度お試しください。",
+        "finalStepFailed": "組織データはすべて削除されましたが、アカウント自体の削除は完了しませんでした。もう一度お試しいただくか、サポートにお問い合わせください。"
+      },
+      "desc": "元に戻せない操作です。送信する前に、確認用の文字列を入力する必要があります。"
+    },
+    "language": {
+      "title": "言語",
+      "label": "表示言語",
+      "desc": "supalensの画面と定期メールで使用する言語です。",
+      "saved": "言語設定を保存しました。",
+      "profileFailed": "プロフィールの言語設定を保存できませんでした。選択した表示言語と定期メールの言語が異なる場合があります。",
+      "displayFailed": "表示言語の変更を確認できませんでした。設定を再読み込みしてから再試行してください。",
+      "retry": "プロフィールの保存を再試行"
+    },
+    "emailPrefs": {
+      "title": "メール通知",
+      "desc": "このワークスペースで受け取る定期メールを選択してください。この設定では請求関連の通知は無効になりません。",
+      "digest": "週間ダイジェスト",
+      "digestDesc": "毎週月曜日、データソースのAI要約",
+      "alert": "アラートメール",
+      "alertDesc": "指標アラートの発生・解消時にメールを受信",
+      "lifecycle": "オンボーディング案内",
+      "lifecycleDesc": "セットアップ完了までに時々届く使い方のヒント",
+      "saved": "保存しました",
+      "error": "保存できませんでした。もう一度お試しください。"
+    },
+    "weeklyDigest": {
+      "title": "週次ダイジェスト",
+      "desc": "このワークスペースに週次のAI要約メールを1通送ります。オーナー・管理者のみ設定でき、初期状態はオフです。",
+      "toggle": "週次ダイジェストを送信",
+      "toggleDesc": "毎週月曜、このワークスペースの主要データソースをAIが要約し、オーナー・管理者へ1通のメールで送ります。",
+      "saved": "保存しました",
+      "error": "保存できませんでした。もう一度お試しください。"
+    },
+    "timezone": {
+      "title": "タイムゾーン",
+      "desc": "このワークスペースの時刻表示に使うタイムゾーンです — モニターの確認時刻、インシデント発生時刻、報告の日付に適用されます。",
+      "label": "ワークスペースのタイムゾーン",
+      "useBrowser": "ブラウザのタイムゾーンを使う",
+      "browserHint": "ブラウザのタイムゾーンは {tz} です。",
+      "preview": "このタイムゾーンの表示例: {time}",
+      "saving": "保存中…",
+      "save": "変更を保存",
+      "saved": "タイムゾーンを保存しました",
+      "error": "保存できませんでした。もう一度お試しください。",
+      "invalid": "認識できないタイムゾーンです。",
+      "pendingMigration": "タイムゾーン設定はまだ有効ではありません — データベース更新までは UTC を使用します。",
+      "readOnly": "ワークスペースのタイムゾーンはオーナー・管理者のみ変更できます。"
+    },
+    "groups": {
+      "workspace": "ワークスペース",
+      "personal": "個人の設定"
+    },
+    "password": {
+      "title": "パスワード",
+      "desc": "ログインに使うパスワードを変更します。",
+      "newLabel": "新しいパスワード",
+      "confirmLabel": "新しいパスワード(確認)",
+      "save": "パスワードを変更",
+      "saved": "パスワードを変更しました。",
+      "weak": "パスワードは{min}文字以上にしてください。",
+      "mismatch": "2つのパスワードが一致しません。",
+      "same": "新しいパスワードは現在のものと異なる必要があります。",
+      "failed": "パスワードを変更できませんでした。もう一度お試しください。"
+    }
+  },
+  "appSources": {
+    "title": "データソース",
+    "subtitle": "連携したデータベースと、それぞれのコード · 理解 · 監視 · 通知の設定状況です。",
+    "supabaseNotConfigured": "Supabase が設定されていません。",
+    "time": {
+      "justNow": "たった今",
+      "minutesAgo": "{count}分前",
+      "hoursAgo": "{count}時間前",
+      "daysAgo": "{count}日前"
+    },
+    "status": {
+      "active": "接続済み",
+      "pending": "接続中",
+      "error": "エラー",
+      "disabled": "無効"
+    },
+    "meta": {
+      "type": "タイプ",
+      "tableCount": "テーブル数",
+      "collectionCount": "コレクション数",
+      "lastSynced": "最終同期"
+    },
+    "sync": {
+      "inProgress": "同期中…",
+      "failed": "同期に失敗しました"
+    },
+    "card": {
+      "menuAria": "{name} メニュー",
+      "syncSchema": "スキーマを同期",
+      "attachRepo": "リポジトリを連携",
+      "changeRepo": "リポジトリを変更",
+      "manageInSettings": "設定で管理",
+      "delete": "削除",
+      "kpiTitle": "コア KPI を自動抽出 · コード/スキーマの根拠から提案",
+      "kpiStarting": "開始中…"
+    },
+    "context": {
+      "chip": {
+        "fresh": "コンテキスト最新",
+        "stale": "コンテキスト古い",
+        "generating": "コンテキスト生成中…",
+        "failed": "コンテキスト失敗",
+        "create": "コンテキスト生成"
+      },
+      "statusName": {
+        "pending": "待機",
+        "generating": "生成中",
+        "fresh": "最新",
+        "stale": "古い",
+        "failed": "失敗"
+      },
+      "modalTitle": "コンテキスト — {name}",
+      "modalDescription": "このドキュメント（SUPALENS.md）は分析エージェントに信頼済みコンテキストとして注入され、クエリ精度を高めます。",
+      "statusPrefix": "ステータス: {status}",
+      "statusNone": "なし",
+      "withRepo": " · リポジトリ {name}",
+      "noRepo": " · リポジトリ未連携",
+      "regenerateFromRepo": "リポジトリから再生成",
+      "generateFromSchema": "スキーマから生成",
+      "requesting": "リクエスト中…",
+      "loading": "読み込み中…",
+      "generatingBody": "生成中です。しばらくしてからこのウィンドウを再度開くとドキュメントが表示されます。",
+      "emptyWithRepo": "まだコンテキストがありません。リポジトリから生成してください。",
+      "emptyNoRepo": "まだコンテキストがありません。スキーマベースのベースラインを生成するか、リポジトリを連携してコードから生成してください。"
+    },
+    "kpi": {
+      "chip": {
+        "generating": "生成中…",
+        "proposed": "提案 {count}件",
+        "stale": "古い",
+        "catalog": "KPI カタログ",
+        "extract": "KPI 自動抽出"
+      },
+      "quotaDefault": "今回の請求サイクルの利用上限に達しました。",
+      "upgradePlan": "プランをアップグレード →",
+      "extractFailed": "抽出の開始に失敗しました ({status})",
+      "modal": {
+        "title": "KPI自動抽出",
+        "subtitle": "{name} から抽出する指標エリアを選択してください。",
+        "pickHint": "提案するKPIエリアを選択してください。",
+        "selectAll": "すべて選択",
+        "clearAll": "すべて解除",
+        "cat": {
+          "growth": {
+            "label": "成長",
+            "desc": "登録 · アクティブユーザー · 成長率"
+          },
+          "revenue": {
+            "label": "売上",
+            "desc": "売上 · MRR · 転換 · 返金"
+          },
+          "engagement": {
+            "label": "エンゲージメント",
+            "desc": "コアアクション · リテンション · 機能利用"
+          },
+          "ops": {
+            "label": "運用",
+            "desc": "決済失敗 · エラー · キュー滞留"
+          },
+          "funnel": {
+            "label": "ファネル",
+            "desc": "訪問 → 登録 → アクティブ → 課金"
+          },
+          "custom": {
+            "label": "カスタム",
+            "desc": "コードから抽出したサービス固有の指標"
+          }
+        },
+        "templateCount": "テンプレート{count}件",
+        "codeDerived": "コードベース",
+        "tier1Note": "リポジトリを接続すると、コードベースのカスタム指標も抽出します。",
+        "cancel": "キャンセル",
+        "startCount": "KPI抽出 ({count})",
+        "awaitingTitle": "抽出ステータスの確認を待っています",
+        "statusUnavailable": "最新の状態を読み取れませんでした。以前の件数を保持し、状態の確認を続けます。抽出の完了や失敗が確認されたわけではありません。",
+        "viewElapsed": "この画面での経過時間 · {time}",
+        "processHint": "抽出には次の処理が含まれる場合があります。各段階の実際の進捗はこの画面には報告されません。",
+        "catalogCount": "現在レビュー待ちの提案: {count}件",
+        "unconfirmedTitle": "抽出リクエストを確認できませんでした",
+        "unconfirmedBody": "リクエストは受け付けられた可能性があります。再試行する前に接続画面を再読み込みし、記録された状態を確認してください。再読み込みでは抽出を再送信しません。",
+        "reload": "接続画面を再読み込み",
+        "runningTitle": "KPIを抽出中…",
+        "step": {
+          "schema": "スキーマを分析中",
+          "validate": "指標SQLの作成・検証中",
+          "catalog": "カタログを作成中"
+        },
+        "runningHint": "この画面を閉じても送信済みの抽出はキャンセルされません。接続画面で記録された状態を確認できます。",
+        "background": "バックグラウンドで実行",
+        "failedTitle": "抽出に失敗しました",
+        "failedBody": "抽出中に問題が発生しました。しばらくしてから再度お試しください。",
+        "foundCount": "現在{count}件を検出",
+        "partialTitle": "抽出停止 · レビュー可能な提案{count}件",
+        "partialBody": "抽出は失敗しましたが、現在のカタログにある提案はレビューできます。この件数には以前の提案が含まれる場合があります。",
+        "doneTitle": "レビュー可能な提案{count}件",
+        "doneBody": "確認して、必要な指標をダッシュボードに固定してください。",
+        "review": "提案を確認",
+        "emptyTitle": "指標が見つかりませんでした",
+        "emptyBody": "現在のデータでは指標を作成できませんでした。別のカテゴリを選択するか、リポジトリを接続してください。",
+        "close": "閉じる",
+        "retry": "再試行"
+      },
+      "error": {
+        "trigger_required": "バックグラウンド実行環境が準備できていないため、抽出を開始できません。",
+        "trigger_failed": "抽出ジョブの開始に失敗しました。しばらくしてから再度お試しください。",
+        "engine_not_supported": "KPI 抽出は SQL データソースのみ対応しています。",
+        "demo_not_supported": "デモソースには標準の KPI カタログが用意されています。",
+        "supabase_not_configured": "サーバー設定エラーのため抽出を開始できません。"
+      }
+    },
+    "connect": {
+      "cta": "連携",
+      "addTitle": "データソースを連携",
+      "modalTitle": "データソースを連携",
+      "modalDescription": "SupabaseはOAuth一回で接続できます。他のデータベースは接続情報で接続します。",
+      "back": "← 戻る",
+      "type": {
+        "postgres": "ホスト・ポートで直接接続",
+        "mysql": "ホスト・ポートで直接接続",
+        "supabase": "OAuth でアカウント・プロジェクトを連携",
+        "firestore": "サービスアカウント JSON で連携"
+      },
+      "supabaseBlurb": "Supabase アカウントを OAuth で連携すると、プロジェクトの DB を読み取り専用で分析します。パスワードの代わりに supalens_ro ロールが自動発行されます。",
+      "supabaseCta": "Supabase アカウントを連携 →",
+      "provisioning": "Supabase プロジェクトを取り込んでいます… まもなく一覧に表示されます。",
+      "connectedGithub": "GitHubが接続されました。{count}件のリポジトリにアクセスできます。",
+      "connectedSupabase": "Supabaseアカウントが接続されました。データソースを{count}件取り込みました。",
+      "error": {
+        "invalid_state": "接続セッションの有効期限が切れたか無効です。このページからもう一度お試しください。",
+        "installation_claimed": "このGitHubインストールはすでに別の組織に接続されています。",
+        "generic": "接続に失敗しました: {code}"
+      },
+      "supabaseHeroTitle": "Supabaseで接続",
+      "supabaseHeroSub": "OAuth一回 · プロジェクト自動取り込み",
+      "trustRole": "読み取り専用ロールのみ発行",
+      "trustNoWrite": "書き込み権限なし",
+      "trustRevoke": "いつでも解除",
+      "othersToggle": "他のデータベース",
+      "othersHint": "PostgreSQL · MySQL · Firestore",
+      "githubHint": "コードリポジトリはデータソースではありません。各ソースカードの「コードを接続」から付けます。",
+      "addSub": "Supabase · PostgreSQL · MySQL · Firestore",
+      "recommended": "おすすめ",
+      "modalDescriptionDirect": "読み取り専用の認証情報でデータベースを接続します。"
+    },
+    "attach": {
+      "modalTitle": "このDBの意味を持つコードを接続してください",
+      "modalDescription": "スキーマは「何があるか」を、コードは「何を数えるか」を教えます。リポジトリを接続すると、返金除外・内部アカウント除外といった実際のルールを読み取り、正確なKPIを提案します。",
+      "noRepos": "連携済みの GitHub リポジトリがありません。",
+      "connectGithub": "GitHub を連携 →",
+      "connectAnother": "別の GitHub 組織を連携 →",
+      "repoLabel": "リポジトリ",
+      "none": "— 連携しない —",
+      "saving": "保存中…",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "failed": "失敗 ({status})",
+      "installTitle": "リポジトリを選ぶにはGitHubを接続してください",
+      "installBody": "コードを所有する組織に読み取り専用のGitHub Appをインストールします。どのリポジトリを見せるかはご自身で選べます。",
+      "installCta": "リポジトリを接続して分析",
+      "noAdmin": "そのGitHub組織の管理者ではありませんか？",
+      "noAdminCta": "オーナーにインストールを申請する",
+      "scope": "Contents: read · Metadata: read",
+      "scopeNote": "読み取り専用です。取得したコードをビルド・インストール・実行することはありません。",
+      "suggested": "{name} に近いリポジトリ",
+      "allRepos": "すべてのリポジトリ",
+      "searchLabel": "リポジトリを検索",
+      "searchPlaceholder": "owner/repo",
+      "noMatches": "「{query}」に一致するリポジトリがありません。",
+      "branch": "デフォルトブランチ {branch}",
+      "detach": "リポジトリを接続しない",
+      "advanced": "複数リポジトリ・モノレポ・サブパス",
+      "advancedBody": "現在はデータソース1件につきリポジトリ1件のみです。モノレポのサブパス指定は未対応で、接続するとリポジトリ全体を読み取ります。",
+      "connectAnotherOrg": "別のGitHub組織を接続する",
+      "contextQueued": "リポジトリを接続しました。コードを読み取ってコンテキスト文書を作成しています。",
+      "contextLimit": "リポジトリは接続しましたが、プランのコード解析回数を使い切ったためコンテキスト文書を再生成できませんでした。",
+      "contextQuota": "リポジトリは接続しましたが、今期の使用量上限に達したためコンテキスト文書を再生成できませんでした。",
+      "attachedNote": "現在の接続: {name}"
+    },
+    "delete": {
+      "title": "'{name}' を削除",
+      "descFailed": "削除に失敗しました: {error}",
+      "desc": "このデータソースを削除すると、保存された認証情報は破棄され、接続が解除されます。続行しますか？",
+      "confirm": "削除",
+      "failed": "削除に失敗しました ({status})"
+    },
+    "form": {
+      "name": "名前",
+      "namePlaceholderSql": "例: 本番 DB",
+      "namePlaceholderFirestore": "例: 本番 Firestore",
+      "host": "ホスト",
+      "port": "ポート",
+      "database": "データベース",
+      "user": "ユーザー",
+      "password": "パスワード",
+      "passwordHint": "パスワードは暗号化して保存されます。",
+      "ssl": "SSL を使用",
+      "testing": "テスト中…",
+      "submit": "接続テストして追加",
+      "fileReadError": "ファイルを読み込めませんでした。",
+      "serviceAccountKey": "サービスアカウントキー",
+      "uploadJson": "JSON ファイルをアップロード",
+      "saProject": "プロジェクト",
+      "pasteJson": "または JSON を直接貼り付け",
+      "saHint": "読み取り専用の roles/datastore.viewer サービスアカウントを推奨します。private_key は暗号化して保存されます。",
+      "databaseId": "データベース ID",
+      "databaseIdHint": "任意 · 空欄の場合は既定のデータベース",
+      "connectionUrl": "接続 URL(任意)",
+      "connectionUrlHint": "接続 URL を貼り付けると下の項目が入力されます。",
+      "sslMode": "暗号化",
+      "sslVerify": "SSL — 証明書を検証",
+      "sslRequire": "SSL — 証明書を検証しない(自己署名・プーラー)",
+      "sslOff": "SSL を使用しない",
+      "errors": {
+        "unsafeHost": "このホストはプライベートまたはローカルアドレスで、このインストールではブロックされています。管理者が ALLOW_PRIVATE_DB_HOSTS=true で許可できます。",
+        "tls": "暗号化接続に失敗しました。サーバーが自己署名証明書やプーラーを使用している場合は「SSL — 証明書を検証しない」を、SSL がない場合は「SSL を使用しない」を選択してください。",
+        "auth": "データベースがユーザー名またはパスワードを拒否しました。",
+        "hostNotFound": "ホスト名を解決できませんでした。綴りと、このサーバーから到達できるかを確認してください。",
+        "refused": "接続が拒否されました。ポートと、データベースがこのサーバーからの接続を許可しているかを確認してください。",
+        "databaseNotFound": "サーバーにそのデータベースが存在しません。",
+        "timeout": "接続がタイムアウトしました。ファイアウォールがこのサーバーをブロックしている可能性があります。",
+        "unreachable": "データベースに到達できませんでした。ホスト・ポート・ネットワークアクセスを確認してください。"
+      }
+    },
+    "error": {
+      "supabase_not_configured": "サーバー設定エラーによりリクエストを処理できませんでした。",
+      "unauthorized": "再度サインインしてください。",
+      "forbidden": "このデータソースへの権限がありません。",
+      "invalid_body": "リクエストの形式が正しくありません。",
+      "repo_forbidden": "このリポジトリへのアクセス権限がありません。",
+      "cross_org_not_allowed": "他の組織のリポジトリは接続できません。",
+      "update_failed": "更新に失敗しました。",
+      "use_disconnect_for_oauth_sources": "連携アカウントのソースは統合設定ページで接続解除してください。",
+      "baseline_failed": "基本コンテキストの生成に失敗しました。",
+      "repo_invalid": "接続されたリポジトリが見つかりません。",
+      "installation_not_found": "GitHubインストール情報が見つかりません。",
+      "trigger_required": "バックグラウンド実行環境が準備できていないため、リクエストを処理できません。",
+      "trigger_failed": "ジョブの開始に失敗しました。しばらくしてから再度お試しください。",
+      "context_limit": "無料プランではコンテキスト抽出は1回までです。再度抽出するにはプランをアップグレードしてください。"
+    },
+    "pipeline": {
+      "database": "データベース",
+      "application": "アプリケーションコード",
+      "understanding": "ビジネス理解",
+      "monitoring": "監視",
+      "slack": "通知チャンネル",
+      "dbTables": "接続済み · テーブル {count}件",
+      "dbCollections": "接続済み · コレクション {count}件",
+      "dbUnsynced": "スキーマ未同期",
+      "dbSyncing": "同期中…",
+      "dbSyncFailed": "同期失敗",
+      "appNone": "コード未接続",
+      "ctxFreshCode": "最新 · コード基準",
+      "ctxFreshSchema": "最新 · スキーマのみ",
+      "ctxStale": "古い",
+      "ctxGenerating": "生成中…",
+      "ctxFailed": "失敗",
+      "ctxNone": "なし",
+      "monActive": "KPI {count}件を監視中",
+      "monNone": "監視なし",
+      "monRunning": "KPI抽出中…",
+      "monProposed": "提案 {count}件がレビュー待ち",
+      "slackNone": "未接続 · メールのみ",
+      "alertNone": "未接続"
+    },
+    "next": {
+      "label": "次",
+      "attachRepo": "コードを接続",
+      "generateContext": "コンテキスト生成",
+      "generating": "コンテキスト生成中…",
+      "extractKpis": "KPI抽出",
+      "extracting": "KPI抽出中…",
+      "reviewKpis": "KPIレビュー",
+      "viewModel": "ビジネスモデルを見る",
+      "manage": "設定で管理"
+    },
+    "sample": {
+      "heading": "サンプル",
+      "badge": "デモ",
+      "note": "登録時に自動で付く読み取り専用サンプルです。使用量には含まれません。"
+    },
+    "empty": {
+      "title": "まだデータベースが接続されていません。"
+    }
+  },
+  "common": {
+    "language": "言語",
+    "brandHome": "Supalens ホーム",
+    "logIn": "ログイン",
+    "getStarted": "始める",
+    "goToApp": "ダッシュボードへ"
+  },
+  "emailAlert": {
+    "subjectFired": "[発生] {name}",
+    "subjectResolved": "[解除] {name}",
+    "headingFired": "アラート発生",
+    "headingResolved": "アラート解除",
+    "conditionLabel": "現在値 / 条件",
+    "currentValueLabel": "現在値",
+    "rootCause": "✦ 原因分析 (AI)",
+    "viewButton": "モニターを見る",
+    "op": {
+      "lt": "未満",
+      "lte": "以下",
+      "gt": "超過",
+      "gte": "以上",
+      "eq": "に等しい",
+      "neq": "と異なる"
+    },
+    "bodyFired": "現在値 {value} がしきい値 {threshold} {op} の条件を満たしました。",
+    "bodyResolved": "条件から外れて正常に戻りました。現在値 {value}。",
+    "anomalyFired": "現在値 {value} が通常の範囲を大きく外れました{deviation}。",
+    "anomalyResolved": "異常な状態から通常の範囲に戻りました。現在値 {value}。",
+    "anomalyDeviation": "（通常平均 {mean} に対して {dev} の逸脱）",
+    "unsubscribe": "アラートメールの配信を停止",
+    "likelyCause": "考えられる原因 (AI)",
+    "confirmedInData": "データで確認済み",
+    "goalLabel": "目標",
+    "relativeFired": "最新値 {value} は直前 {window} 日の平均（{mean}）に対して {change} 変化しました。"
+  },
+  "emailBilling": {
+    "paymentFailedSubject": "[決済失敗] {org} — お支払い方法をご確認ください",
+    "paymentFailedLabel": "決済失敗",
+    "paymentFailedBody": "{plan} プランの決済に失敗しました。お支払い方法が更新されない場合、サブスクリプションは解約され、無料プランに切り替わります。請求設定でカード情報をご確認ください。",
+    "paymentFailedButton": "請求設定を開く",
+    "quotaSubject": "[使用量 {pct}%] {org} — 今月の分析クォータが残りわずかです",
+    "quotaLabel": "使用量の警告",
+    "quotaMeterLabel": "今回の請求期間の分析使用量",
+    "quotaBody": "クォータを使い切ると、次の期間まで新しい分析が制限されます。継続してご利用いただくには、プランのアップグレードをご検討ください。",
+    "quotaButton": "プランを見る",
+    "quotaReachedSubject": "今月のクエリ上限に達しました · {org}",
+    "quotaReachedLabel": "使用量の上限に到達",
+    "quotaReachedBody": "{plan} プランの今回の請求期間のクエリ上限をすべて使い切りました。分析を続けるにはプランをアップグレードしてください。",
+    "quotaReachedResets": "上限は {date} にリセットされます。",
+    "quotaReachedButton": "プランをアップグレード"
+  },
+  "emailDigest": {
+    "subject": "[週次ダイジェスト] {org}",
+    "label": "週次ダイジェスト",
+    "subtitle": "{org} · 過去7日間",
+    "ctaButton": "オーバービューを開く",
+    "footer": "AIがデータを読み取り、自動生成しました。ワークスペース設定で管理・オフにできます。",
+    "unsubscribe": "週間ダイジェストの配信を停止",
+    "moreSources": "このワークスペースにはさらに{count}件のソースがあります。",
+    "sections": {
+      "health": "モニター状態",
+      "incidents": "インシデント",
+      "changes": "大きなKPIの変化",
+      "pending": "レビュー待ち"
+    },
+    "health": {
+      "watching": "監視中",
+      "firing": "発生中",
+      "errored": "エラー",
+      "paused": "一時停止",
+      "none": "有効なモニターがまだありません。",
+      "unit": "{count}件"
+    },
+    "incidents": {
+      "none": "今週はインシデントがありませんでした。",
+      "fired": "発生",
+      "resolved": "解消",
+      "open": "未解決",
+      "count": "発生 {fired}件 · 解消 {resolved}件"
+    },
+    "pending": {
+      "kpis": "承認待ちのKPI提案",
+      "stale": "古くなったKPI提案",
+      "context": "再生成が必要なビジネスモデル",
+      "none": "待機中の項目はありません。"
+    }
+  },
+  "emailInvite": {
+    "invitedYou": "{inviter}さんが{org}に招待しました",
+    "body": "{role}として参加します。下のボタンを押して招待を承認してください。この招待は7日間有効です。",
+    "acceptButton": "招待を承認する",
+    "linkFallback": "ボタンが開かない場合は、このアドレスをコピーしてください: {link}",
+    "roleAdmin": "管理者",
+    "roleMember": "メンバー",
+    "roleViewer": "ビューアー"
+  },
+  "emailWelcome": {
+    "subject": "Supalens へようこそ",
+    "heading": "ようこそ、{name}さん 👋",
+    "body": "データにそのまま質問しましょう。すぐ使えるサンプルデータが用意されているので、設定なしで自然な言葉で質問すると、Supalens が SQL を書き、チャートまで描きます。準備ができたら、自分のデータベースやリポジトリを接続してより正確な回答を得られます。",
+    "ctaButton": "サンプルデータに質問する",
+    "footer": "サポートが必要な場合は admin@supalens.ai までご連絡ください。",
+    "bodyNoSample": "データベース（必要ならリポジトリも）を接続し、普段の言葉で質問してください。SupalensがSQLを書き、チャートを描き、監視すべきKPIを提案します。",
+    "ctaNoSample": "Supalensを開く",
+    "footerContact": "お困りの際は {email} までご連絡ください。"
+  },
+  "faq": {
+    "title": "よくある質問",
+    "items": [
+      {
+        "q": "Supalensは誰のためのプロダクトですか？",
+        "a": "データチームのない初期のSaaS・AI SaaSチームです。Founder・CTO・プロダクトリードがダッシュボードを作る時間はなくても、売上・転換・解約などの指標を見守り続けなければならないとき、Supalensがデータ担当者の役割を代わります。"
+      },
+      {
+        "q": "AI SQLツールと何が違いますか？",
+        "a": "ほとんどのAI SQLツールはスキーマしか見ません。SupalensはGitHubのコードから「解約済みサブスクはMRRから除外」「内部アカウントは集計から除外」といったビジネスルールを読み取り、その上でKPIを定義し、回答で終わらず承認済みKPIを監視し続け、異常があれば原因を調査します。"
+      },
+      {
+        "q": "SupabaseとGitHubを接続すると何が起きますか？",
+        "a": "SupabaseはOAuthで接続し、プロジェクトごとに読み取り専用ロールを発行してスキーマを読みます。GitHubはAppのインストールでリポジトリを読み取り専用でクローンし、ビジネスルールを抽出してSUPALENS.mdとして保存します。その後、実行検証済みのKPIを提案し、承認したKPIにモニターが作られます。"
+      },
+      {
+        "q": "KPI定義は監視前に承認しますか？",
+        "a": "はい。すべてのKPIは実際に実行されたSQLからのみ提案され、承認したものだけがダッシュボードとモニターになります。定義は自然言語で表示され、SQLはいつでも展開できます。"
+      },
+      {
+        "q": "何を保存しますか？",
+        "a": "データベース全体は複製しません。回答、最大200行のサンプル、スキーマ構造、コードから抽出したコンテキスト（SUPALENS.md）、承認済みKPI定義、モニターの発火記録と調査結果を保存します。認証情報はテナントごとの鍵で封筒暗号化され、平文がコード・ログ・モデルに残ることはありません。"
+      },
+      {
+        "q": "本番データを変更できますか？",
+        "a": "いいえ。データを書き込むツール自体がありません。すべてのクエリとモニターはSELECTのみ、READ ONLYトランザクション内で実行され、INSERT・UPDATE・DELETE・DROPはブロックされます。"
+      },
+      {
+        "q": "AIの原因分析が間違っていたら？",
+        "a": "原因は仮説です。通知では「データで確認済み」と「可能性の高い原因」を分けて表示し、実行したSQLを常に一緒に示します。重要な判断は確認済みの事実を根拠にし、間違った仮説は次の調査の手がかりになります。"
+      },
+      {
+        "q": "料金はどう決まりますか？",
+        "a": "監視するモニター数と確認周期、データソース・メンバー数が基準です。無料プランでもモニター3個を2時間ごとに確認し、有料プランは10分・5分周期でより多くのモニターを監視します。自然言語の質問数はフェアユースの上限としてのみ扱います。"
+      },
+      {
+        "q": "Claude・Cursor・Codexからも使えますか？",
+        "a": "はい。MCPサーバー mcp.supalens.ai を接続すると、承認済みKPI定義をそのまま再利用して質問し、原因を分解し、新しいモニターを作れます。Webコンソールなしでも動作します。"
+      },
+      {
+        "q": "対応データベースは？",
+        "a": "Supabase（OAuth）、PostgreSQL、MySQL、Firebase Firestoreです。自動KPI提案は現在SQL系（Supabase・PostgreSQL・MySQL）で対応し、GitHubコードコンテキストはどのソースにも接続できます。"
+      }
+    ]
+  },
+  "features": {
+    "heading": "理解し、作り、見守る。",
+    "lede": "Supalensは機能の寄せ集めではなく、ひとつの流れです。コードとDBからビジネスを理解し、検証済みのKPIを作り、承認したものを見守り続けます。",
+    "items": [
+      {
+        "kicker": "01 · Understand",
+        "title": "ビジネスを理解する",
+        "body": "データベースとアプリケーションコードからビジネスのエンティティとルールを学習します。"
+      },
+      {
+        "kicker": "02 · Build",
+        "title": "検証済みKPIを作る",
+        "body": "レビューして承認できる、実行検証済みのKPI定義を提案します。"
+      },
+      {
+        "kicker": "03 · Watch",
+        "title": "承認したものを見守る",
+        "body": "承認済みKPIを監視し、変化を調査してからSlackに送ります。"
+      }
+    ],
+    "secondaryLabel": "必要なときは",
+    "secondary": [
+      "自然言語で質問",
+      "MCP · Claude・Cursor・Codex",
+      "ダッシュボード",
+      "週次ダイジェスト",
+      "メール通知"
+    ],
+    "vig": {
+      "githubBadge": "リポジトリから生成",
+      "githubNote1": "決済完了は status = 'paid' のみ",
+      "githubNote2": "返金は refunded_at で除外",
+      "kpi1": "MRR",
+      "kpi2": "返金率",
+      "kpiVerified": "実行検証済み",
+      "kpiRows": "12行 · 0.4s",
+      "alertMetric": "MRR",
+      "alertInvestigating": "原因を調査中…"
+    }
+  },
+  "finalCta": {
+    "line": "プロダクトはあなたが作る。\nビジネスはSupalensが見守る。",
+    "ctaPrimary": "Supabaseを接続",
+    "ctaSecondary": "ライブデモを見る",
+    "note": "カード登録不要 · 設計上の読み取り専用"
+  },
+  "footer": {
+    "columns": [
+      {
+        "title": "製品",
+        "links": [
+          "仕組み",
+          "なぜコードか",
+          "モニタリング",
+          "セキュリティ",
+          "料金"
+        ]
+      },
+      {
+        "title": "ソリューション",
+        "links": [
+          "Supabase のための Supalens"
+        ]
+      },
+      {
+        "title": "リソース",
+        "links": [
+          "ライブデモ",
+          "MCP セットアップガイド"
+        ]
+      },
+      {
+        "title": "会社",
+        "links": [
+          "お問い合わせ"
+        ]
+      },
+      {
+        "title": "法的事項",
+        "links": [
+          "プライバシーポリシー",
+          "利用規約",
+          "返金ポリシー"
+        ]
+      }
+    ],
+    "biz": {
+      "name": "商号",
+      "ceo": "代表",
+      "ceoName": "朴周燦",
+      "registrationNumber": "事業者登録番号"
+    }
+  },
+  "hero": {
+    "desktop": {
+      "menu": {
+        "file": "ファイル",
+        "edit": "編集",
+        "view": "表示",
+        "go": "移動",
+        "window": "ウィンドウ"
+      },
+      "menuDate": "9月4日(金) 09:12",
+      "chromeTitle": "DailyCart — 5分セットアップ",
+      "connectTag": "1 · 接続",
+      "connectHelp": "DBは何があるかを、コードは何を数えるべきかを教えてくれます",
+      "supabaseScope": "プロジェクト読み取り · 読み取り専用ロール",
+      "githubScope": "コード読み取り · Contents: Read",
+      "connectBtn": "接続",
+      "connectDone": "接続済み",
+      "scanStatus": [
+        "Supabase接続済み · 読み取り専用",
+        "スキーマを読み取り中 — テーブル42個",
+        "コードを読み取り中 — 決済・サブスクリプション"
+      ],
+      "scanCounters": [
+        "テーブル42個をスキャン",
+        "ビジネスエンティティ6個",
+        "コード裏付けルール9個",
+        "KPIクエリ7個を検証"
+      ],
+      "rulesTag": "2 · 理解した内容",
+      "rulesTitle": "このサービスはこう動いているようです",
+      "entities": [
+        "Users",
+        "Subscriptions",
+        "Payments",
+        "Refunds",
+        "Credits",
+        "Generations"
+      ],
+      "rules": [
+        {
+          "text": "解約済みサブスクリプションはMRRから除外",
+          "ev": "billing/mrr.ts:41"
+        },
+        {
+          "text": "返金済み決済は売上から除外",
+          "ev": "payments/revenue.ts:18"
+        },
+        {
+          "text": "削除済みユーザーは集計しない",
+          "ev": "users/query.ts:9"
+        },
+        {
+          "text": "社内テストアカウントは除外",
+          "ev": "lib/accounts.ts:22"
+        },
+        {
+          "text": "クレジットは生成成功時のみ消費",
+          "ev": "credits/consume.ts:57"
+        }
+      ],
+      "rulesCta": "合っています — KPIを確認",
+      "kpiTag": "3 · 提案されたKPI",
+      "kpiMeta": "7件すべて実行検証済み",
+      "kpis": [
+        {
+          "name": "MRR",
+          "value": "₩41.2M",
+          "kind": "anomaly"
+        },
+        {
+          "name": "新規有料転換",
+          "value": "38人",
+          "kind": "anomaly"
+        },
+        {
+          "name": "トライアル転換率",
+          "value": "11.4%",
+          "kind": "threshold"
+        },
+        {
+          "name": "解約率",
+          "value": "2.1%",
+          "kind": "threshold"
+        },
+        {
+          "name": "返金率",
+          "value": "0.8%",
+          "kind": "anomaly"
+        },
+        {
+          "name": "生成成功率",
+          "value": "97.9%",
+          "kind": "dash"
+        },
+        {
+          "name": "ARPU",
+          "value": "₩28,400",
+          "kind": "dash"
+        }
+      ],
+      "kindAnomaly": "異常検知",
+      "kindThreshold": "しきい値",
+      "kindDash": "ダッシュボードのみ",
+      "approveCta": "承認して5件の監視を開始",
+      "doneTitle": "Supalensが監視を開始しました",
+      "doneApproved": "KPI 7件を承認",
+      "doneMonitors": "モニター5件が有効",
+      "doneNext": "次回チェックは予約済み",
+      "slack": {
+        "channel": "#founders",
+        "app": "Supalens",
+        "time": "午前9:14",
+        "title": "売上の異常を検知",
+        "headline": "金曜日のベースライン比 −23%",
+        "investigating": "原因を調査中",
+        "confirmedTag": "データで確認済み",
+        "confirmed": [
+          "新規サブスク −4%",
+          "更新売上 −31%",
+          "US 正常",
+          "Japan −52%"
+        ],
+        "likelyTag": "可能性の高い原因",
+        "likely": "決済Webhook失敗率 0.3% → 7.8%",
+        "foot": "Supalensが調査 · 読み取り専用クエリ8回",
+        "ack": "確認"
+      },
+      "toastTitle": "監視を開始しました",
+      "toastSub": "モニター5件 · Slack #founders"
+    },
+    "cursor": {
+      "eyebrow": "データチームのないスタートアップのためのAIデータオペレーター",
+      "headline": "データベースは何があるかを知っています。コードは何を数えるべきかを知っています。",
+      "sub": "SupabaseとGitHubをつなぐだけ。Supalensがビジネスルールを理解し、重要なKPIを提案して24時間監視します。異常があれば原因まで調査します。",
+      "ctaPrimary": "Supabaseを接続",
+      "ctaSecondary": "5分セットアップを見る →"
+    }
+  },
+  "legal": {
+    "backHome": "← Supalens ホーム",
+    "effectiveDate": "施行日",
+    "ceoLabel": "代表",
+    "ceoName": "朴周燦",
+    "bizRegLabel": "事業者登録番号",
+    "toc": "目次",
+    "connectCta": "Supabase + GitHub を接続",
+    "home": "Supalens ホーム"
+  },
+  "mcpHub": {
+    "heading": "必要なときに質問し、質問しないときも監視し続けます。",
+    "lede": "Claude Code・Cursor・Codexにmcp.supalens.aiを接続すると、承認済みのKPI定義をそのまま再利用して質問し、原因を分解し、新しいモニターまで作れます。質問がなくても監視は止まりません。",
+    "guideLink": "設定ガイド →",
+    "mock": {
+      "user": "先月比でMRRはどう変わった？承認済みの定義で。",
+      "lastMonth": "先月",
+      "thisMonth": "今月",
+      "reply": "承認済みMRR定義では今月 ₩48.2M、先月比 +6.4% です。解約・返金は除外済みです。",
+      "saved": "MRR異常検知モニターを作成しました。プランの周期ごとに確認し、#foundersに通知します。"
+    }
+  },
+  "meta": {
+    "title": "Supalens — データチームのないスタートアップのAIデータオペレーター",
+    "description": "SupabaseとGitHubを接続すると、Supalensがコードからビジネスルールを読み取り、実行検証済みのKPIを提案し、承認したKPIを24時間監視します。異常が起きれば原因まで調査してSlackに通知します。"
+  },
+  "nav": {
+    "ariaLabel": "メイン",
+    "howItWorks": "仕組み",
+    "whyCode": "なぜコードか",
+    "monitoring": "モニタリング",
+    "security": "セキュリティ",
+    "pricing": "料金",
+    "liveDemo": "ライブデモ",
+    "ctaConnect": "Supabaseを接続",
+    "menuOpen": "メニューを開く",
+    "menuClose": "メニューを閉じる",
+    "forSupabase": "Supabase"
+  },
+  "pricing": {
+    "head": {
+      "title": "監視するKPIの数で選ぶ。",
+      "subtitle": "無料で始めて、監視対象が増えたらアップグレード。"
+    },
+    "badgeRecommended": "スタートアップにおすすめ",
+    "note": "料金はすべてUSD。カード登録なしで無料で始められます。AI原因調査はモニターが発火したときに実行されます。",
+    "plans": [
+      {
+        "per": "",
+        "tagline": "ひとりで指標を見守り始めるとき",
+        "intro": "含まれるもの:",
+        "features": [
+          "モニター3個",
+          "2時間ごとに確認",
+          "メール · Slack · Discord 通知",
+          "データソース1個",
+          "メンバー1名",
+          "月15質問 · フェアユース"
+        ],
+        "cta": "無料で始める"
+      },
+      {
+        "per": "/月",
+        "tagline": "始めたばかりのSaaSチーム",
+        "intro": "Freeのすべてに加えて:",
+        "features": [
+          "モニター10個",
+          "10分ごとに確認",
+          "メール · Slack · Discord 通知",
+          "データソース3個",
+          "メンバー5名",
+          "月150質問 · フェアユース"
+        ],
+        "cta": "始める"
+      },
+      {
+        "per": "/月",
+        "tagline": "監視対象が増えたチーム",
+        "intro": "Basicのすべてに加えて:",
+        "features": [
+          "モニター50個",
+          "5分ごとに確認",
+          "メール · Slack · Discord 通知",
+          "データソース10個",
+          "メンバー15名",
+          "月750質問 · フェアユース"
+        ],
+        "cta": "今すぐ始める"
+      },
+      {
+        "per": "/月",
+        "tagline": "制限のない大規模運用",
+        "intro": "Standardのすべてに加えて:",
+        "features": [
+          "モニター無制限",
+          "5分ごとに確認",
+          "メール · Slack · Discord 通知",
+          "データソース無制限",
+          "メンバー無制限",
+          "質問無制限 · フェアユース"
+        ],
+        "cta": "始める"
+      }
+    ]
+  },
+  "privacy": {
+    "metaTitle": "プライバシーポリシー · Supalens",
+    "title": "プライバシーポリシー",
+    "updated": "2026年9月4日",
+    "s1": {
+      "h": "1. 収集する個人情報",
+      "body": "(1) アカウント: メールアドレス、氏名、ソーシャルログイン(Google・Kakao・GitHub)のプロフィール識別子。(2) 利用情報: サービス利用ログ、アクセス記録。(3) 決済: 決済は Paddle が処理し、当社はカード番号などの決済手段情報を保存しません。(4) 接続されたデータベース: 当社はお客様のデータベースを複製したり全量保存したりしません。ただしサービス提供(分析履歴、ダッシュボード、KPI プレビュー)のため、クエリ結果の一部(サンプル行、最大 200 行)、AI の回答、スキーマ構造(テーブル名・カラム名)を当社のデータベースに保存します。データベースの資格情報はエンベロープ暗号化で保護して保存します。(5) コードコンテキスト: GitHub リポジトリを接続した場合、コードとスキーマから生成したビジネスコンテキスト文書(SUPALENS.md)をデータソースごとに保存します。リポジトリ本体は分析ジョブの間だけ一時的にクローンされ、終了後に破棄されます。(6) 監視・調査記録: KPI の定義と提案、モニター(アラート)設定、アラート発生履歴、AI の原因分析結果を保存します。"
+    },
+    "s2": {
+      "h": "2. 利用目的",
+      "body": "会員の識別・管理、サービス提供(自然言語での分析、ビジネスコンテキスト生成、KPI 提案、ダッシュボード、定期監視と通知、AI 原因分析、MCP 連携)、有料プランの決済・精算、お問い合わせ対応、サービス改善および不正利用防止。"
+    },
+    "s3": {
+      "h": "3. 接続先サービスへのアクセス範囲",
+      "body": "(1) データベース: お客様が質問したときだけでなく、有効化したモニターを評価するために接続先データベースへ読み取り専用クエリを実行します。スケジューラは 5 分ごとに動作し、各モニターはご利用中のプランのチェック間隔(無料は 2 時間ごと、有料プランは 10 分または 5 分ごと)で評価されます。保存済みダッシュボードを開いた際も登録済みクエリを再実行します。すべてのクエリは SELECT のみ許可され、読み取り専用トランザクション、実行時間制限、行数上限の中で実行されます。Supabase OAuth で接続したプロジェクトには専用の読み取り専用ロール(supalens_ro)を発行して使用します。(2) GitHub: GitHub App のインストールを通じて、お客様が選択したリポジトリのメタデータとコンテンツに読み取り権限のみでアクセスします。短期のインストールトークンだけを使用し、GitHub ログイントークンは使用しません。リポジトリのコードをビルド・インストール・実行することは一切ありません。(3) Slack・Discord: 連携を有効化した場合、通知メッセージ(指標名、現在値、基準値、AI 原因分析の要約)およびメンションへの回答(質問・回答・チャート)が当該サービスへ送信されます。"
+    },
+    "s4": {
+      "h": "4. 保有期間",
+      "body": "退会時にはサービスへのアクセスを直ちに停止し、保管中の資格情報はただちに失効させ、以後使用できないようにします。残る運用記録は次の保存期間の経過後に自動削除されます: 分析実行記録と AI 回答 180 日、アラート発生履歴 180 日、資格情報アクセス記録 180 日、監査ログ 365 日、外部サービス(Paddle・GitHub・Slack)の Webhook 受信記録 90 日。関連法令により保存が必要な取引・決済記録は、法令の定める期間保管します。"
+    },
+    "s5": {
+      "h": "5. 接続解除とアカウント削除",
+      "body": "お客様はいつでも接続を解除できます。Supabase アカウントの接続を解除すると OAuth トークンを失効させ、ボールトに保管された読み取り専用ロールの資格情報も併せて失効させ、以後使用できないようにします(データベースに作成された supalens_ro ロールはお客様自身で削除できます)。直接接続したデータベースと Firestore の資格情報は、データソース削除と同時に失効して使用できなくなり、キャッシュされた接続情報も直ちに破棄されます。GitHub App はアプリ内で接続解除するか GitHub でアンインストールでき、その後リポジトリへのアクセスは停止します。アカウントを削除すると、組織が保有するすべての資格情報が失効しアクセスが停止され、残る記録は第 4 項の保存期間に従って削除されます。"
+    },
+    "s6": {
+      "h": "6. 処理の委託および第三者提供",
+      "body": "当社はサービス提供のため、次の委託先に個人情報の処理を委託します: Supabase(データベース・認証)、Vercel(ホスティング)、Trigger.dev(分析・監視ジョブ実行基盤)、Paddle(決済・税務処理)、Anthropic(AI 分析処理)、Resend(メール送信)、Sentry(エラー追跡)、Google Cloud(クラウド基盤・ソーシャルログイン・利用分析)、Kakao(ソーシャルログイン)、GitHub(ソーシャルログインおよびコード分析時のリポジトリアクセス)。また Slack・Discord 連携を有効化した場合、当該サービスへ通知および分析結果が送信されます。委託先の一部は国外(米国など)に所在します。法令に基づく場合またはお客様の同意がある場合を除き、個人情報を第三者に提供しません。"
+    },
+    "s7": {
+      "h": "7. お客様の権利",
+      "body": "お客様はいつでも自身の個人情報の閲覧・訂正・削除・処理停止を請求でき、アカウント削除により退会できます。請求は admin@supalens.ai で受け付けます。"
+    },
+    "s8": {
+      "h": "8. 個人情報の破棄",
+      "body": "利用目的が達成された、または第 4 項の保有期間が経過した個人情報は破棄します。保有期間を過ぎた電子ファイルは復元不可能な方法で削除します。"
+    },
+    "s9": {
+      "h": "9. 安全管理措置",
+      "body": "データベース資格情報などの機微情報はエンベロープ暗号化(KEK/DEK)で保存し、通信の暗号化(TLS)、アクセス権限管理、監査ログなどにより個人情報を保護します。分析 AI は接続情報を取り除いた隔離環境で実行され、データベースの資格情報が AI モデルに渡ることはありません。"
+    },
+    "s10": {
+      "h": "10. 個人情報保護責任者",
+      "body": "個人情報保護責任者: 朴周燦 (admin@supalens.ai)。個人情報に関するお問い合わせ・苦情・救済はこの連絡先で受け付けます。"
+    },
+    "s11": {
+      "h": "11. 告知義務",
+      "body": "本方針の追加・削除・修正がある場合、施行前にサービス内の告知を通じてお知らせします。"
+    }
+  },
+  "refund": {
+    "metaTitle": "返金ポリシー · Supalens",
+    "title": "返金ポリシー",
+    "updated": "2026年7月3日",
+    "s1": {
+      "h": "1. 決済および販売者",
+      "body": "Supalens 有料サブスクリプションの決済は決済代行事業者 <b>Paddle</b> を通じて処理され、Paddle が販売者(Merchant of Record)として代金請求、税金(付加価値税など)、インボイス・領収書の発行および返金処理を代行します。"
+    },
+    "s2": {
+      "h": "2. サブスクリプションの解約",
+      "body": "利用者は決済管理(カスタマーポータル)からいつでもサブスクリプションを解約できます。解約時には次回の決済日から請求が停止され、すでに決済済みの期間は引き続き本サービスを利用できます。"
+    },
+    "s3": {
+      "h": "3. 返金の基準",
+      "body": "(1) 決済後に本サービスを実質的に利用していない場合、決済日から7日以内であれば全額返金を請求できます。(2) 月額サブスクリプションの場合、すでに利用した期間については原則として返金が制限され、残余期間の一部返金の可否は関連法令および Paddle の返金規定に従います。(3) 当社の帰責により本サービスを正常に提供できなかった場合、当該期間について返金します。"
+    },
+    "s4": {
+      "h": "4. 返金の手続き",
+      "body": "返金のご請求は admin@supalens.ai、または決済時に送信された Paddle の領収書の案内を通じて受け付けており、承認された返金は元の決済手段へ Paddle を通じて処理されます。処理期間は決済手段・カード会社の方針により、営業日基準で数日を要する場合があります。"
+    },
+    "s5": {
+      "h": "5. お問い合わせ",
+      "body": "返金および決済に関するお問い合わせ: admin@supalens.ai"
+    }
+  },
+  "showcase": {
+    "title": "Supalensが見つけ、あなたが承認したKPI。",
+    "lede": "コードとスキーマから見つけたKPIを承認すると、このボードになります。各ウィジェットに検証状態、監視状態、最終確認時刻が付きます。",
+    "exploreLink": "ダッシュボードを見る",
+    "menu": {
+      "file": "ファイル",
+      "edit": "編集",
+      "view": "表示",
+      "go": "移動",
+      "window": "ウインドウ"
+    },
+    "clock": "午前10:24",
+    "windowTitle": "デイリーカート · 主要KPI",
+    "board": {
+      "titles": {
+        "revenue": "本日の売上",
+        "orders": "本日の注文数",
+        "revenueTrend": "日次売上の推移 · 14日",
+        "topProducts": "上位商品",
+        "regionCategory": "地域別 · カテゴリ売上"
+      },
+      "vsYesterday": "前日比",
+      "orderUnit": "件",
+      "tableCols": {
+        "product": "商品",
+        "revenue": "売上",
+        "orders": "注文"
+      },
+      "regions": [
+        "ソウル",
+        "京畿",
+        "釜山",
+        "大邱",
+        "仁川"
+      ],
+      "categories": [
+        "生鮮食品",
+        "加工食品",
+        "生活用品"
+      ],
+      "products": [
+        "オーガニックりんご 1.5kg",
+        "済州サムダス 2L×6",
+        "韓牛サーロイン 300g",
+        "アボカド 4個",
+        "抗生物質不使用たまご 30個"
+      ]
+    },
+    "status": {
+      "verified": "検証済み",
+      "monitoring": "監視中",
+      "anomaly": "異常検知",
+      "dashboardOnly": "ダッシュボードのみ",
+      "checked": "{min}分前に確認"
+    }
+  },
+  "demo": {
+    "metaTitle": "ライブデモ — 実在するショップのデータベースに何でも質問",
+    "metaDescription": "オンラインアパレルショップの実際の Postgres データベースで Supalens を試せます。登録不要。自然な言葉で質問すると、読み取り専用の AI アナリストが SQL を書き、結果をチャートにして、何が変わったのかを説明します。",
+    "tag": "ライブデモ · 登録不要",
+    "title": "実際のデータベースに何でも質問",
+    "sub": "Northwind Supply は、6か月分の注文データが毎日最新に保たれるオンラインアパレルショップです。自然な言葉で質問してください。読み取り専用の AI アナリストが SQL を書いて実行し、結果をチャートにして、何が変わったのかを伝えます。",
+    "facts": {
+      "tables": "テーブル 4 件",
+      "customers": "顧客 {count} 人",
+      "orders": "注文 {count} 件",
+      "current": "今日までのデータ",
+      "readOnly": "読み取り専用アクセス"
+    },
+    "console": {
+      "label": "ライブデモコンソール",
+      "database": "northwind_supply",
+      "engine": "Postgres · 読み取り専用",
+      "live": "Live",
+      "tablesTitle": "テーブル",
+      "rows": "{count} 行",
+      "rulesTitle": "使用中の定義",
+      "rules": [
+        "売上は支払い済み（paid）の注文のみ",
+        "返金率 = 返金 ÷（支払い済み + 返金）",
+        "金額は米ドル"
+      ],
+      "limitsTitle": "制限",
+      "limits": [
+        "おすすめの質問はすぐに回答",
+        "ライブ質問は1日最大 {count} 回",
+        "SELECT のみ、8秒でタイムアウト"
+      ],
+      "emptyTitle": "このショップについて何を知りたいですか？",
+      "emptyBody": "質問を選ぶか、自由に入力してください。おすすめの質問は、最近実際に実行した回答をすぐに表示します。",
+      "groups": {
+        "revenue": "売上",
+        "diagnose": "原因を探る",
+        "customers": "顧客"
+      },
+      "placeholder": "売上、商品、返金、顧客について質問…",
+      "send": "質問",
+      "hint": "Enter で質問",
+      "clear": "新しい会話",
+      "you": "あなた",
+      "analyst": "Supalens アナリスト",
+      "more": "別の質問を試す",
+      "schema": "テーブルと定義"
+    },
+    "suggestions": [
+      {
+        "group": "revenue",
+        "question": "直近30日の売上はいくら？"
+      },
+      {
+        "group": "revenue",
+        "question": "直近14日の日別売上を見せて"
+      },
+      {
+        "group": "diagnose",
+        "question": "最近、数日間売上が落ちたのはなぜ？"
+      },
+      {
+        "group": "diagnose",
+        "question": "返金率が特に高い商品はある？"
+      },
+      {
+        "group": "customers",
+        "question": "この1か月で登録が最も伸びた国は？"
+      },
+      {
+        "group": "customers",
+        "question": "累計購入額の上位5人の顧客は？"
+      }
+    ],
+    "answer": {
+      "live": "デモデータベースでライブ実行中",
+      "liveDone": "{seconds}秒でライブ回答",
+      "cached": "{time}にライブ回答 · キャッシュから表示",
+      "cachedUnknown": "以前にライブ回答 · キャッシュから表示",
+      "starting": "アナリストを起動中…",
+      "pending": "同じ質問を別の方が実行中です。その回答に合流しています…",
+      "steps": {
+        "schema": "スキーマを読む",
+        "sql": "{count, plural, =0 {SQL を作成中} other {読み取り専用クエリを # 件実行}}",
+        "chart": "{count, plural, =0 {チャートを選択中} other {チャートを # 件作成}}",
+        "writing": "回答を作成中",
+        "written": "回答を作成しました"
+      },
+      "sql": "{count, plural, one {SQL} other {SQL · クエリ # 件}}",
+      "copy": "コピー",
+      "copied": "コピーしました",
+      "monitorCta": "自分のデータでこの指標を監視",
+      "noAnswer": "アナリストは回答なしで終了しました。質問を言い換えてみてください。",
+      "interrupted": "ライブ実行が完了する前に止まりました。少し待ってから再度お試しください。"
+    },
+    "notices": {
+      "busy": "ライブデモは現在混み合っています。おすすめの質問はすぐに回答します。少し待ってから再度お試しください。",
+      "rateLimited": "本日のライブ質問を使い切りました。自分のデータベースを接続すると続けて使えます。無料です。",
+      "dailyBudget": "デモの本日のライブ質問の上限に達しました。おすすめの質問は引き続きすぐに回答します。",
+      "unavailable": "現在ライブ質問は利用できません。おすすめの質問は引き続きすぐに回答します。",
+      "error": "この質問は実行できませんでした。",
+      "retry": "再試行",
+      "connect": "データベースを接続 — 無料"
+    },
+    "stories": {
+      "tag": "データに隠れた話",
+      "title": "このショップが知るべき3つのこと",
+      "lede": "皆さんのデータと同じように、このデータにも実際の問題と機会が隠れています。アナリストに探させてみてください。アナリストは答えを知らされていません。",
+      "items": [
+        {
+          "kicker": "REVENUE",
+          "title": "数日間、売上が急に落ちた",
+          "body": "日次売上が数日間大きく落ち込み、その後回復しました。はっきりした原因があります。",
+          "question": "最近、数日間売上が落ちたのはなぜ？"
+        },
+        {
+          "kicker": "QUALITY",
+          "title": "返品が続く商品がひとつある",
+          "body": "カタログ全体の返金率は普通ですが、ひとつだけ違います。どの商品で、いつからでしょう？",
+          "question": "返金率が特に高い商品はある？"
+        },
+        {
+          "kicker": "GROWTH",
+          "title": "新しい市場が動き始めている",
+          "body": "先月、ある国からの登録が急増しました。どこで、どれくらい速いのかを探ってください。",
+          "question": "この1か月で登録が最も伸びた国は？"
+        }
+      ],
+      "ask": "アナリストに質問"
+    },
+    "trust": {
+      "tag": "根拠を示します",
+      "title": "すべての回答は確かめられます",
+      "items": [
+        {
+          "kicker": "READ-ONLY",
+          "title": "データは変更できません",
+          "body": "アナリストは SELECT だけができるロールで接続し、8秒でタイムアウトする読み取り専用トランザクションの中で実行します。"
+        },
+        {
+          "kicker": "SQL",
+          "title": "回答にはクエリが付きます",
+          "body": "すべてのチャートに、その結果を出した SQL が付いています。開いて、コピーして、自分で実行してみてください。"
+        },
+        {
+          "kicker": "DEFINITIONS",
+          "title": "数字はあなたのルールに従います",
+          "body": "自分のデータを接続すると、Supalens がコードを読んで何を売上や返金と数えるのかを把握し、その定義で回答します。"
+        }
+      ]
+    },
+    "next": {
+      "tag": "回答の次に",
+      "title": "役立つ回答はモニターになります",
+      "lede": "大事な数字はモニターとして承認してください。Supalens がプランの間隔で確認し、異常があれば何が変わったのかを説明します。",
+      "monitor": {
+        "label": "モニター",
+        "title": "日次売上",
+        "rows": [
+          [
+            "定義",
+            "支払い済みの注文、米ドル"
+          ],
+          [
+            "方式",
+            "7日間のベースラインとの比較で異常を検出"
+          ],
+          [
+            "間隔",
+            "Free は2時間ごと、有料プランは5〜10分ごと"
+          ],
+          [
+            "通知",
+            "Slack #revenue · メール"
+          ]
+        ]
+      },
+      "alert": {
+        "channel": "#revenue",
+        "when": "自動送信",
+        "title": "日次売上が7日間のベースラインより約45%低下しました",
+        "confirmedLabel": "データで確認済み",
+        "confirmed": "一番の売れ筋 Selvedge Denim Jeans の注文が5日間0件でした。アパレルの売上は大きく落ち、フットウェアとアクセサリーは通常どおりでした。",
+        "likelyLabel": "考えられる原因",
+        "likely": "売れ筋商品が在庫切れでした。広告費をかける前に在庫連携を確認してください。",
+        "note": "デモデータに基づく例"
+      },
+      "board": {
+        "title": "承認済みの KPI",
+        "live": "デモデータベースからライブ取得",
+        "sample": "デモデータベースのサンプル値",
+        "updated": "{time}に更新",
+        "columns": {
+          "name": "商品",
+          "revenue": "売上",
+          "units": "販売数"
+        }
+      }
+    },
+    "cta": {
+      "title": "あなたのデータベースも、こう答えられます",
+      "note": "設計上、読み取り専用 · 無料で開始",
+      "secondary": "MCP で Claude から使う"
+    },
+    "payoffTitles": {
+      "total_revenue": "総売上",
+      "daily_revenue": "日次売上",
+      "revenue_by_category": "カテゴリ別売上",
+      "refund_rate": "返金率",
+      "order_count": "日次注文数",
+      "top_products": "上位商品",
+      "new_signups": "日次新規登録"
+    }
+  },
+  "stats": {
+    "ariaLabel": "プロダクト原則",
+    "items": [
+      {
+        "kicker": "STACK",
+        "title": "Supabase + GitHub + Slack",
+        "sub": "DBは何があるかを、コードは何を数えるかを、Slackはどこへ知らせるかを。"
+      },
+      {
+        "kicker": "READ-ONLY",
+        "title": "設計上の読み取り専用",
+        "sub": "書き込むツールがありません。SELECTのみ、READ ONLYトランザクション内で。"
+      },
+      {
+        "kicker": "VERIFIED",
+        "title": "監視前に検証済みのKPI",
+        "sub": "提案されるKPIはすべて実際に実行されたSQLから生まれます。"
+      }
+    ]
+  },
+  "steps": {
+    "heading": "接続から監視まで、4ステップ。",
+    "lede": "設定は一度だけ。あとはSupalensがビジネスを見守ります。",
+    "items": [
+      {
+        "title": "Supabase + GitHubを接続",
+        "body": "SupabaseはOAuth一回、コードはGitHub Appで。読み取り専用ロールと読み取り権限のみ。"
+      },
+      {
+        "title": "Supalensの理解を確認",
+        "body": "エンティティとビジネスルールをコードの根拠付きで表示。正しければ承認、違えば修正。"
+      },
+      {
+        "title": "KPIを承認",
+        "body": "実行検証済みのKPI提案を確認し、監視するものを選びます。定義は自然言語で、SQLは展開して。"
+      },
+      {
+        "title": "Monitor all + Slack接続",
+        "body": "承認したKPIをプランの周期ごとに確認し、異常があれば原因を調査してSlackに送ります。"
+      }
+    ],
+    "demo": {
+      "connect": {
+        "name": "接続",
+        "supabaseBtn": "OAuthで接続",
+        "githubBtn": "Appをインストール",
+        "synced": "テーブル42 · リポジトリ1"
+      },
+      "rules": {
+        "name": "見つかったルール",
+        "r1": "解約済みサブスクはMRRから除外",
+        "r2": "返金済み決済は売上から除外",
+        "r3": "内部テストアカウントは除外",
+        "evidence": "billing/mrr.ts"
+      },
+      "kpi": {
+        "name": "KPI提案",
+        "k1": "MRR",
+        "k2": "新規有料転換",
+        "k3": "返金率",
+        "verified": "実行検証済み",
+        "cta": "承認して監視開始"
+      },
+      "monitor": {
+        "name": "監視中",
+        "approved": "承認 7",
+        "monitors": "モニター 5",
+        "channel": "#founders",
+        "next": "次回チェックは予約済み"
+      }
+    }
+  },
+  "terms": {
+    "metaTitle": "利用規約 · Supalens",
+    "title": "利用規約",
+    "updated": "2026年9月4日",
+    "s1": {
+      "h": "第1条(目的)",
+      "body": "本規約は、Streamize Co., Ltd.(以下「当社」)が提供する Supalens サービス(以下「本サービス」)の利用に関して、当社と利用者との間の権利・義務および責任事項を定めることを目的とします。"
+    },
+    "s2": {
+      "h": "第2条(定義)",
+      "body": "「本サービス」とは、利用者が接続したデータベースおよびコードリポジトリを分析してビジネスコンテキストを生成し KPI を提案するとともに、自然言語によるクエリ・分析、ダッシュボード、定期監視(モニター)と異常検知、通知、AI 原因分析、MCP 連携などを提供するオンラインソフトウェア(SaaS)をいいます。「モニター」とは、利用者が承認・有効化した KPI の監視条件をいいます。「利用者」とは、本規約に同意し本サービスを利用する会員をいいます。"
+    },
+    "s3": {
+      "h": "第3条(規約の掲示と改定)",
+      "body": "当社は本規約を本サービスの初期画面または接続画面に掲示します。当社は関連法令に違反しない範囲で規約を改定でき、改定時には適用日および理由を明示して事前に告知します。"
+    },
+    "s4": {
+      "h": "第4条(サービスの提供)",
+      "body": "当社は年中無休でのサービス提供を原則としますが、システム点検・障害・不可抗力などの理由により、本サービスの全部または一部を一時的に中断することがあります。本サービスは利用者が接続したデータベースおよびリポジトリに<b>読み取り専用</b>でアクセスし、リポジトリのコードを実行せず、認証情報は暗号化して保管します。利用者がモニターを有効化した場合、当社は定期的に接続先データベースへ読み取り専用クエリを実行し、条件を満たすと利用者が設定したチャネルへ通知と AI 原因分析を送信します。"
+    },
+    "s5": {
+      "h": "第5条(会員登録およびアカウント)",
+      "body": "利用者は Google・GitHub などのソーシャルログインまたはメールを通じてアカウントを作成します。利用者はアカウント情報を最新に保ち、アカウントの管理責任を負います。"
+    },
+    "s6": {
+      "h": "第6条(有料サービスおよび決済)",
+      "body": "有料プランの決済は決済代行事業者 <b>Paddle</b> を通じて処理され、Paddle が販売者(Merchant of Record)として代金請求・付加価値税などの税金・インボイス発行を代行します。料金・上限などの詳細は本サービス内の価格案内に従います。"
+    },
+    "s7": {
+      "h": "第7条(サブスクリプションの解約および返金)",
+      "body": "利用者は決済管理(カスタマーポータル)からいつでもサブスクリプションを解約できます。返金に関する事項は<link>返金ポリシー</link>に従います。"
+    },
+    "s8": {
+      "h": "第8条(利用者の義務および禁止行為)",
+      "body": "利用者は、他人のデータへ無断でアクセスしたり、本サービスをリバースエンジニアリング・過度な負荷の惹起・自動化の濫用など正常な運営を妨げる用途で使用してはなりません。利用者は、自身が接続したデータに対する適法な権限を保有しなければなりません。"
+    },
+    "s9": {
+      "h": "第9条(サービスの変更・中断)",
+      "body": "当社は運営・技術上の必要に応じて本サービスの内容を変更または中断することができ、有料サービスの重大な変更時には事前に告知します。"
+    },
+    "s10": {
+      "h": "第10条(データおよび知的財産権)",
+      "body": "利用者が接続・入力したデータの権利は利用者に帰属します。本サービス自体および当社が制作したコンテンツに関する知的財産権は当社に帰属します。"
+    },
+    "s11": {
+      "h": "第11条(自動生成結果の性質および監視の限界)",
+      "body": "本サービスが生成するビジネスルール、KPI 定義、分析回答、原因分析は AI が自動生成した提案または仮説であり、当社はその正確性・完全性を保証しません。利用者は重要な KPI 定義を監視に適用する前に確認・承認する必要があり、本サービスが提供する SQL と根拠で結果を検証できます。当社はすべての異常を検知すること、または特定の時間内に通知を届けることを保証せず(サービスレベル合意は提供しません)、通知は評価周期や外部サービス(データベース・Slack・メールなど)の障害・遅延により遅れたり届かなかったりすることがあります。利用者は本サービスの結果を自らの判断で検証したうえで意思決定に用いなければなりません。"
+    },
+    "s12": {
+      "h": "第12条(責任の制限)",
+      "body": "当社は、天災地変、利用者または第三者の帰責、接続された外部サービス(データベース・AI 提供者など)の障害に起因する損害について、関連法令が許容する範囲で責任を制限します。本サービスは「現状のまま」提供されます。"
+    },
+    "appendix": {
+      "h": "附則",
+      "body": "本規約は2026年9月4日から施行します。"
+    },
+    "s13": {
+      "h": "第13条(準拠法および管轄)",
+      "body": "本規約は大韓民国の法律に従って規律され、本サービスの利用に関連する紛争は、関連法令に基づく管轄裁判所を第一審裁判所とします。"
+    }
+  },
+  "emailLifecycle": {
+    "footer": "設定 → 通知でこの案内メールの受信を管理できます。",
+    "unsubscribe": "オンボーディング・案内メールの配信停止",
+    "connectSource": {
+      "subject": "読み取り専用でSupabaseを接続しましょう",
+      "heading": "まだデータベースが接続されていません",
+      "body": "Supalensは接続したデータベースとコードを読み、ビジネスルールと主要KPIを見つけて監視します。SupabaseはOAuth一回で接続でき、アクセスは専用の読み取り専用ロールのみです。セットアップ画面から続けられます。",
+      "cta": "セットアップを続ける"
+    },
+    "connectRepo": {
+      "subject": "{source}の意味が書かれたコードを接続しましょう",
+      "heading": "{source}は接続済み、次はコードです",
+      "body": "スキーマは何があるかを教えますが、何を数えるべきかはコードにあります。GitHubリポジトリを接続すると、返金除外やテストアカウント除外といった実際のルールを読み取り、KPI定義の精度を高めます。読み取り専用で、コードは実行されません。",
+      "cta": "リポジトリを接続する"
+    },
+    "approveKpis": {
+      "subject": "{source}のKPI提案を確認してください",
+      "heading": "Supalensの理解を確認する番です",
+      "body": "コードとスキーマから提案したKPI定義が確認を待っています。正しいものを承認すると監視が始まり、値がいつもと違えば原因まで調査してお知らせします。承認前には何も監視しません。",
+      "cta": "KPIを確認して監視を開始"
+    },
+    "connectSlack": {
+      "subject": "異常が起きたら、どこに知らせますか？",
+      "heading": "監視は始まりました。通知はメールのみです",
+      "body": "現在、モニターが異常を検知してもメールにしか届きません。Slackを接続してチャンネルを選ぶと、チームが見ている場所に調査結果まで届きます。メールのみのままでも問題ありません。",
+      "cta": "通知チャンネルを設定する"
+    }
+  },
+  "oauthConsent": {
+    "review": {
+      "description": "Supalens ワークスペースへのアクセスを許可する前に、アプリとリクエスト内容をご確認ください。",
+      "clientLabel": "接続をリクエストしたアプリ",
+      "clientIdLabel": "クライアント ID",
+      "returnTo": "接続後の戻り先",
+      "permissions": "リクエストされたスコープ",
+      "scopeNote": "これはリクエストされた範囲であり、承認済みの権限ではありません。実際に許可できるアクセスはワークスペースのロールで制限されます。",
+      "accessNote": "データベースへのクエリは読み取り専用です。write スコープでは、ダッシュボード・保存済みクエリ・モニターなどの Supalens リソースを変更できます。",
+      "confirmNote": "信頼できるアプリの場合のみ承認してください。承認すると接続手続きが続行されますが、アプリ側の接続完了を確認したことにはなりません。",
+      "backHome": "Supalens に戻る",
+      "errorHint": "リクエスト元のアプリに戻り、接続をやり直してください。この画面では承認できません。",
+      "missingClient": "接続リクエストにアプリの識別子がありません。",
+      "unknownClient": "リクエスト元のアプリが見つかりません。アプリから接続を新しく開始してください。",
+      "invalidReturn": "戻り先がこのアプリの登録済みアドレスと一致しないため、接続を続行できません。"
+    },
+    "errorTitle": "接続できません",
+    "title": "supalens 接続を承認",
+    "description": "{name}があなたのsupalensワークスペースへのアクセスを求めています — 接続済みデータベースの読み取り（SELECT専用）、ダッシュボード・クエリの作成。認証情報は共有されません。",
+    "approve": "承認",
+    "deny": "拒否",
+    "loggedInAs": "{email} でログイン中",
+    "sessionExpired": "セッションの有効期限が切れました。再度サインインしてから接続してください。"
+  },
+  "orgActions": {
+    "emptyName": "組織名を入力してください",
+    "orgCapReached": "1人あたり組織は最大{cap}個まで作成できます。",
+    "notAMember": "その組織のメンバーではありません",
+    "renamePermissionDenied": "組織名を変更する権限がありません",
+    "defaultInviterName": "チームメンバー",
+    "genericFailed": "リクエストを処理できませんでした",
+    "errors": {
+      "forbidden": "権限がありません",
+      "target_outranks_caller": "自分と同じか、それ以上の権限を持つメンバーは変更できません",
+      "role_above_caller": "自分より高い権限のロールは付与できません",
+      "cannot_change_own_role": "自分自身のロールは変更できません",
+      "use_transfer_ownership": "オーナーの指定は「所有権の移譲」を使用してください",
+      "use_leave_org": "ご自身の場合は「組織を退出」で処理してください",
+      "last_owner_must_transfer": "最後のオーナーは退出できません。先に所有権を移譲してください",
+      "already_member": "すでにこの組織のメンバーです",
+      "invalid_email": "有効なメールアドレスではありません",
+      "cannot_invite_owner": "オーナー権限では招待できません",
+      "not_a_member": "対象はこの組織のメンバーではありません",
+      "invite_not_found": "招待が見つかりません",
+      "invite_not_pending": "すでに処理済みまたはキャンセルされた招待です",
+      "invite_expired": "期限切れの招待です",
+      "email_mismatch": "招待されたメールアドレスとログイン中のアカウントが異なります",
+      "email_not_confirmed": "このアカウントはメール認証が完了していません。受信トレイの確認リンクを先に確認してください",
+      "already_owner": "すでにオーナーです",
+      "org_invite_pending_email": "このメールアドレス宛の招待がすでに保留中です",
+      "single_workspace": "このインストールで使えるワークスペースは1つです。"
+    },
+    "account": {
+      "invalid_email": "有効なメールアドレスを入力してください。",
+      "weak_password": "パスワードは{min}文字以上にしてください。",
+      "email_exists": "このメールアドレスのアカウントは既に存在します。",
+      "failed": "アカウントを保存できませんでした。もう一度お試しください。"
+    }
+  },
+  "security": {
+    "eyebrow": "セキュリティ",
+    "heading": "設計上、Supalensはあなたのデータを変更できません。",
+    "lede": "読み取り専用は約束ではなく、構造です。書き込むツール自体が存在せず、認証情報は封印され、分析AIは認証情報を持たず隔離されて動きます。",
+    "items": [
+      {
+        "title": "認証情報の封印",
+        "body": "データベースの認証情報は、組織ごとに異なる鍵でAES-256-GCM封筒暗号化されます。その鍵を包む上位鍵はデータベースに保存されないため、DBダンプだけでは復号できません。平文がブラウザにもAIモデルにも渡ることはありません。"
+      },
+      {
+        "title": "構造的な読み取り専用",
+        "body": "質問とモニターは読み取り専用でのみ実行されます。SELECT以外の文は拒否され、READ ONLYトランザクション・ステートメントタイムアウト・行数上限が常に適用されます。Supabase OAuthで接続するとプロジェクトごとに専用の読み取り専用ロール(supalens_ro)を発行して接続し、直接接続したDBにはユーザーが渡した認証情報の上に同じSELECT専用ガードとREAD ONLYトランザクションを重ねます。"
+      },
+      {
+        "title": "隔離されたAI実行",
+        "body": "分析AIは認証情報を環境から取り除いたサンドボックスで実行されます — シェル・ファイル・ネットワークのツールなし。DBの認証情報がモデルプロセスに入ることは決してなく、事前に許可されたツールだけが動作します。"
+      },
+      {
+        "title": "テナント分離",
+        "body": "すべてのユーザーテーブルで行レベルセキュリティ（RLS）が有効です。1回の分析は1つの組織に紐づき、その対象はサーバーが決めます — 質問文やモデルが他組織のデータを選ぶことはできません。"
+      }
+    ],
+    "transparency": {
+      "title": "透明に",
+      "body": "データベース全体を複製することはありません。分析時にクエリ結果はAnthropic（Claude）へ送信され、回答と最大200行のサンプル・スキーマ構造・コードから抽出したコンテキスト（SUPALENS.md）・承認済みKPI定義・モニターの発火記録と調査結果が保存されます。すべてのクエリは監査ログに残り一定期間後に自動削除され、データソースまたはアカウントを削除すると保存された資格情報は直ちに失効し、以後使用できません。"
+    },
+    "compliance": {
+      "title": "コンプライアンス",
+      "items": [
+        "プライバシーポリシーと委託先（サブプロセッサ）の全面開示",
+        "データ主体の権利：開示・削除など",
+        "決済はPaddleが処理 — カード情報は保存しません"
+      ],
+      "privacyLink": "プライバシーポリシー"
+    }
+  },
+  "quota": {
+    "dailyCapReached": "1日の分析実行上限（{cap}回）に達しました。しばらくしてからお試しください。",
+    "orgNotFound": "組織が見つかりません",
+    "queryLimitReached": "今の請求期間のクエリ上限（{limit}回）をすべて使用しました。プランをアップグレードしてください。",
+    "tokenLimitReached": "今の請求期間のトークン上限（{limit}）をすべて使用しました。プランをアップグレードしてください。",
+    "resourceLimitReached": "{label}の上限（{limit}件)に達しました。プランをアップグレードしてください。",
+    "seatLimitReached": "メンバー上限（{limit}名）に達しました。プランをアップグレードしてください。",
+    "inviteDailyCap": "1日の招待上限（{cap}件）に達しました。明日もう一度お試しください。",
+    "inviteTargetCooldown": "同じアドレスへの招待が多すぎます。しばらくしてからお試しください。",
+    "labels": {
+      "dataSource": "データソース",
+      "dashboard": "ダッシュボード",
+      "widget": "ウィジェット",
+      "alert": "アラート"
+    }
+  },
+  "alertActions": {
+    "notificationSaveFailed": "通知設定を保存できませんでした。以前の設定が適用されている可能性があります。再読み込みして確認してから再試行してください。",
+    "nameRequired": "アラート名を入力してください",
+    "invalidOperator": "無効な演算子です",
+    "thresholdNaN": "しきい値が数値ではありません",
+    "invalidSql": "無効なSQLです",
+    "metricSqlError": "条件クエリのエラー: {msg}",
+    "sourceNotFound": "データソースが見つかりません",
+    "sqlOnly": "アラートはSQLデータソース（postgres/mysql）でのみ使用できます",
+    "changeDenied": "変更する権限がありません",
+    "deleteDenied": "削除する権限がありません",
+    "sensitivityInvalid": "感度が正しくありません",
+    "fireThresholdInvalid": "連続発火回数が正しくありません",
+    "cooldownInvalid": "クールダウンが正しくありません",
+    "nameEmpty": "名前を入力してください",
+    "alertNotFound": "アラートが見つかりません",
+    "seriesTooLong": "時系列が長すぎます（{max}件超）。期間を狭めてください",
+    "seriesNotNumeric": "クエリが数値の時系列を返しませんでした",
+    "scalarNotNumeric": "クエリが数値を返しませんでした",
+    "testDetailAnomaly": "最新値 {latest} · 平均 {mean} · z={z}",
+    "testDetail": "現在値 {value} · しきい値 {threshold}",
+    "queryFailed": "クエリの実行に失敗しました",
+    "adminOnly": "権限がありません（owner/admin）",
+    "slackWebhookInvalid": "Slack incoming webhookのURLではありません（https://hooks.slack.com/…）",
+    "discordWebhookInvalid": "DiscordのwebhookのURLではありません（https://discord.com/api/webhooks/…）",
+    "slackConnectFirst": "先にSlackワークスペースを連携してください",
+    "testNotifyName": "テストモニター",
+    "testNotifyMessage": "supalens 通知チャンネルのテストです。このメッセージが見えれば、インシデント通知の設定は完了です。",
+    "conditionInvalid": "モニターの条件が正しくありません",
+    "testDetailRelative": "最新値 {latest} · 平均 {mean} · 変化 {change}",
+    "testDetailLearning": "最新値 {latest} · 通常範囲を学習中（履歴 {n} 日）"
+  },
+  "dashActions": {
+    "invalidSpec": "無効なウィジェット定義です",
+    "sourceNotFound": "データソースが見つかりません",
+    "noOrg": "所属している組織がありません",
+    "deleteDenied": "削除する権限がありません",
+    "changeDenied": "変更する権限がありません",
+    "updateDenied": "編集する権限がありません",
+    "nameRequired": "名前を入力してください",
+    "widgetNotFound": "ウィジェットが見つかりません",
+    "titleRequired": "タイトルを入力してください",
+    "sqlRequired": "SQLを入力してください",
+    "sqlEditUnsupported": "このウィジェットはSQL編集に対応していません",
+    "queryError": "クエリエラー: {msg}",
+    "invalidSql": "無効なSQLです",
+    "refreshRange": "更新間隔は15秒から86400秒（1日）の間で指定してください"
+  },
+  "slackBot": {
+    "cannotProcess": "リクエストを処理できませんでした。",
+    "rateLimited": "リクエストが多すぎます。しばらくしてからお試しください。",
+    "notConnected": "このワークスペースはsupalensに連携されていません。",
+    "channelNotAllowedCommand": "このチャンネルではsupalensを使用できません。管理者が許可したチャンネルでご利用ください。",
+    "channelNotAllowedMention": "このチャンネルではsupalensを使用できません。管理者が許可したチャンネルでメンションしてください。",
+    "emptyQuestionCommand": "質問を入力してください。例: `/supalens 昨日の売上は？`",
+    "emptyQuestionMention": "何をお調べしますか？ 例: `@supalens 昨日の売上は？`",
+    "overQuota": "今の期間の使用上限に達しました。プランをご確認ください: {url}",
+    "analyzing": "分析中… まもなく結果をお送りします 🔎",
+    "duplicate": "同じ質問をすでに分析しています。少々お待ちください。",
+    "unavailable": "現在分析を実行できません。しばらくしてからお試しください。",
+    "startFailed": "分析を開始できませんでした。しばらくしてからお試しください。",
+    "processingError": "処理中にエラーが発生しました。もう一度メンションしてください。",
+    "multipleSources": "データソースが複数あります: {names}。ウェブ（{url}）でソースを指定して質問してください。",
+    "noSources": "接続されたデータソースがありません。{url} で先に接続してください。",
+    "answerError": "分析中にエラーが発生しました。しばらくしてからお試しください。",
+    "answerIncomplete": "分析を完了できませんでした。しばらくしてからお試しください。",
+    "fullResult": "結果の全文を見る ↗"
+  },
+  "emailUnsubscribe": {
+    "expiredTitle": "リンクの有効期限が切れています",
+    "expiredBody": "この配信停止リンクは無効か期限切れです。アプリの設定でメール配信を管理できます。",
+    "unsubscribedTitle": "配信を停止しました",
+    "unsubscribedBody": "今後このメールは届きません。アプリの設定でいつでも再開できます。",
+    "confirmTitle": "配信停止",
+    "confirmBody": "このワークスペースの{what}の受信を停止しますか？",
+    "kinds": {
+      "digest": "週間ダイジェスト",
+      "lifecycle": "オンボーディング・お知らせメール",
+      "alert": "アラート通知"
+    },
+    "button": "配信停止"
+  },
+  "docsMcp": {
+    "metaTitle": "Claude を supalens に接続する — MCP セットアップガイド",
+    "metaDescription": "supalens のリモート MCP サーバーを Claude、Claude Code、その他の MCP クライアントに接続する方法:OAuth ログイン、利用可能なツール、読み取り専用のセキュリティモデル、トラブルシューティング。",
+    "title": "Claude をあなたのデータに接続",
+    "kicker": "MCP セットアップガイド",
+    "updated": "最終更新 · 2026-09-04",
+    "intro": "supalens はホスト型 MCP(Model Context Protocol)サーバーを提供します。一度接続すれば、claude.ai、Claude Code、その他の MCP 対応クライアントの Claude が本番データベースを読み取り専用で照会し、チームが承認した KPI 定義を再利用し、supalens 分析エージェントを実行し、モニターまでチャットから直接作成できます。",
+    "url": {
+      "h": "コネクタ URL",
+      "body": "すべてのクライアントで同じ URL を使います。認証は OAuth 2.1(PKCE)— 初回接続時に supalens アカウントでログインし、ワークスペースへのアクセスを承認します。"
+    },
+    "claude": {
+      "h": "Claude での設定(Web · デスクトップ)",
+      "steps": [
+        "設定 → コネクタで「カスタムコネクタを追加」を選びます。",
+        "上のコネクタ URL を貼り付けて保存します。",
+        "接続を押し、supalens にサインインしてワークスペースの同意画面を承認します。",
+        "すぐに質問できます:「承認済みの MRR 定義で今月と先月を比較して。」"
+      ]
+    },
+    "code": {
+      "h": "Claude Code での設定",
+      "body": "ターミナルでサーバーを追加し、セッション内で /mcp を実行して認証します:"
+    },
+    "other": {
+      "h": "その他の MCP クライアント · API キー",
+      "body": "streamable HTTP + OAuth をサポートするクライアントなら接続できます(Cursor、Windsurf など)。ヘッドレス/スクリプト用途では、アプリ(設定 → Developer)で長期 API キーを発行し、OAuth の代わりに Bearer トークンとして送れます:"
+    },
+    "tools": {
+      "h": "接続後に Claude ができること",
+      "items": [
+        "照会 — SQL ソースは get_schema と execute_sql(行数制限付きの読み取り専用 SELECT)、Firestore ソースは list_collections · query_documents · aggregate。",
+        "分析 — ask が質問を supalens 分析エージェント(多段階の自然言語 → SQL → チャート、ビジネスコンテキスト注入)に渡し、get_analysis で結果をポーリングします。",
+        "ダッシュボード — create_dashboard · add_widget · register_query が検証済みチャートをワークスペースに保存します。",
+        "モニター — create_alert(しきい値または異常検知 + AI 原因分析)、list_alerts、toggle_alert、delete_alert。ここで作成したモニターはプランごとのチェック間隔(無料は 2 時間ごと、有料プランは 10 分または 5 分ごと)で評価されます。",
+        "Auto-KPI — extract_kpis がスキーマ(接続済みリポジトリを含む)から検証済み KPI カタログを提案し、list_kpis · apply_kpis が承認したものだけをライブダッシュボードにします。"
+      ]
+    },
+    "security": {
+      "h": "セキュリティモデル",
+      "items": [
+        "構造的読み取り専用:SQL は SELECT 専用ガードを通過し、読み取り専用トランザクション(ステートメントタイムアウト + 行数上限)内でのみ実行されます — サーバーにはデータベースへの書き込み経路自体がありません。",
+        "トークン 1 つ = ワークスペース 1 つ:すべてのトークンは単一の組織に紐づき、他テナントのデータには決して到達できません。",
+        "書き込みツール(ダッシュボード・アラート・KPI)はトークンの write スコープと member 以上のロールを追加で要求します — viewer トークンは読み取り専用のままです。",
+        "トークンはいつでも失効でき、発行者のメンバーシップはリクエストごとに再検証されます — 発行者がワークスペースを離れるとトークンも無効になります。",
+        "リクエストは資格情報ごとにレート制限されます。"
+      ]
+    },
+    "trouble": {
+      "h": "トラブルシューティング",
+      "items": [
+        "401 unauthorized — 再接続(OAuth)するか API キーを確認してください。発行者がワークスペースを離れるとキーは停止します。",
+        "“Multiple data sources” — どのソースを使うか Claude に伝えるか、dataSourceId を渡してください。",
+        "402 quota exceeded — プランの月間質問クォータを使い切りました。設定 → 請求を確認してください。",
+        "SQL ツールが Firestore ソースを拒否 — 意図された動作です。ask ツールまたは Firestore ドキュメントツールを使うよう依頼してください。"
+      ]
+    },
+    "manage": {
+      "h": "キー · スコープ管理",
+      "body": "トークンの発行、スコープ(読み取り / 読み取り+書き込み)設定、失効はアプリで行います:",
+      "link": "supalens を開く → 設定 → Developer"
+    },
+    "why": {
+      "h": "なぜ素のデータベース MCP ではなく supalens なのか?",
+      "items": [
+        "コードから抽出したビジネスルール — どの status が売上か、どのアカウントが内部テストかを、スキーマから推測せずリポジトリから読み取り、すべてのクエリに注入します。",
+        "承認済み KPI 定義 — チームが確認・承認した定義を Claude がそのまま再利用するため、同じ質問には同じ数字が返ります。",
+        "組織の権限 — トークンは 1 つのワークスペースに紐づき、ロール(viewer / member)をリクエストごとに再検証します。DB パスワードがクライアント設定に入ることはありません。",
+        "継続的な監視 — チャットが終わってもモニターは動き続けます。Claude から作成したアラートはプランごとのチェック間隔(無料は 2 時間ごと、有料プランは 10 分または 5 分ごと)で評価され、発生時は原因分析とともに Slack・Discord・メールへ届きます。"
+      ]
+    },
+    "examples": {
+      "h": "こう聞いてみてください",
+      "items": [
+        "「承認済みの MRR 定義で今月と先月を比較して。」",
+        "「先週返金率が上がった理由をカテゴリ別に分解して。」",
+        "「日次売上が 7 日平均より 20% 下がったら #founders に知らせるモニターを作って。」"
+      ]
+    },
+    "copy": "コピー",
+    "copied": "コピー済み",
+    "copying": "コピー中…",
+    "copyFailed": "自動コピーがブロックされました。上のコマンドを選択して手動でコピーしてください。"
+  },
+  "schemaOnly": {
+    "kicker": "なぜコードか",
+    "heading": "スキーマはビジネスロジックではありません。",
+    "lede": "データベースは何があるかを知っています。コードは何を数えるべきかを知っています。",
+    "left": {
+      "label": "スキーマだけ見ると",
+      "result": "有効なサブスクリプション",
+      "value": "1,284"
+    },
+    "right": {
+      "label": "コードが実際に言っていること",
+      "result": "有効なサブスクリプション",
+      "value": "1,061",
+      "evidence": "lib/billing/mrr.ts:42"
+    },
+    "caption": "正しいSQLでも、間違ったビジネスの答えを出すことがあります。",
+    "body": "だからGitHub接続は精度のオプションではなく、Supalensが存在する理由です。Supalensはリポジトリからルールを読み取ってSUPALENS.mdとして残し、すべてのKPIと質問はそのルールの上で実行されます。解約済みの除外、内部アカウントのフィルタ、返金の除外を、人が覚えておく必要はありません。"
+  },
+  "appMonitors": {
+    "notConfigured": "Supabase が設定されていません。",
+    "title": "モニター",
+    "subtitle": "指標の条件、チェック結果、設定済み通知先を確認できます。プランのチェック間隔: {cadence}。",
+    "connection": {
+      "title": "Supabase の再認証が必要です",
+      "description": "有効なモニター {count} 件で接続認証エラーが記録されています。接続を復旧してください。以下の過去の記録は現在の測定値ではありません。",
+      "rowLabel": "前回のチェック失敗 · 再認証が必要",
+      "askAdmin": "ワークスペースのオーナーまたは管理者に再接続を依頼してください。"
+    },
+    "filter": {
+      "aria": "モニターフィルター",
+      "all": "すべて",
+      "healthy": "正常",
+      "incident": "インシデント",
+      "error": "エラー",
+      "paused": "一時停止",
+      "pending": "初回チェック待ち"
+    },
+    "newMenu": {
+      "label": "新しいモニター",
+      "fromKpi": "おすすめ KPI から",
+      "fromKpiHint": "提案された KPI の定義と監視設定を確認してから承認してください。",
+      "fromAsk": "回答から",
+      "fromAskHint": "まず質問して回答を確認し、モニターに変換",
+      "fromSql": "SQL で直接",
+      "fromSqlHint": "上級 · 条件クエリを自分で書く",
+      "other": "ほかの方法",
+      "fromGoal": "目標から作成"
+    },
+    "needSource": "モニターを作成するには、まずデータソースを接続してください。",
+    "form": {
+      "title": "SQL でモニターを作成",
+      "namePlaceholder": "モニター名 (例: 日次売上が1千万未満)",
+      "typeAria": "モニターの種類",
+      "threshold": "しきい値",
+      "anomaly": "異常検知",
+      "sqlSummary": "条件 SQL (上級)",
+      "sqlPlaceholderAnomaly": "時系列クエリ (測定値は最終列、古い→新しい順) — 例: select day, sum(amount) v from sales group by day order by day",
+      "sqlPlaceholderThreshold": "条件クエリ (数値を1つ返す) — 例: select sum(amount) from sales where day = current_date",
+      "vsNormal": "平常時との差が",
+      "sigmaHint": "σ 以上外れたら通知 (しきい値不要)",
+      "sigmaHintShort": "σ 以上外れたら通知",
+      "resultIs": "結果が",
+      "thresholdPlaceholder": "しきい値",
+      "thenAlert": "ならインシデント",
+      "create": "作成",
+      "cadenceNote": "このプランのモニターは{cadence}評価されます。",
+      "noSqlHint": "SQL を書かずに作るなら<a>目標を言葉で書いてください</a> — 例:「日次売上が先週平均を下回ったら知らせて」。",
+      "fillAll": "すべての項目を入力してください",
+      "prefilled": "回答から取り込みました — 保存前に条件を確認してください。",
+      "cadenceNoteSelf": "モニターは{cadence}評価されます。"
+    },
+    "strip": {
+      "label": "状況",
+      "total": "全体",
+      "healthy": "正常",
+      "incident": "インシデント",
+      "error": "エラー",
+      "paused": "一時停止",
+      "firing": "インシデント {count}件",
+      "allOk": "すべて正常",
+      "destinations": "通知先",
+      "configure": "設定"
+    },
+    "bulk": {
+      "selected": "{count}件選択",
+      "pause": "一時停止",
+      "resume": "再開",
+      "clear": "選択解除",
+      "selectAll": "すべて選択",
+      "selectOne": "{name} を選択"
+    },
+    "table": {
+      "name": "モニター",
+      "current": "現在値 · 期待範囲",
+      "cadence": "周期 · 次回確認",
+      "lastChecked": "最終確認",
+      "lastIncident": "最終インシデント",
+      "schedule": "チェック予定",
+      "destination": "通知先",
+      "manage": "管理",
+      "status": "状態",
+      "empty": "モニターはありません。おすすめ KPI を承認するか、自然言語で作成してください。",
+      "emptyFiltered": "このフィルターに該当するモニターはありません。"
+    },
+    "health": {
+      "healthy": "正常",
+      "incident": "インシデント",
+      "error": "エラー",
+      "paused": "一時停止",
+      "pending": "初回チェック待ち"
+    },
+    "type": {
+      "threshold": "しきい値",
+      "anomaly": "異常検知",
+      "change_rate": "変化率"
+    },
+    "row": {
+      "condAnomaly": "現在 {value} · {sigma}σ 基準",
+      "never": "まだありません",
+      "next": "次回チェックの目安: {when}",
+      "nextSoon": "チェック予定時刻に到達（推定）",
+      "inMinutes": "{n}分後に",
+      "toggleOn": "オン",
+      "toggleOff": "オフ",
+      "noDestination": "通知先なし",
+      "reconnect": "停止中 — Supabase 接続の再認証が必要です。",
+      "reconnectCta": "Supabase を再接続",
+      "expected": "期待値 {range}",
+      "goal": "目標:「{goal}」"
+    },
+    "dest": {
+      "slack": "Slack #{name}",
+      "slackWebhook": "Slack Webhook",
+      "discord": "Discord",
+      "email": "メール {count}名"
+    },
+    "btn": {
+      "edit": "編集",
+      "test": "テスト",
+      "history": "履歴",
+      "delete": "削除",
+      "cancel": "キャンセル",
+      "detail": "詳細",
+      "more": "{name} の操作メニュー"
+    },
+    "cta": {
+      "save": "保存"
+    },
+    "confirm": {
+      "delete": "「{name}」モニターを削除しますか？"
+    },
+    "detailActions": {
+      "deleteDescription": "有効な一覧からモニターを削除し、定期チェックを停止します。",
+      "unknown": "処理結果を確認できませんでした。別の操作を行う前に、再読み込みしてモニターの状態を確認してください。",
+      "reload": "モニターを再読み込み",
+      "refreshFailed": "変更は保存されましたが、画面を更新できませんでした。再読み込みして最新の状態を確認してください。"
+    },
+    "notice": {
+      "updated": "モニターを更新しました",
+      "updateFailed": "更新に失敗しました",
+      "created": "モニターを作成しました",
+      "createFailed": "作成に失敗しました",
+      "deleted": "モニターを削除しました",
+      "disabled": "モニターを一時停止しました",
+      "enabled": "モニターを再開しました",
+      "requestFailed": "リクエストに失敗しました",
+      "testFailed": "テストに失敗しました",
+      "bulkPaused": "モニター {count}件を一時停止しました",
+      "bulkResumed": "モニター {count}件を再開しました",
+      "createdGoal": "モニター「{name}」を作成しました — 1 日が終わるたびに判定します。"
+    },
+    "test": {
+      "result": "テスト: {detail} → {outcome}。このテストは異常履歴を作成せず、通知も送信しません。",
+      "met": "今回のテストで条件を満たしました",
+      "unmet": "今回のテストで条件を満たしませんでした"
+    },
+    "edit": {
+      "resetHint": "条件を変更すると発火状態がリセットされます。",
+      "namePlaceholder": "モニター名"
+    },
+    "history": {
+      "title": "インシデント履歴",
+      "loading": "読み込み中…",
+      "empty": "発生/解除の履歴はまだありません。",
+      "fired": "発生",
+      "resolved": "解除",
+      "failed": "異常履歴を読み込めませんでした。履歴がないことを意味するものではありません。",
+      "retry": "再試行"
+    },
+    "explanation": {
+      "label": "考えられる原因 (AI)",
+      "more": "詳しく見る",
+      "less": "閉じる"
+    },
+    "detail": {
+      "back": "モニター一覧",
+      "notFound": "モニターが見つかりません。",
+      "currentValue": "現在値",
+      "lastRecorded": "最終記録",
+      "sensitivity": "感度 {sigma}σ",
+      "lastChecked": "最終確認",
+      "nextCheck": "次回チェックの目安",
+      "definition": "定義",
+      "noDescription": "説明がありません。編集でこの指標が何を測るのかを記録してください。",
+      "source": "データソース",
+      "showSql": "SQL を表示",
+      "settings": "監視設定",
+      "consecutive": "連続 {n}回該当で発生",
+      "cooldown": "クールダウン {min}分",
+      "destinations": "通知先",
+      "incidents": "インシデント履歴",
+      "noIncidents": "インシデントはまだありません。",
+      "ask": "この指標について質問",
+      "confirmed": "データで確認済み",
+      "likely": "考えられる原因 (AI)",
+      "seriesNote": "定期評価の値はまだ保存されていないため、発生・解除時点の値のみ表示します。",
+      "createdAt": "作成 {date}",
+      "valueAt": "値 {value}",
+      "notified": "通知済み",
+      "notNotified": "未通知",
+      "expectedRange": "期待範囲",
+      "firesWhen": "発火条件",
+      "goal": "目標"
+    },
+    "cadence": {
+      "everyMinutes": "{n}分ごとに",
+      "everyHours": "{n}時間ごとに"
+    },
+    "errors": {
+      "checkFailed": "確認失敗:",
+      "no_scalar": "条件クエリが数値を返しませんでした。",
+      "series_too_long": "時系列が長すぎます — 期間を狭めてください。",
+      "series_too_short": "基準を作るための履歴がまだ足りません。",
+      "source_removed": "データソースが削除されました。"
+    },
+    "collection": {
+      "empty": "モニターなし",
+      "paused": "すべてのモニターが一時停止中",
+      "pending": "初回チェック待ち {count} 件",
+      "healthy": "有効なモニターのチェックは正常",
+      "error": "チェック失敗 {count} 件",
+      "incident": "未解決の異常 {count} 件"
+    },
+    "viewSwitch": {
+      "aria": "監視ビューの切り替え"
+    },
+    "goal": {
+      "title": "何を見守りますか？",
+      "lead": "知りたいことを言葉で書くと、データを探して条件を決め、直近 90 日で何回通知していたかを示します。承認するまで何も作成されません。",
+      "close": "閉じる",
+      "placeholder": "例: 日次の新規登録が落ち込んだら知らせて",
+      "sourceLabel": "データソース",
+      "examplesLabel": "例",
+      "ex1": "日次の新規登録が落ち込んだら知らせて",
+      "ex2": "売上が先週平均より 30% 下がったら知らせて",
+      "ex3": "決済失敗が急増したら知らせて",
+      "quota": "このワークスペースは今期の質問上限に達しました。",
+      "quotaCta": "プランを見る",
+      "footHint": "下書き 1 回でプランの質問を 1 回使います。用意されたリストから始めるなら<kpi>おすすめ KPI</kpi>へ。",
+      "submit": "下書きを作成",
+      "starting": "開始しています…",
+      "stage": {
+        "schema": "この目標を測るデータを探しています",
+        "query": "直近 90 日を計測しています",
+        "propose": "その期間で条件を検証しています"
+      },
+      "workingHint": "通常 20〜60 秒かかります。",
+      "cancel": "キャンセル",
+      "failed": "この目標ではモニターの下書きを作成できませんでした。",
+      "failedHint": "テーブルやイベントを指定してください — 例:「profiles テーブルの日次登録数」。",
+      "retry": "再試行",
+      "errors": {
+        "sql_only": "モニターは SQL ソースのみ対応しています — Postgres/MySQL 接続を選んでください。",
+        "duplicate_run": "この目標の下書きを作成中です — 少しお待ちください。",
+        "goal_too_long": "目標は 500 文字以内で入力してください。",
+        "forbidden": "モニターを管理できるメンバーのみ下書きを作成できます。",
+        "generic": "下書きを開始できませんでした。もう一度お試しください。",
+        "createFailed": "モニターを作成できませんでした。もう一度お試しください。"
+      },
+      "card": {
+        "kicker": "モニターの下書き",
+        "nameLabel": "モニター名",
+        "source": "データソース · {name}",
+        "ruleLabel": "条件の種類",
+        "directionLabel": "方向",
+        "strategy": {
+          "anomaly": "いつもと違うとき",
+          "relative": "平均との比較",
+          "absolute": "決まった値"
+        },
+        "direction": {
+          "down": "下がったとき",
+          "up": "上がったとき",
+          "both": "両方"
+        },
+        "sensitivity": "感度",
+        "sensitivityEarly": "早めに",
+        "sensitivityBig": "大きな変化のみ",
+        "pct": "変化幅",
+        "window": "比較対象",
+        "window1": "前日",
+        "windowN": "直前 {n} 日の平均",
+        "threshold": "値",
+        "operator": "比較",
+        "chartLabel": "直近 {days} 日の日次値。この条件なら {count} 回通知していました",
+        "factLine": "現在の基準",
+        "factLatest": "直近の確定日",
+        "factBacktest": "直近 {days} 日",
+        "backtestCount": "{count, plural, =0 {通知なし} other {# 回通知していた}}",
+        "backtestDates": "{dates}",
+        "currentRange": {
+          "both": "通常範囲 {lower} – {upper}",
+          "lower": "{value} 未満で通知",
+          "upper": "{value} 超で通知"
+        },
+        "learning": "まだ通常範囲を学習中です — 十分な履歴がたまると通知できます。",
+        "wouldFireNow": "現時点で通知",
+        "noisy": "この期間では通知が多すぎます —「大きな変化のみ」側に寄せるか、変化幅を大きくしてください。",
+        "cadence": "1 日が終わるたびに判定します（{tz}）。",
+        "why": "この条件の理由",
+        "sql": "クエリ",
+        "approveHint": "基準線はデータの成長に合わせて動きます — 調整し直す必要はありません。",
+        "discard": "破棄",
+        "redraft": "作り直す",
+        "create": "モニターを作成"
+      },
+      "footHintSelf": "用意されたリストから選びたい場合は<kpi>おすすめ KPI</kpi>から始めてください。"
+    },
+    "subtitleSelf": "指標の条件、チェック結果、設定済みの通知先を確認します。チェック間隔: {cadence}。"
+  },
+  "appNotifications": {
+    "webhookUrl": "Webhook URL",
+    "revealWebhook": "URL を表示",
+    "credentialHint": "この URL には投稿権限があります。非公開で保管してください。入力を消して保存すると、この Webhook は無効になります。",
+    "configUnavailable": "通知設定を読み込めませんでした。送信先を変更する前にページを再読み込みしてください。",
+    "saveUnconfirmed": "保存結果を確認できませんでした。入力内容は保持されています。再試行する前にページを再読み込みして保存済みの設定を確認してください。",
+    "testUnconfirmed": "テスト結果を確認できませんでした。すでに送信された可能性があるため、送信先を確認してから再送してください。",
+    "refreshFailed": "サーバーは保存成功を報告しましたが、ページの更新に失敗しました。再読み込みして現在の設定を確認してください。",
+    "unsavedHint": "変更を保存してからテストしてください。テストは未保存の入力値ではなく、保存済みの送信先を使用します。",
+    "channelsLabel": "Slack / Discord",
+    "channelsAccepted": "少なくとも 1 つのチャネルが送信成功を報告",
+    "emailAccepted": "メールプロバイダーがテスト送信を受け付けました",
+    "sendNotConfirmed": "送信成功の報告なし — 利用不可、未設定、または失敗",
+    "deliveryCaveat": "受信や既読を確認した結果ではありません。チャネルの結果は集約されており、すべてのチャネルの成功を示しません。テストメールは本人のアドレスにのみ送信されます。",
+    "title": "通知",
+    "subtitle": "インシデントの通知先を一か所で管理します。",
+    "readOnly": "通知先の変更は owner・admin のみ可能です。",
+    "status": {
+      "connected": "接続済み",
+      "notConnected": "未接続",
+      "configured": "設定済み",
+      "notConfigured": "未設定",
+      "fallback": "フォールバック"
+    },
+    "slackBot": {
+      "title": "Slack",
+      "desc": "接続したワークスペースのチャンネルにインシデントを送ります。",
+      "channel": "チャンネル",
+      "noChannel": "チャンネルを選択しない (ボット通知オフ)",
+      "inviteHint": "ボットが該当チャンネルに招待されている必要があります。",
+      "connect": "Slack を接続",
+      "connectUnavailable": "この環境では Slack アプリが設定されていません。",
+      "channelSet": "送信先を保存: #{name}",
+      "botRemoved": "Slack ボット通知を解除しました"
+    },
+    "slackWebhook": {
+      "title": "Slack Webhook",
+      "desc": "ボットなしで incoming webhook 経由で送ります。ボットチャンネルがある場合はフォールバックとしてのみ使われます。",
+      "placeholder": "https://hooks.slack.com/… — 空にすると解除",
+      "saved": "Slack Webhook を保存しました",
+      "removed": "Slack Webhook を解除しました",
+      "descPrimary": "Incoming Webhook で Slack チャンネルに通知を送ります。Webhook URL を貼り付けるだけで、Slack アプリは不要です。"
+    },
+    "discord": {
+      "title": "Discord",
+      "desc": "incoming webhook で埋め込みカードを送ります。",
+      "placeholder": "https://discord.com/api/webhooks/… — 空にすると解除",
+      "saved": "Discord Webhook を保存しました",
+      "removed": "Discord 通知を解除しました"
+    },
+    "email": {
+      "title": "メール",
+      "desc": "owner・admin の認証済みアドレスに送ります。受信設定は各自が 設定 > 組織 で変更します。",
+      "optedOut": "受信停止",
+      "none": "受信者がいません。",
+      "noTransport": "メールサーバーなし",
+      "descNoTransport": "メールは送信されません。このインストールにはメールサーバー(SMTP_URL)が設定されていません。上の Slack または Discord の Webhook を使用してください。"
+    },
+    "test": {
+      "title": "テスト通知",
+      "desc": "設定済みのすべてのチャンネルと自分のメールにテストインシデントを送ります。",
+      "button": "テスト通知を送信",
+      "sending": "送信中…",
+      "result": "チャンネル: {channels} · メール: {email}",
+      "sent": "送信済み",
+      "notSent": "未送信 (未設定)"
+    },
+    "preview": {
+      "title": "インシデントメッセージのプレビュー",
+      "desc": "サンプル値を使ったメッセージ例です。観測された事実と未検証の仮説を分けて表示しています。実際に送信された通知ではありません。",
+      "sampleName": "日次売上",
+      "sampleBody": "現在値 3,100,000 がしきい値 4,000,000 未満の条件を満たしました。",
+      "sampleCause": "決済失敗率が 0.3% から 7.8% に上昇した区間と重なります。決済確定ステップの確認を推奨します。"
+    },
+    "summary": {
+      "title": "通知先",
+      "none": "設定された通知先はありません。"
+    },
+    "cta": {
+      "save": "保存"
+    },
+    "notice": {
+      "requestFailed": "リクエストに失敗しました"
+    }
+  },
+  "appOverview": {
+    "workspaceTitle": "ビジネスの概要",
+    "summary": {
+      "otherMonitors": "その他のモニター",
+      "active": "有効なモニター",
+      "firing": "要確認",
+      "failed": "チェック失敗",
+      "monitors": "モニター",
+      "lastRecorded": "前回の記録：{value} · 現在の値は不明",
+      "openMonitor": "モニターと調査を見る"
+    },
+    "title": "概要",
+    "setup": {
+      "heading": "Supalensはまだビジネスを監視していません",
+      "sub": "接続 → 理解 → 承認 → 監視。残りのステップを終えると最初のチェックが始まります。",
+      "continue": "設定を続ける",
+      "stepsTitle": "アクティベーションチェックリスト",
+      "next": "次のステップ",
+      "title": "Supalens はまだビジネスを見張っていません",
+      "lede": "以下のステップを終えると、承認した KPI を継続的に確認し、異常があれば原因まで調べてお知らせします。",
+      "step": {
+        "db_connected": "データベースを接続",
+        "repo_attached": "コードリポジトリを接続",
+        "understanding_generated": "ビジネスルールの理解",
+        "kpis_extracted": "KPI 提案を受け取る",
+        "kpis_approved": "KPI を {need} 件承認",
+        "monitors_active": "モニターを {need} 件有効化",
+        "notifications_configured": "通知先の設定"
+      },
+      "cta": {
+        "db_connected": "データベースを接続",
+        "repo_attached": "コードを接続",
+        "understanding_generated": "コンテキストを作成",
+        "kpis_extracted": "KPI を抽出",
+        "kpis_approved": "KPI を確認",
+        "monitors_active": "KPI を確認",
+        "notifications_configured": "通知チャンネルを設定"
+      },
+      "nextBadge": "次",
+      "progress": "{done} / {total} 完了",
+      "details": "詳細",
+      "hide": "非表示",
+      "optional": "推奨",
+      "optionalNote": "推奨ステップです。なくても監視は始まり、あれば精度が上がります。",
+      "doneLabel": "完了",
+      "viewerNote": "設定はオーナーまたは管理者が行えます。",
+      "stepBody": {
+        "repo_attached": "スキーマは何があるかを示し、何を数えるかはコードにあります。読み取り専用でのみ参照します。",
+        "notifications_configured": "メールはすでにオーナー・管理者へ届きます。Slack や Discord チャンネルを接続すると、チームが見る場所に調査結果まで届きます。"
+      }
+    },
+    "health": {
+      "watching": "Supalensが{source}のKPI {n}件を監視中です",
+      "allNormal": "すべて正常",
+      "firing": "異常 {n}件",
+      "checkedAgo": "{m}分前に確認",
+      "checkedJustNow": "たった今確認",
+      "neverChecked": "チェック待ち",
+      "nextIn": "次の確認は{k}分後",
+      "nextSoon": "まもなく確認",
+      "errors": "エラー {n}件",
+      "title": "モニター",
+      "all": "すべて見る",
+      "noValue": "値なし",
+      "checked": "{ago} 分前",
+      "paused": "一時停止",
+      "error": "チェック失敗",
+      "incident": "異常",
+      "healthy": "正常",
+      "none": "まだモニターがありません。"
+    },
+    "incidents": {
+      "title": "未解決の異常 {n}件",
+      "since": "{time}から",
+      "view": "モニターを見る →",
+      "investigating": "原因を調査中…",
+      "current": "現在値",
+      "threshold": "基準"
+    },
+    "monitors": {
+      "title": "モニターの状態",
+      "empty": "有効なモニターがありません。",
+      "all": "すべて見る →",
+      "current": "現在値",
+      "lastChecked": "最終確認",
+      "normal": "正常",
+      "firing": "異常",
+      "error": "エラー",
+      "never": "—"
+    },
+    "pending": {
+      "title": "承認待ち",
+      "count": "KPI提案 {n}件",
+      "review": "確認 →",
+      "none": "確認待ちの提案はありません。",
+      "item": "提案 {count} 件",
+      "cta": "確認"
+    },
+    "activity": {
+      "title": "最近の動き",
+      "fired": "異常を検出",
+      "resolved": "正常に回復",
+      "none": "まだ記録がありません。"
+    },
+    "ask": {
+      "label": "クイック質問",
+      "placeholder": "例: 先週と比べて売上はどう変わった？",
+      "submit": "質問する"
+    },
+    "subtitle": "Supalens が今見ているもの。",
+    "notConfigured": "Supabase が設定されていません。",
+    "incident": {
+      "title": "{count} 件の指標に異常が検出されました",
+      "lede": "Supalens がデータを分解し、原因の仮説を作成しました。",
+      "investigating": "原因を調査中…",
+      "since": "{ago} 前に発生",
+      "current": "現在 {value}",
+      "threshold": "基準 {value}",
+      "view": "モニターを開く",
+      "viewAll": "モニターをすべて見る"
+    },
+    "healthy": {
+      "title": "Supalens が {source} の KPI を {count} 件監視しています",
+      "allNormal": "すべて正常",
+      "checked": "{ago} 分前に確認",
+      "neverChecked": "初回チェック待ち",
+      "next": "チェック間隔: {minutes} 分",
+      "nextHours": "チェック間隔: {hours} 時間",
+      "nextSoon": "まもなく再チェック"
+    },
+    "board": {
+      "watching": "{source} の指標 {count} 件を監視中です",
+      "watchingNoSource": "指標 {count} 件を監視中です",
+      "allNormal": "すべて正常",
+      "firing": "異常 {count} 件",
+      "errored": "確認失敗 {count} 件",
+      "cadence": "最終チェック {ago} 前 · 次回は約 {next} 分後の見込み",
+      "cadenceNever": "初回チェックは約 {next} 分後の見込み",
+      "waitingChecks": "モニター {count} 件が初回チェック待ち",
+      "waitingNote": "まだ評価されていないため、正常とは判断できません。",
+      "noActive": "有効なモニターなし",
+      "statePending": "初回チェック待ち",
+      "reviewPendingChecks": "待機中のモニターを見る",
+      "openIncidents": "インシデントを見る",
+      "reviewKpis": "KPI 提案 {count} 件をレビュー",
+      "expected": "期待値 {range}",
+      "expectedAnomaly": "異常検知",
+      "noValue": "まだ値がありません",
+      "stateHealthy": "正常",
+      "stateIncident": "異常",
+      "stateError": "確認失敗",
+      "statePaused": "一時停止",
+      "addSlot": "承認した KPI がここに追加されます",
+      "investigation": "{name} · 調査結果",
+      "confirmed": "データで確認された事実",
+      "likely": "可能性の高い原因",
+      "investigating": "調査中…",
+      "sinceAgo": "{ago} 前に発生",
+      "pendingLabel": "承認待ちの KPI 提案",
+      "activityLabel": "最近の動き",
+      "activityNone": "まだ記録がありません",
+      "review": "レビュー",
+      "seeAll": "すべて",
+      "eventFired": "{name} 異常検知",
+      "eventResolved": "{name} 正常化",
+      "degraded": "チェック失敗 {count}件",
+      "degradedAll": "指標 {count}件すべてチェック失敗",
+      "degradedNote": "解消するまでこれらの指標は評価されません",
+      "fixChecks": "失敗の原因を見る",
+      "overflow": "他に指標が{count}件あります",
+      "overflowCta": "すべて（{count}件）を見る"
+    },
+    "home": {
+      "lede": "{source} · 有効なモニター {count}件",
+      "ledeNoSource": "有効なモニター {count}件",
+      "recovery": {
+        "reconnect": "モニター{count}件を点検できません。",
+        "reconnectNote": "Supabaseの認可が期限切れです。",
+        "reconnectCta": "再接続",
+        "scanFailed": "分析が完了しませんでした。",
+        "scanFailedNote": "止まった段階から再開できます。",
+        "scanFailedCta": "分析を再開"
+      },
+      "banner": {
+        "new": "まだデータが接続されていません。",
+        "newNote": "データベースを接続すると、スキーマとコードを読んで監視するKPIを提案します。",
+        "pending": "Supabaseアカウントが接続されました。",
+        "pendingNote": "監視するプロジェクトを選んでください。",
+        "pendingCta": "プロジェクトを選択",
+        "analyzing": "プロジェクトを分析しています。",
+        "analyzingNote": "このページを離れても分析は続きます。",
+        "proposals": "KPI提案が{count}件あります。",
+        "proposalsNote": "承認したKPIだけがモニターになります。",
+        "extract": "データベースが接続されました。",
+        "extractNote": "KPI提案を受け取って監視を始めましょう。",
+        "paused": "すべてのモニターがオフです。",
+        "pausedNote": "現在は何も監視していません。",
+        "pausedCta": "モニターを管理",
+        "firstCheck": "モニター{count}件で監視を始めました。",
+        "firstCheckNote": "最初の点検は約{minutes}分後です。"
+      },
+      "cards": {
+        "supabase": {
+          "title": "Supabaseを接続",
+          "badge": "おすすめ",
+          "body": "OAuthでプロジェクトを選ぶと、読み取り専用ロールを発行して分析を始めます。",
+          "cta": "Supabaseを接続"
+        },
+        "other": {
+          "title": "その他のデータベース",
+          "body": "PostgreSQL・MySQL・Firestoreを読み取り専用の認証情報で直接接続します。",
+          "cta": "直接接続"
+        },
+        "sample": {
+          "title": "サンプルデータで試す",
+          "badge": "無料",
+          "body": "データを接続する前に、ECのサンプルデータに質問してみましょう。",
+          "cta": "サンプルに質問"
+        },
+        "review": {
+          "title": "KPI提案を確認",
+          "badge": "{count}件",
+          "body": "定義と根拠を確認し、監視するKPIを承認します。",
+          "cta": "提案を確認"
+        },
+        "extract": {
+          "title": "KPI提案を受け取る",
+          "body": "スキーマとコードを読み、このビジネスの主要指標を提案します。",
+          "cta": "提案を受け取る"
+        },
+        "repo": {
+          "title": "コードを接続",
+          "body": "GitHubリポジトリを接続すると、コードのビジネスルールまで読み取り提案が正確になります。",
+          "cta": "リポジトリを接続"
+        },
+        "slack": {
+          "title": "Slack通知",
+          "body": "指標が動くと、原因調査とともにチームのチャンネルへ通知します。",
+          "cta": "通知を設定"
+        },
+        "ask": {
+          "title": "データに質問",
+          "body": "指標が動いた理由や数字の内訳を、自然な言葉で質問できます。",
+          "cta": "質問する"
+        },
+        "optional": "任意",
+        "viewerNote": "オーナーまたは管理者が設定できます。",
+        "reports": {
+          "title": "ダッシュボード",
+          "body": "よく見るチャートを1ページにまとめ、実データで更新して確認します。",
+          "cta": "ダッシュボードを開く"
+        },
+        "database": {
+          "title": "データベースを接続",
+          "body": "読み取り専用の認証情報で PostgreSQL・MySQL・Firestore を接続します。Supalens がスキーマを読み取り、分析を開始します。",
+          "cta": "データベースを接続"
+        }
+      },
+      "how": {
+        "title": "はじめ方",
+        "connect": {
+          "title": "接続",
+          "body": "読み取り専用でデータベースを接続します。書き込みツールはありません。"
+        },
+        "understand": {
+          "title": "理解",
+          "body": "スキーマとコードからビジネスルールとKPIを見つけます。"
+        },
+        "watch": {
+          "title": "監視",
+          "body": "承認したKPIを定期的に点検し、異常は原因調査とともに通知します。"
+        }
+      },
+      "scan": {
+        "title": "分析の進行"
+      },
+      "monitoring": {
+        "title": "モニタリング",
+        "week": "過去7日間の異常検知",
+        "resolved": "解消 {count}件",
+        "quiet": "過去7日間に異常はありません。",
+        "cadence": "現在のプランでは{minutes}分ごとに点検します。",
+        "chart": "過去7日間の日別異常検知数",
+        "cadenceHours": "現在のプランでは{hours}時間ごとに点検します。"
+      },
+      "table": {
+        "monitor": "モニター",
+        "status": "状態",
+        "value": "現在値",
+        "expected": "想定範囲",
+        "checked": "最終点検",
+        "never": "未実施",
+        "more": "ほか{count}件のモニター",
+        "ago": "{value}前"
+      },
+      "links": {
+        "title": "クイックリンク",
+        "ask": "質問する",
+        "monitors": "モニターを管理",
+        "incidents": "インシデント",
+        "reports": "ダッシュボード",
+        "connections": "接続を管理",
+        "notifications": "通知チャンネル",
+        "team": "チームを招待",
+        "developer": "MCPで接続",
+        "review": "KPI提案を確認"
+      },
+      "proposals": {
+        "title": "提案されたKPI",
+        "kpi": "KPI",
+        "importance": "重要度",
+        "importanceValue": "重要度 5段階中{value}",
+        "all": "{count}件の提案をすべて確認"
+      },
+      "switcher": {
+        "label": "概要の表示",
+        "all": "すべて",
+        "pick": "サービスを選択"
+      },
+      "all": {
+        "lede": "サービス{services}件 · 有効なモニター{count}件",
+        "banner": {
+          "firing": "サービス{services}件で異常{count}件",
+          "reconnect": "サービス{services}件の接続が切れています。",
+          "degraded": "サービス{services}件で点検が失敗しています。",
+          "setup": "サービス{services}件はまだ監視前です。",
+          "normal": "すべてのサービスが正常です。"
+        },
+        "open": "詳細を見る",
+        "lastCheck": "最終点検",
+        "stage": {
+          "reconnect": "接続切れ",
+          "scanFailed": "分析失敗",
+          "firing": "異常 {count}件",
+          "degraded": "点検失敗 {count}件",
+          "pending": "初回点検待ち {count}件",
+          "normal": "正常",
+          "firstCheck": "初回点検待ち",
+          "paused": "モニターオフ",
+          "analyzing": "分析中",
+          "proposals": "KPI提案 {count}件",
+          "extract": "KPI提案前"
+        },
+        "more": "ほか{count}件のモニター",
+        "checkedNever": "まだ点検前"
+      },
+      "board": {
+        "ledePreparing": "ダッシュボードを準備しています。",
+        "open": "ダッシュボードを開く",
+        "reason": {
+          "chosen": "{name} · このワークスペースで指定したダッシュボード",
+          "core": "{name} · 自動選択：AIが作成したコアKPIダッシュボード",
+          "pinned": "{name} · 自動選択：お気に入りの最初のダッシュボード",
+          "first": "{name} · 自動選択：最初のダッシュボード"
+        },
+        "picker": "概要に表示するダッシュボード",
+        "pickerShort": "表示",
+        "auto": "自動選択（{name}）",
+        "autoEmpty": "自動選択",
+        "saving": "概要のダッシュボードを保存しています…",
+        "saved": "概要にこのダッシュボードを表示します。"
+      },
+      "empty": {
+        "draftTitle": "ダッシュボードの下書きを作成できます",
+        "draftBody": "AIが{service}でKPIを{count}件提案しました。重要度の高い{draft}件で、この画面に表示するダッシュボードの下書きを作成します。",
+        "draftNote": "チャートのみ作成します。モニターはKPIを承認したときにオンになります。",
+        "draftCta": "ダッシュボードの下書きを作成",
+        "drafting": "作成中…",
+        "reviewCta": "KPIを自分でレビュー",
+        "viewerNote": "ダッシュボードの作成と編集はメンバー以上のみ可能です。",
+        "analyzingTitle": "AIがダッシュボードを作成しています",
+        "analyzingBody": "スキーマとコードを読み、見るべきKPIを探しています。完了すると下書きがこの画面に表示されます。",
+        "extractTitle": "KPI提案を受け取るとダッシュボードが作成されます",
+        "extractBody": "{service}が接続されました。AIがスキーマとコードからKPIを提案し、そのKPIでダッシュボードの下書きを作成します。",
+        "extractCta": "KPI提案を受け取る",
+        "emptyTitle": "このダッシュボードにはまだチャートがありません",
+        "emptyBody": "質問して作ったチャートを追加するか、別のダッシュボードをホームに設定してください。",
+        "askCta": "質問してチャートを追加",
+        "boardsCta": "ダッシュボード一覧",
+        "draftError": {
+          "no_proposals": "下書きにできるKPI提案がありません。",
+          "cap": "プランのダッシュボードまたはウィジェット上限に達したため、下書きを作成できませんでした。",
+          "error": "下書きを作成できませんでした。もう一度お試しください。"
+        }
+      }
+    },
+    "reports": {
+      "lede": "報告{total}件 · 要確認{action}件",
+      "ledeScoped": "{service} · 報告{total}件 · 要確認{action}件",
+      "feed": {
+        "needsAction": "要確認",
+        "needsActionNote": "判断を待っている報告です。",
+        "history": "報告履歴",
+        "today": "今日",
+        "yesterday": "昨日",
+        "new": "新着",
+        "live": "リアルタイム",
+        "filterLabel": "報告の種類",
+        "tagFilter": "タグ: {tag}",
+        "clearTag": "タグの絞り込みを解除",
+        "empty": "まだ報告はありません。",
+        "emptyFilter": "この条件に合う報告はありません。",
+        "showAll": "すべての報告を見る"
+      },
+      "type": {
+        "all": "すべて",
+        "urgent": "緊急",
+        "daily": "日次",
+        "weekly": "週次",
+        "analysis": "分析"
+      },
+      "badge": {
+        "urgent": "緊急報告",
+        "resolved": "解消報告",
+        "daily": "日次報告",
+        "weekly": "週次報告",
+        "analysis": "分析報告"
+      },
+      "importance": {
+        "label": "重要度",
+        "critical": "緊急",
+        "high": "高",
+        "normal": "中",
+        "low": "参考"
+      },
+      "tag": {
+        "ai": "AI分析",
+        "action": "要対応"
+      },
+      "title": {
+        "incident": "{metric}が想定範囲を外れました",
+        "connection": "{service}の接続が切れました",
+        "degraded": "{service}で点検{count}件が失敗",
+        "paused": "{service}のモニターがすべてオフ",
+        "resolved": "{metric}が想定範囲に戻りました",
+        "daily": "{date} 日次報告",
+        "weekly": "{start} – {end} 週次報告",
+        "kpiReady": "{service}のKPI提案{count}件のレビュー依頼",
+        "kpiFailed": "{service}のKPI抽出に失敗",
+        "kpiNeeded": "{service}のKPI提案を受け取れます",
+        "contextReady": "{service}のビジネスモデル分析が完了",
+        "analyzing": "{service}を分析中",
+        "firstCheck": "{service}の初回点検待ち"
+      },
+      "summary": {
+        "connection": "モニター{count}件を点検できません。再接続すると監視が再開します。",
+        "degraded": "有効なモニター{total}件のうち{count}件の直近の点検が失敗しました。",
+        "paused": "モニター{count}件がすべてオフのため、現在は何も監視していません。",
+        "resolved": "{duration}で想定範囲に戻りました。",
+        "investigating": "原因を調査しています。",
+        "daily": "異常{fired}件 · 解消{resolved}件 · 未解決{open}件",
+        "dailyQuiet": "記録された異常はありません。",
+        "weekly": "異常{fired}件 · 解消{resolved}件",
+        "mttr": "平均解消 {duration}",
+        "kpiReady": "スキーマとコードを分析し、監視するKPIを{count}件提案しました。承認したKPIだけがモニターになります。",
+        "kpiFailed": "直近のKPI抽出が完了しませんでした。KPI画面からもう一度お試しください。",
+        "kpiNeeded": "データベースが接続されました。KPI提案を受け取って監視を始めましょう。",
+        "contextReadyCode": "コードとスキーマを読み、ビジネスルールをまとめました。",
+        "contextReadySchema": "スキーマを読み、ビジネスルールをまとめました。",
+        "analyzing": "スキーマとコードを読んでいます。完了するとKPI提案がここに届きます。",
+        "firstCheck": "モニター{count}件で監視を開始しました。初回の点検を待っています。"
+      },
+      "fig": {
+        "value": "現在 {value}",
+        "expected": "想定 {range}",
+        "sigma": "平常比 {z}σ",
+        "for": "{duration}継続"
+      },
+      "doc": {
+        "reporter": "報告者",
+        "reporterName": "Supalens運用エージェント",
+        "target": "対象",
+        "targetAll": "すべてのサービス",
+        "filed": "日時",
+        "period": "期間",
+        "section": {
+          "summary": "要約",
+          "confirmed": "データで確認された事実",
+          "likely": "推定原因",
+          "breakdown": "モニター別の内訳",
+          "next": "次の対応"
+        },
+        "likelyNote": "AIがデータから推定した原因です。対応前に確認してください。",
+        "noFindings": "このインシデントには原因調査の記録がありません。",
+        "basis": "アラート履歴(異常の発生・解消)から作成しました。過去の日の個別の点検結果は保存していません。",
+        "liveNote": "リアルタイムの状況報告です。現在のサービスの状態を反映しています。",
+        "draftNote": "今日の報告は一日が終わるまで更新されます。",
+        "fig": {
+          "value": "現在値",
+          "recovered": "復帰時の値",
+          "expected": "想定範囲",
+          "change": "乖離",
+          "duration": "継続時間",
+          "fired": "異常発生",
+          "resolved": "解消",
+          "open": "未解決",
+          "mttr": "平均解消時間"
+        },
+        "anomalyRange": "平常パターン",
+        "col": {
+          "monitor": "モニター",
+          "fired": "異常",
+          "resolved": "解消",
+          "state": "締め時点"
+        },
+        "state": {
+          "open": "未解決",
+          "closed": "正常"
+        },
+        "noLines": "この期間に想定範囲を外れたモニターはありません。",
+        "cta": {
+          "incident": "インシデントを見る",
+          "incidents": "インシデント一覧",
+          "reconnect": "再接続",
+          "monitors": "モニター管理",
+          "review": "提案をレビュー",
+          "extract": "KPI提案を受け取る",
+          "model": "ビジネスモデルを見る"
+        },
+        "copyLink": "リンクをコピー",
+        "copied": "リンクをコピーしました",
+        "ack": "確認",
+        "expected": "想定内の変動",
+        "unack": "確認を取り消す",
+        "stamp": {
+          "ack": "確認",
+          "expected": "想定内"
+        },
+        "ackFailed": "保存できませんでした。もう一度お試しください。",
+        "viewerNote": "報告の確認はメンバー以上のみ可能です。"
+      },
+      "rail": {
+        "services": "サービス",
+        "recent": "直近7日",
+        "fired": "異常",
+        "resolved": "解消",
+        "mttr": "平均解消",
+        "links": "クイックリンク"
+      },
+      "page": {
+        "title": "報告",
+        "homeLink": "ホームダッシュボード",
+        "empty": "接続されたデータがないため、まだ報告はありません。",
+        "emptyCta": "データを接続"
+      }
+    }
+  },
+  "onboardingModal": {
+    "aria": "Supalens をはじめる",
+    "close": "閉じる",
+    "back": "戻る",
+    "next": "次へ",
+    "start": "はじめる",
+    "railLabel": "セットアップ",
+    "notifySub": "チームが見る場所で通知を受け取ります",
+    "welcome": {
+      "tag": "はじめに",
+      "points": [
+        {
+          "title": "設計上リードオンリー",
+          "body": "書き込みツールは存在しません。Supabase ではプロジェクトごとに専用の読み取り専用ロールを発行します。"
+        },
+        {
+          "title": "承認するまで監視しません",
+          "body": "確認して承認した KPI 定義だけがモニターになります。"
+        },
+        {
+          "title": "いつでも続きから",
+          "body": "いつ閉じても大丈夫です。進行状況はワークスペースに保存されます。"
+        }
+      ]
+    },
+    "kpis": {
+      "revenue": "日次売上",
+      "paymentFailure": "決済失敗率",
+      "conversion": "トライアル → 有料転換率",
+      "entitlement": "決済後の権限未付与",
+      "activeSubs": "アクティブなサブスクリプション数"
+    },
+    "alertToggle": "アラート",
+    "slackOption": "Slack チャンネル",
+    "emailOption": "メールのみ",
+    "connectCta": "{name}を接続"
+  },
+  "appSetup": {
+    "title": "5 分で Supalens がビジネスの監視を始めます",
+    "subtitle": "離れて戻っても、進捗はそのまま続きます。",
+    "progress": "{done} / {total} 完了",
+    "tour": "アプリを見て回る",
+    "stageSub": {
+      "connect": "Supabaseとコードを接続します",
+      "understand": "Supalensが理解した内容を確認します",
+      "monitor": "KPIを監視して通知を受け取ります"
+    },
+    "status": {
+      "done": "完了",
+      "current": "今やること",
+      "pending": "待機",
+      "optional": "推奨"
+    },
+    "steps": {
+      "db_connected": {
+        "title": "Supabaseを接続",
+        "desc": "構造的に読み取り専用です — 書き込みツール自体がありません。Supabase 接続では専用の読み取り専用ロールを発行し、いつでも解除できます。"
+      },
+      "repo_attached": {
+        "title": "コードを接続",
+        "desc": "このDBの意味を持つコードを接続してください。スキーマだけではビジネスルールは分かりません。"
+      },
+      "understanding_generated": {
+        "title": "ビジネス理解を生成",
+        "desc": "コードとスキーマを読み、エンティティ・ルール・注意点をまとめたSUPALENS.mdを作成します。"
+      },
+      "kpis_extracted": {
+        "title": "KPI提案を抽出",
+        "desc": "実行検証済みのKPI候補を提案します。実行できないSQLはカタログに入りません。"
+      },
+      "kpis_approved": {
+        "title": "KPIを承認（最低{n}件）",
+        "desc": "定義を確認して承認してください。承認した定義は質問と監視で再利用されます。"
+      },
+      "monitors_active": {
+        "title": "モニターを開始（最低{n}件）",
+        "desc": "「アラートを含める」をオンにして承認するとモニターも作成されます。ダッシュボードのみでは監視されません。"
+      },
+      "notifications_configured": {
+        "title": "通知チャンネル",
+        "desc": "メールは標準で準備済みです。Slackを接続するとチャンネルで調査結果を受け取れます。"
+      }
+    },
+    "actions": {
+      "connectSupabase": "Supabaseで接続",
+      "otherDb": "他のデータベース",
+      "trust": "構造的に読み取り専用 · Supabase は専用の読み取り専用ロール · いつでも解除",
+      "attachRepo": "リポジトリを接続",
+      "schemaOnlyNote": "スキーマのみで続けるとルールなしの集計だけが提案されます。精度が下がります。",
+      "generateContext": "理解を生成",
+      "generating": "生成中… 通常1〜3分",
+      "extractKpis": "KPIを抽出",
+      "extracting": "抽出中… 通常2〜5分",
+      "reviewKpis": "KPIを確認 →",
+      "approveHint": "重要度の高いKPIが事前に選択されています。",
+      "monitorHint": "「アラートを含める」をオンにして承認してください。ダッシュボードのみではモニターは作成されません。",
+      "connectSlack": "Slackを接続",
+      "pickChannel": "チャンネルを選択 →",
+      "emailOnly": "メールのみ使用 — すでに準備済み",
+      "slackConnected": "Slack接続済み",
+      "upgrade": "プランを見る →"
+    },
+    "errors": {
+      "contextLimit": "無料プランのコードベース理解生成（1回）を使い切りました。プランをアップグレードすると続行できます。",
+      "quota": "今期の使用量を使い切りました。",
+      "inProgress": "すでに進行中です。しばらくお待ちください。",
+      "generic": "リクエストに失敗しました。しばらくしてから再試行してください。"
+    },
+    "done": "完了",
+    "notConfigured": "Supabase が設定されていません。",
+    "browse": "アプリを見て回る",
+    "skip": "あとで",
+    "optional": "任意",
+    "stage": {
+      "connect": "接続",
+      "understand": "理解",
+      "monitor": "監視",
+      "notify": "通知"
+    },
+    "step": {
+      "db_connected": {
+        "title": "データベースを接続",
+        "body": "Supabase は OAuth 一度で完了します。プロジェクトごとに専用の読み取り専用ロールを発行し、書き込みツールは存在しません。",
+        "cta": "Supabase を接続",
+        "alt": "別のデータベースを接続",
+        "directBody": "PostgreSQL・MySQL・Firestore の読み取り専用の認証情報を入力します。クエリは読み取り専用トランザクション内の SELECT に限定され、書き込みツールはありません。",
+        "directCta": "データベースを接続"
+      },
+      "repo_attached": {
+        "title": "この DB の意味が書かれたコードを接続",
+        "body": "スキーマは「何があるか」を、コードは「何を数えるか」を教えます。リポジトリは読み取り専用で、ビルドも実行もしません。",
+        "cta": "リポジトリを接続",
+        "note": "コードなしでも続けられますが、スキーマだけでは返金除外やテストアカウント除外などの実際のルールは分かりません。"
+      },
+      "understanding_generated": {
+        "title": "ビジネスルールの理解",
+        "body": "接続したスキーマとコードを読み、エンティティ・状態・集計ルールをまとめたコンテキスト文書を作成します。以降のすべての問い合わせの基準になります。",
+        "cta": "コンテキストを作成",
+        "generating": "作成中…",
+        "failed": "失敗しました。しばらくしてからもう一度お試しください。",
+        "limit": "無料プランのコード解析回数を使い切りました。",
+        "limitCta": "プランを見る",
+        "quota": "今期の使用量を使い切りました。",
+        "view": "作成された文書を見る"
+      },
+      "kpis_extracted": {
+        "title": "KPI 提案を受け取る",
+        "body": "コードとスキーマを根拠に、実行検証済みの KPI 定義を提案します。承認するまで何も監視しません。",
+        "cta": "KPI を抽出"
+      },
+      "kpis_approved": {
+        "title": "KPI を確認して承認",
+        "body": "定義が正しいか確認して承認してください。{need} 件承認すると監視が始まります。",
+        "cta": "KPI を確認",
+        "progress": "{done} / {need} 承認済み"
+      },
+      "monitors_active": {
+        "title": "モニターを有効化",
+        "body": "承認した KPI のうち、しきい値または異常検知を設定できるものがモニターになります。最低 {need} 件必要です。",
+        "cta": "KPI を確認",
+        "progress": "{done} / {need} 有効"
+      },
+      "notifications_configured": {
+        "title": "どこにお知らせしますか？",
+        "body": "既定はメールで、組織のオーナー・管理者の認証済みアドレスに届きます。Slack を接続すると、チームが見ているチャンネルに調査結果まで届きます。",
+        "cta": "Slack を接続",
+        "alt": "通知チャンネル設定",
+        "emailOnly": "メールだけでも問題ありません。",
+        "webhookBody": "Slack または Discord の Webhook URL を貼り付けると、チームが見ているチャンネルに調査結果が届きます。",
+        "webhookCta": "通知を設定"
+      }
+    },
+    "complete": {
+      "title": "Supalens がビジネスを監視しています",
+      "kpis": "KPI {count} 件承認",
+      "monitors": "モニター {count} 件有効",
+      "source": "データベース",
+      "code": "コード",
+      "codeNone": "未接続",
+      "alerts": "通知",
+      "alertsEmail": "メール",
+      "next": "次回チェックまで {minutes} 分",
+      "nextHours": "次回チェックまで {hours} 時間",
+      "openMonitoring": "モニタリングを開く",
+      "ask": "質問する",
+      "alertsNone": "未設定"
+    },
+    "projects": {
+      "title": "どのデータベースを監視しますか？",
+      "lede": "まずは一つ選んでください。残りは後から追加できます。",
+      "empty": "この Supabase アカウントにはまだプロジェクトがありません。",
+      "notConnected": "先に Supabase を接続してください。",
+      "loadFailed": "プロジェクト一覧を読み込めませんでした。しばらくしてからお試しください。",
+      "requestFailed": "リクエストに失敗しました。",
+      "cta": "選択したプロジェクトを接続",
+      "ctaMany": "プロジェクト {count} 件を接続",
+      "retry": "再試行",
+      "provisioning": "接続中…",
+      "adminOnly": "プロジェクトの接続はオーナーまたは管理者のみ可能です。",
+      "env": {
+        "production": "本番",
+        "staging": "ステージング",
+        "unknown": "環境不明"
+      },
+      "envGuess": "プロジェクト名からの推定です",
+      "environmentHint": "本番・ステージングの表示はプロジェクト名からの推定であり、実際の環境設定を確認したものではありません。",
+      "paused": "Supabase で一時停止中 — 再開するまで接続できません",
+      "state": {
+        "active": "接続済み",
+        "pending": "接続中…",
+        "error": "失敗",
+        "disabled": "無効"
+      },
+      "stage": {
+        "authorized": "アカウント認可済み",
+        "roleCreated": "読み取り専用ロール作成済み",
+        "schemaScanned": "スキーマ読み取り済み"
+      },
+      "error": {
+        "mint_readonly_role_failed": "このデータベースに読み取り専用ロールを作成できませんでした。",
+        "pooler_config_unavailable": "Supabase がこのプロジェクトの接続ホストを返しませんでした。",
+        "provisioning_failed": "接続処理に失敗しました。",
+        "generic": "問題が発生しました。"
+      },
+      "reconnectTitle": "Supabase を再接続",
+      "reconnectBody": "Supalens が使用していた認証が取り消されたため、プロジェクトを読み取れません。再認証すると続行できます。他の設定はそのまま残ります。",
+      "reconnectCta": "Supabase を再接続"
+    },
+    "slack": {
+      "title": "問題が起きたら、どこにお知らせしますか？",
+      "lede": "チームがシグナルを確認する場所を選びます。メール通知に加え、Slack でも調査結果を確認できます。",
+      "connect": "Slack を接続",
+      "notConfigured": "このデプロイでは Slack が設定されていません。",
+      "channelLabel": "通知チャンネル",
+      "channelPlaceholder": "チャンネルを選択",
+      "suggested": "おすすめ",
+      "save": "チャンネルを保存",
+      "saved": "チャンネルを保存しました。",
+      "saveFailed": "チャンネルを保存できなかったため、以前の選択に戻しました。",
+      "saving": "チャンネルを保存中…",
+      "readOnly": "通知チャンネルの変更とテスト送信は、オーナーと管理者のみ行えます。",
+      "noChannels": "選択できるチャンネルがありません。通知設定で Slack 接続を確認してください。",
+      "testResult": "{channels} · {email}",
+      "channelsAccepted": "少なくとも一つの通知チャンネルが送信成功を報告",
+      "channelsUnconfirmed": "送信成功を報告した通知チャンネルなし",
+      "emailAccepted": "自分宛てのメール送信成功を報告",
+      "emailUnconfirmed": "自分宛てのメール送信を確認できません",
+      "testHint": "設定済みの全通知チャンネルと自分のメールにテストを送信します。送信成功は受信の保証ではありません。目的の Slack チャンネルと受信箱を確認してください。",
+      "test": "テスト通知を送信",
+      "testing": "送信中…",
+      "testSent": "送信しました。チャンネルとメールをご確認ください。",
+      "testFailed": "テストを送信できませんでした。",
+      "previewTitle": "通知の例 · サンプルデータ",
+      "previewName": "日次売上",
+      "previewFacts": "金曜のベースライン ₩4.2M に対し ₩3.1M（−26%）。更新売上 −31%、日本 −52%。",
+      "previewCause": "決済処理が遅延している可能性があります。Webhook の配信と再試行を確認してください。この売上だけでは原因を断定できません。",
+      "mentionNote": "ここは通知の宛先です。設定 › 連携の @supalens メンション許可チャンネルとは別の設定です。",
+      "emailOnly": "メールのみを使う",
+      "emailOnlyNote": "通知設定でメールの宛先と配信設定を確認してください。通知に依存する前に、テストで実際の受信を確認してください。",
+      "startWatching": "監視を開始",
+      "manage": "通知設定を開く →"
+    },
+    "scan": {
+      "title": "業務ルールと KPI を探す",
+      "body": "スキーマと接続されたリポジトリを読み、確認用の業務ルールと KPI 定義を提案します。進捗は経過時間ではなく、保存された結果に基づきます。",
+      "cta": "スキャンを開始",
+      "ctaSchemaOnly": "スキーマのみでスキャン",
+      "retry": "続きから再試行",
+      "running": "スキャン中…",
+      "leaveSafe": "この画面を閉じても構いません。スキャンは続行し、戻ると続きが表示されます。",
+      "phase": {
+        "schema": "スキーマ",
+        "context": "ビジネスルール",
+        "kpi": "KPI 提案"
+      },
+      "phaseState": {
+        "pending": "待機",
+        "running": "実行中",
+        "done": "完了",
+        "failed": "失敗",
+        "skipped": "完了済み"
+      },
+      "metric": {
+        "tables": "読み取ったテーブル",
+        "entities": "ビジネスエンティティ",
+        "rules": "見つかったルール",
+        "kpis": "KPI 提案"
+      },
+      "pending": "—",
+      "reveal": {
+        "entities": "見つかったエンティティ",
+        "rules": "見つかったルール",
+        "kpis": "提案された KPI"
+      },
+      "done": "確認できる KPI 提案があります。承認前に定義と根拠を確認してください。",
+      "review": "KPI 提案を確認",
+      "failed": "処理が失敗したか、開始を確認できませんでした。再開する前に状態を確認してください。",
+      "limit": "プランのコード分析回数を使い切りました。",
+      "quota": "今サイクルの使用量上限に達しました。",
+      "limitCta": "プランを見る",
+      "conflict": "このソースでは既にスキャンが実行中です。",
+      "bodySchemaOnly": "データベースのスキーマから業務ルールと KPI 定義を提案します。リポジトリは未接続のため、推論されたルールの確認が必要です。",
+      "phasesLabel": "スキャンの段階",
+      "countsLabel": "最後に報告された件数",
+      "snapshotNote": "最後に報告された結果です。以前の処理結果を含む場合があります。「—」は未確認で、ゼロではありません。推論されたルールと KPI 定義を承認前に確認してください。",
+      "waiting": "進捗報告待ち",
+      "refresh": "状態を更新",
+      "refreshing": "状態を確認中…",
+      "unconfirmed": "状態未確認",
+      "repository": "接続されたリポジトリまたは GitHub インストールを確認できませんでした。データソースの接続を確認してから再試行してください。",
+      "repositoryCta": "ソース接続を確認",
+      "permission": "スキャンを開始する権限がないか、ログインセッションの有効期限が切れています。",
+      "state": {
+        "idle": "進行中のスキャンは報告されていません。",
+        "submitting": "スキャンをリクエスト中…",
+        "waiting": "リクエストを受け付けました。進捗報告を待っています。",
+        "running": "スキャン進行中 · 最後に報告された状態",
+        "failed": "スキャン段階の失敗が報告されました。",
+        "ready": "KPI 提案を確認できます。",
+        "unavailable": "状態を更新できませんでした。最後の結果を表示していますが、現在の実行状態は確認できていません。",
+        "empty": "スキャン完了 · KPI 提案なし"
+      },
+      "emptyDone": "スキャンは完了しましたが、KPI 提案はありません。確認画面でソースの状態と再抽出の選択肢を確認してください。",
+      "emptyReview": "KPI 確認画面を開く"
+    },
+    "suggestions": {
+      "title": "推奨ステップ",
+      "lede": "監視の開始には不要ですが、行うと回答の精度が上がります。"
+    }
+  },
+  "appBusinessModel": {
+    "title": "ビジネスモデル",
+    "subtitle": "Supalens がスキーマとコードから理解した内容です。すべてのクエリと KPI 定義はこれに基づきます。",
+    "notConfigured": "Supabase が設定されていません。",
+    "empty": "データソースがまだありません。",
+    "emptyCta": "データベースを接続する",
+    "sampleGroup": "サンプル",
+    "state": {
+      "fresh": "最新",
+      "stale": "古い",
+      "generating": "生成中…",
+      "failed": "失敗",
+      "none": "未生成"
+    },
+    "tier": {
+      "repo": "コードベース",
+      "schema": "スキーマのみ"
+    },
+    "counts": {
+      "entities": "エンティティ {count} 件",
+      "rules": "ルール {count} 件",
+      "metrics": "指標 {count} 件"
+    },
+    "generatedAt": "{date} 生成",
+    "never": "—",
+    "open": "開く",
+    "generate": "生成する",
+    "back": "ビジネスモデル",
+    "tabs": {
+      "entities": "エンティティ",
+      "rules": "ルール",
+      "metrics": "指標",
+      "changes": "変更",
+      "raw": "SUPALENS.md 原文"
+    },
+    "entities": {
+      "concept": "概念",
+      "table": "テーブル",
+      "note": "説明",
+      "empty": "このドキュメントにエンティティのマッピングは見つかりませんでした。"
+    },
+    "rules": {
+      "empty": "このドキュメントにルールは見つかりませんでした。",
+      "unconfirmed": "未確認",
+      "evidence": "根拠",
+      "section": {
+        "enums": "ステータス・コード値",
+        "relationships": "リレーション",
+        "filters": "フィルタ・クエリパターン",
+        "conventions": "規約"
+      },
+      "gotchas": "注意点"
+    },
+    "metrics": {
+      "empty": "このドキュメントに指標の定義は見つかりませんでした。",
+      "sql": "SQL",
+      "review": "KPI を確認",
+      "inCatalog": "KPI カタログに存在",
+      "status": {
+        "proposed": "提案中",
+        "accepted": "承認済み",
+        "dismissed": "除外",
+        "stale": "古い"
+      }
+    },
+    "changes": {
+      "staleTitle": "理解した内容が古くなっています",
+      "staleBody": "このドキュメントの作成後にスキーマまたはコードが変更されました。現在もクエリに使われますが、正確な定義のため再生成してください。",
+      "freshTitle": "最新の状態",
+      "freshBody": "このドキュメントの作成後、スキーマ・コードの変更は検出されていません。",
+      "failedTitle": "生成に失敗しました",
+      "sha": "コミット",
+      "schemaHash": "スキーマ指紋",
+      "repo": "リポジトリ",
+      "model": "モデル",
+      "regenerate": "再生成",
+      "regenerating": "生成中…",
+      "started": "生成リクエストが受け付けられました。更新して記録された状態を確認してください。",
+      "completed": "スキーマのコンテキストを生成しました。更新して保存された文書を確認してください。",
+      "refresh": "状態を更新",
+      "generatingBody": "記録された状態は生成中です。この画面はリアルタイムの進捗を表示しません。以下の文書は以前の生成結果である可能性があります。",
+      "timeUnavailable": "記録時刻を確認できません",
+      "errorGeneric": "生成結果を確認できませんでした。再試行する前に記録された状態を確認してください。",
+      "errorLimit": "プランのコード解析回数を使い切りました。",
+      "errorQuota": "今回の請求サイクルの利用上限に達しました。",
+      "errorRunning": "すでに生成が実行中です。",
+      "billing": "プランを見る",
+      "generatedAtLabel": "生成日時",
+      "errorReconnect": "このデータベースを再度読み取るには、Supabase 接続の再認証が必要です。"
+    },
+    "raw": {
+      "empty": "このソースにはまだコンテキストドキュメントがありません。"
+    }
+  },
+  "appIncidents": {
+    "notConfigured": "Supabase が設定されていません。",
+    "title": "インシデント",
+    "subtitle": "モニターが異常を検知した記録です。何が変わり、調査で何が分かったかをまとめて表示します。",
+    "filter": {
+      "aria": "インシデントのフィルター",
+      "openish": "未解決 · 調査中",
+      "open": "未解決",
+      "investigating": "調査中",
+      "resolved": "解決済み",
+      "all": "すべて"
+    },
+    "table": {
+      "severity": "重大度",
+      "monitor": "KPI",
+      "change": "変化",
+      "startedAt": "発生",
+      "duration": "継続",
+      "likelyCause": "推定原因",
+      "ack": "確認",
+      "empty": "まだインシデントはありません。モニターが異常を検知するとここに記録されます。",
+      "emptyFiltered": "このフィルターに該当するインシデントはありません。",
+      "scrollRegion": "インシデント一覧、スクロールして他の列を表示",
+      "timezone": "すべての記録日時は{timezone}基準です",
+      "region": "インシデント一覧"
+    },
+    "severity": {
+      "high": "高",
+      "medium": "中",
+      "low": "低"
+    },
+    "status": {
+      "open": "未解決",
+      "investigating": "調査中",
+      "resolved": "解決済み"
+    },
+    "row": {
+      "ongoing": "継続中",
+      "acked": "確認済み",
+      "expected": "想定内",
+      "notAcked": "未確認",
+      "investigating": "調査中…",
+      "noExplanation": "調査結果なし",
+      "deviation": "{z}σ の乖離",
+      "expectedRange": "期待値 {range}"
+    },
+    "duration": {
+      "minutes": "{n}分",
+      "hours": "{n}時間",
+      "days": "{n}日",
+      "lessThanMinute": "1分未満"
+    },
+    "detail": {
+      "back": "インシデント一覧",
+      "monitor": "モニター",
+      "source": "データソース",
+      "whatChanged": "何が変わったか",
+      "valueAtFire": "発生時の値",
+      "expectedRange": "期待範囲",
+      "changePct": "基準との差",
+      "deviation": "平常時からの乖離",
+      "valueAtResolve": "回復時の値",
+      "sigma": "{sigma}σ しきい値",
+      "noSeries": "定期チェックごとの値は保存していません。以下は発生時と回復時に記録された値です。",
+      "investigation": "AI 調査",
+      "investigating": "調査中です。通常は数分で結果が入ります。",
+      "failed": "このインシデントの調査結果はありません。調査に失敗したか、利用量の上限でスキップされた可能性があります。",
+      "confirmed": "データで確認された事実",
+      "likely": "推定原因",
+      "hypothesis": "仮説",
+      "hypothesisNote": "AI がデータを分解して立てた仮説です。デプロイやログを直接参照しているわけではありません。",
+      "segments": "影響を受けたセグメント",
+      "timeline": "タイムライン",
+      "definition": "モニターの定義",
+      "noDescription": "説明はありません。",
+      "showSql": "条件 SQL を表示",
+      "notified": "通知済み",
+      "notNotified": "未通知"
+    },
+    "timeline": {
+      "fired": "発生",
+      "reconfirmed": "{n}回連続で条件成立",
+      "investigated": "調査完了",
+      "notified": "通知送信",
+      "acked": "{kind}として処理",
+      "resolved": "回復"
+    },
+    "actions": {
+      "title": "このインシデントへの対応",
+      "ack": "確認済みにする",
+      "expected": "想定内にする",
+      "unack": "取り消す",
+      "adjust": "モニターを調整",
+      "ask": "続けて質問する",
+      "snooze": "このモニターを一時停止",
+      "snooze1h": "1時間",
+      "snooze24h": "24時間",
+      "unsnooze": "今すぐ再開",
+      "snoozedUntil": "{when} まで通知を停止中",
+      "saving": "保存中…",
+      "failed": "リクエストに失敗しました",
+      "memberOnly": "この操作はメンバー以上のみ可能です。",
+      "migrationPending": "インシデント対応機能はデータベースのマイグレーション適用後に利用できます。",
+      "unconfirmed": "変更結果を確認できませんでした。訂正内容は保持されています。再試行する前にインシデントの状態を確認してください。",
+      "invalid": "不正なリクエストです。"
+    },
+    "feedback": {
+      "title": "この推定原因は合っていましたか？",
+      "hint": "回答は今後の調査精度の改善に使います。",
+      "correct": "合っている",
+      "partial": "一部合っている",
+      "wrong": "違う",
+      "correctionLabel": "実際の原因（任意）",
+      "correctionPlaceholder": "実際の原因は何でしたか？",
+      "save": "保存",
+      "saved": "保存しました"
+    }
+  },
+  "supabasePage": {
+    "eyebrow": "Supabase のための Supalens",
+    "headline1": "Supabase の上に SaaS を作りました。",
+    "headline2": "では、ビジネスは誰が見守りますか？",
+    "lede": "Supabase 組織と GitHub リポジトリを接続してください。Supalens がスキーマとその意味を持つコードを読み、承認いただく KPI 定義を提案し、それを監視して変化の原因を調査します。",
+    "ctaPrimary": "Supabase を接続",
+    "ctaSecondary": "ライブデモを見る",
+    "flowLabel": "全体の流れ",
+    "flow": [
+      "Supabase OAuth",
+      "GitHub",
+      "ビジネスルール",
+      "承認した KPI",
+      "継続監視",
+      "Slack で原因調査"
+    ],
+    "afterTitle": "接続すると実際に起きること",
+    "afterLede": "ここにデータベースのパスワードは必要なく、書き込みもありません。",
+    "after": [
+      {
+        "title": "認証情報ではなく OAuth",
+        "body": "Supabase 組織に対して Supalens を認可します。データベースのパスワードは Management API から取得できないため、要求も保管もしません。"
+      },
+      {
+        "title": "プロジェクトごとの読み取り専用ロール",
+        "body": "選択したプロジェクトに専用の `supalens_ro` ロールを作成し、そのロールの認証情報のみをテナントごとの鍵で暗号化して保管します。"
+      },
+      {
+        "title": "読み取り専用は構造",
+        "body": "クエリは SELECT のみが許可され、READ ONLY トランザクション内でステートメントタイムアウト・行数上限・監査記録とともに実行されます。書き込むツール自体が存在しません。"
+      },
+      {
+        "title": "いつでも解除",
+        "body": "接続を解除すると保管された認証情報は破棄されます。プロジェクトはそのまま動き、Supalens だけが見えなくなります。"
+      }
+    ],
+    "projectNote": "まずはプロジェクトを一つ選んでください — 本番でもステージングでも。残りは後から追加できます。",
+    "meta": {
+      "title": "Supabase のための Supalens — あなたの Supabase ビジネスを監視します",
+      "description": "Supabase と GitHub を接続。Supalens がスキーマとコードからビジネスルールを学び、検証済み KPI を提案・監視し、異常時は Slack で原因を調査します。設計上リードオンリー。"
+    }
+  },
+  "share": {
+    "metaTitle": "共有された分析 · Supalens",
+    "metaDescription": "Supalens で生成されたデータ分析 — データベースに自然言語で質問できます。"
+  },
+  "xray": {
+    "metaTitle": "ビジネスX-ray — 指標のずれを見つける | Supalens",
+    "metaDescription": "公開GitHubリポジトリを貼るだけ。数分で、プロダクトの収益の流れ、コードが同じ数字を2通りに数えている箇所、見守るべきKPIをまとめます。無料・登録不要。",
+    "landing": {
+      "tag": "ビジネスX-ray",
+      "tagNote": "無料 · 公開リポジトリは登録不要",
+      "title": "リポジトリを貼って\nコーヒーを一杯。\n戻ればレポート。",
+      "sub": "スキーマから決済コードまで読む過程をそのままお見せします。数分後、お金の流れと指標の落とし穴をまとめた共有用レポートのリンクができます。",
+      "trust": [
+        "コードを読むだけで実行しません",
+        "公開リポジトリは権限不要"
+      ],
+      "get": {
+        "title": "数分で得られるもの",
+        "flow": [
+          "登録",
+          "トライアル",
+          "プラン",
+          "返金"
+        ],
+        "diffGood": "analytics.ts  and deleted_at is null",
+        "diffBad": "admin/stats.ts  -- no deleted filter",
+        "kpis": [
+          "新規登録",
+          "トライアル → 有料",
+          "MRR",
+          "解約率",
+          "返金率"
+        ],
+        "items": [
+          {
+            "title": "お金の流れ",
+            "body": "売上が実際にどのテーブルとコードを通っているか、各ステップの根拠となるファイルと行まで示します。"
+          },
+          {
+            "title": "指標の落とし穴",
+            "body": "コードの2か所が同じ数字を別々に数えている箇所を、そのままコピーできる修正案と一緒に示します。"
+          },
+          {
+            "title": "見守るべきKPI",
+            "body": "ビジネスを実際に動かしている指標を、それを定義するコードとともに提案します。"
+          }
+        ]
+      },
+      "recent": {
+        "title": "最近のX-ray",
+        "note": "公開リポジトリのみ表示します。オーナーはいつでもレポートの非表示を依頼できます。",
+        "traps": "{count, plural, =0 {落とし穴なし} other {落とし穴 #件}}",
+        "kpis": "{count, plural, other {KPI #件}}"
+      },
+      "band": {
+        "title": "X-rayはコードが語ることです。\n次に、データが語ることを確かめます。",
+        "body": "Supabaseを読み取り専用で接続すると、すべての落とし穴が実際の数字になります。KPIを承認すれば、Supalensが見守り続けます。",
+        "cta": "リポジトリをスキャン",
+        "steps": [
+          {
+            "kicker": "01 · 登録不要",
+            "title": "コードをX-ray",
+            "body": "お金の流れ、落とし穴、KPI"
+          },
+          {
+            "kicker": "02 · Supabase読み取り専用",
+            "title": "実データで確認",
+            "body": "落とし穴が数字をどれだけ動かすか"
+          },
+          {
+            "kicker": "03 · 追加権限なし",
+            "title": "90日を巻き戻す",
+            "body": "通知を受けるべきだった瞬間"
+          },
+          {
+            "kicker": "04 · Slackチャンネル1つ",
+            "title": "毎週見守る",
+            "body": "原因付きのアラートと月曜ブリーフ"
+          }
+        ]
+      },
+      "replay": {
+        "label": "実際のX-rayを再生",
+        "readOnly": "読み取り専用 · 何も実行しません",
+        "source": "実際のスキャン記録 · 約2分30秒 →",
+        "kinds": {
+          "read": "読込",
+          "search": "検索",
+          "entity": "エンティティ",
+          "rule": "ルール",
+          "trap": "落とし穴",
+          "done": "完了"
+        },
+        "lines": [
+          {
+            "kind": "read",
+            "text": "supabase/migrations/…_init.sql"
+          },
+          {
+            "kind": "read",
+            "text": "app/api/webhooks/route.ts"
+          },
+          {
+            "kind": "entity",
+            "text": "中心テーブル5つ — users, customers, products, prices, subscriptions"
+          },
+          {
+            "kind": "search",
+            "text": "status|active|trial"
+          },
+          {
+            "kind": "rule",
+            "text": "有効なサブスクリプションは status in (trialing, active) の1か所だけで定義"
+          },
+          {
+            "kind": "read",
+            "text": "utils/stripe/server.ts"
+          },
+          {
+            "kind": "trap",
+            "text": "単発の決済はSupabaseに記録されません"
+          },
+          {
+            "kind": "read",
+            "text": "app/account/page.tsx"
+          },
+          {
+            "kind": "trap",
+            "text": "返金・チャージバックは追跡されていません"
+          },
+          {
+            "kind": "done",
+            "text": "レポート完成 — 評価A · 落とし穴2 · KPI 4"
+          }
+        ]
+      }
+    },
+    "form": {
+      "label": "GitHubリポジトリ",
+      "prefix": "github.com/",
+      "placeholder": "owner/repo",
+      "submit": "X-rayする",
+      "submitting": "確認中…",
+      "examples": "例を試す:",
+      "errors": {
+        "invalid_repo": "GitHubリポジトリではないようです。owner/repo の形式で入力してください。",
+        "not_found": "{repo} を開けませんでした。非公開、名前の変更、またはタイプミスの可能性があります。",
+        "too_large": "{repo} は無料のX-rayで読むには大きすぎます。",
+        "empty": "{repo} のデフォルトブランチにはまだコミットがありません。",
+        "rate_limited": "本日の無料X-rayを使い切りました。既存のレポートはいつでもすぐに開けます。",
+        "daily_budget": "本日のX-ray上限に達しました。既存のレポートはすぐに開けます。新しいスキャンは明日お試しください。",
+        "busy": "現在すべてのスキャナーが使用中です。数分後にお試しください。",
+        "github_limited": "GitHubが一時的にリクエストを制限しています。1分後にお試しください。",
+        "github_unavailable": "GitHubが応答していません。1分後にお試しください。",
+        "unavailable": "現在X-rayは利用できません。しばらくしてからお試しください。",
+        "network": "問題が発生しました。もう一度お試しください。"
+      },
+      "privateHint": "非公開リポジトリですか？ログインしてGitHubを接続",
+      "stale": {
+        "title": "{repo} は{when}にX-rayされました。",
+        "body": "そのレポートはコミット {sha} を読みました。その後リポジトリは更新されています。",
+        "view": "レポートを見る",
+        "rescan": "最新でスキャンし直す"
+      }
+    },
+    "scan": {
+      "title": "{name} の収益の仕組みを読んでいます",
+      "metaWaiting": "公開 · {branch}",
+      "meta": "公開 · {branch} · ファイル {files}件",
+      "steps": [
+        {
+          "title": "リポジトリを取得しました",
+          "detail": "デフォルトブランチの最新コミットのみ"
+        },
+        {
+          "title": "スキーマを読みました",
+          "detail": "テーブル、モデル、マイグレーション"
+        },
+        {
+          "title": "お金の流れを追跡中",
+          "detail": "決済、サブスクリプション、返金"
+        },
+        {
+          "title": "指標の定義を照合中",
+          "detail": "コードの2か所が1つの数字を数える箇所"
+        },
+        {
+          "title": "レポートを作成中",
+          "detail": "すべてのコード抜粋を実ファイルと照合"
+        }
+      ],
+      "fetchedDetail": "ファイル {files}件",
+      "live": "ライブ",
+      "readOnly": "読み取り専用 · 何も実行しません",
+      "log": {
+        "read": "読込",
+        "search": "検索",
+        "entity": "エンティティ",
+        "rule": "ルール",
+        "kpi": "KPI",
+        "trap": "落とし穴"
+      },
+      "waitingLog": "最初のファイルを待っています…",
+      "counters": {
+        "entity": "エンティティ",
+        "rule": "ビジネスルール",
+        "kpi": "KPI候補",
+        "trap": "指標の落とし穴"
+      },
+      "filesRead": "{count, plural, =0 {まだファイルを読んでいません} other {ファイル #件を読みました}}",
+      "eta": "通常3〜5分かかります",
+      "etaLate": "もうすぐ完了します",
+      "keepOpen": "このタブを開いたままにしてください。レポートが完成すると専用リンクができます。",
+      "failedTitle": "X-rayを完了できませんでした。",
+      "failed": {
+        "clone_failed": "GitHubからリポジトリをコピーできませんでした。",
+        "budget": "リポジトリが大きすぎて一度に読み切れませんでした。",
+        "no_report": "信頼できるレポートを作れないままスキャンが終了しました。",
+        "other": "スキャンが予期せず停止しました。"
+      },
+      "failedNote": "コピーしたコードはすでに削除されています。",
+      "retry": "もう一度試す",
+      "done": "レポート完成 — 開いています"
+    },
+    "report": {
+      "metaTitle": "{repo} — ビジネスX-ray ({grade})",
+      "tag": "ビジネスX-ray",
+      "public": "公開",
+      "scanned": "{when}にX-ray",
+      "rescan": "再スキャン",
+      "gradeLabel": "指標の健全性",
+      "gradeHow": "評価の仕組み",
+      "gradeHowBody": "100点から始めます。コードで確定した落とし穴は10点、データ確認が必要な落とし穴は3点を引きます。90点台はA、80点台はB、70点台はCです。評価は発見に対するもので、チームに対するものではありません。",
+      "share": {
+        "title": "このX-rayを共有",
+        "note": "共有されるのは発見と評価だけです。数字はこのページの外に出ません。",
+        "x": "Xに投稿",
+        "linkedin": "LinkedIn",
+        "copy": "リンクをコピー",
+        "copied": "リンクをコピーしました",
+        "download": "カードを保存",
+        "post": "{name} のビジネスX-ray評価は {grade}: {headline}"
+      },
+      "money": {
+        "title": "{name} の収益の仕組み",
+        "note": "コミット {sha} のコードから読み取りました。"
+      },
+      "traps": {
+        "title": "{count, plural, =0 {指標の落とし穴なし} other {指標の落とし穴 #件}}",
+        "sub": "コードの2か所が同じ数字を別々に数えています。落とし穴ごとにコピーできる修正案があります。",
+        "subNone": "追跡したすべての数字が1通りの方法で数えられています。珍しいことで、守る価値があります。",
+        "certain": "コードで確定",
+        "needsData": "データ確認が必要",
+        "show": "コードと修正案を表示",
+        "hide": "コードを閉じる",
+        "fix": "修正案 · {path}",
+        "copyFix": "修正案をコピー",
+        "copied": "コピーしました",
+        "openGithub": "GitHubで開く",
+        "right": "正しく数えている",
+        "wrong": "別の数え方",
+        "unclear": "要確認"
+      },
+      "kpis": {
+        "title": "{count, plural, other {見守るべきKPI #件}}",
+        "anomaly": "異常検知で監視",
+        "threshold": "しきい値を超えたら通知"
+      },
+      "cta": {
+        "found": "このリポジトリでSupabaseを見つけました",
+        "notFound": "実データで確認する",
+        "title": "ここまではコードが語ることです。\nデータが語ることも見てみますか？",
+        "checks": [
+          "落とし穴が実際の数字をどれだけ動かすか",
+          "ダッシュボードが実際にどの定義を表示しているか",
+          "過去90日で通知を受けるべきだった瞬間"
+        ],
+        "button": "Supabaseを読み取り専用で接続",
+        "buttonOther": "データベースを接続",
+        "note": "約1分 · 書き込み権限なし · いつでも解除"
+      },
+      "another": "自分のリポジトリもX-ray",
+      "footer": "公開リポジトリのコミット {sha} に対するレポートです。",
+      "hide": "オーナーですか？レポートの非表示を依頼",
+      "empty": {
+        "title": "{repo} はまだX-rayされていません。",
+        "body": "数分かかり、コードを読むだけです。",
+        "cta": "今すぐX-ray"
+      },
+      "failed": {
+        "title": "{repo} の前回のX-rayは完了しませんでした。",
+        "cta": "もう一度試す"
+      }
+    },
+    "card": {
+      "kicker": "ビジネスX-RAY",
+      "rules": "{count, plural, other {ビジネスルール #件}}",
+      "footer": "自分のリポジトリも無料で → supalens.ai/x",
+      "noReport": "このリポジトリはまだX-rayされていません。"
+    }
+  },
+  "appCondition": {
+    "sentence": {
+      "anomaly_down": "通常範囲を大きく下回ったら通知（{sigma}σ）",
+      "anomaly_up": "通常範囲を大きく上回ったら通知（{sigma}σ）",
+      "anomaly_both": "通常範囲を大きく外れたら通知（{sigma}σ）",
+      "relative_down": "直前 {n} 日の平均より {pct} 以上低ければ通知",
+      "relative_up": "直前 {n} 日の平均より {pct} 以上高ければ通知",
+      "relative_down_prev": "前日より {pct} 以上低ければ通知",
+      "relative_up_prev": "前日より {pct} 以上高ければ通知",
+      "absolute_lt": "値が {value} 未満なら通知",
+      "absolute_lte": "値が {value} 以下なら通知",
+      "absolute_gt": "値が {value} を超えたら通知",
+      "absolute_gte": "値が {value} 以上なら通知",
+      "absolute_eq": "値が {value} なら通知",
+      "absolute_neq": "値が {value} でなければ通知"
+    },
+    "basisWindow": "直近 {n} 日から通常範囲を計算します",
+    "basisWholeSeries": "全期間から通常範囲を計算します",
+    "short": {
+      "anomaly_down": "通常比 ↓ {sigma}σ",
+      "anomaly_up": "通常比 ↑ {sigma}σ",
+      "anomaly_both": "通常比 ± {sigma}σ",
+      "relative_down": "{n} 日平均比 −{pct}",
+      "relative_up": "{n} 日平均比 +{pct}",
+      "relative_down_prev": "前日比 −{pct}",
+      "relative_up_prev": "前日比 +{pct}"
+    }
+  }
+}

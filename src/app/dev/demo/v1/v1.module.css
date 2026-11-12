@@ -1,0 +1,611 @@
+/* Dev-only V1 — "Terminal / SQL-forward" public-demo design variation.
+   GLOBAL theme tokens ONLY (--paper/--ink/--line/--panel/--clay …), no .dx-* utilities.
+   The dark console blocks use the --panel/--on-panel inverted-band tokens, so they stay
+   a premium near-black terminal in BOTH themes (darker than the page in dark mode). */
+
+.page {
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+@media (max-width: 640px) {
+  .themeToggleWrap {
+    display: none; /* the fixed dev toggle would cover the header CTA on phones */
+  }
+}
+
+/* ── slim header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 16px 24px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.wordmark {
+  font-family: var(--font-logo);
+  font-weight: 400;
+  font-size: 19px;
+  letter-spacing: 0.01em;
+  text-transform: lowercase;
+}
+.headerActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+.loginLink {
+  font-size: 14px;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+.loginLink:hover {
+  color: var(--ink);
+}
+.headerCta {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 15px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.main {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 46px 24px 96px;
+}
+
+/* ── hero ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.badgeDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--clay);
+  animation: v1Pulse 1.8s ease-in-out infinite;
+}
+@keyframes v1Pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+.title {
+  margin: 16px 0 10px;
+  font-size: clamp(28px, 5vw, 40px);
+  line-height: 1.14;
+  font-weight: 750;
+  letter-spacing: -0.022em;
+}
+.sub {
+  margin: 0;
+  max-width: 660px;
+  font-size: 15.5px;
+  line-height: 1.68;
+  color: var(--ink-2);
+}
+
+/* ── mono section kickers ── */
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+}
+
+/* ── terminal primitives ── */
+.term {
+  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lift);
+  overflow: hidden;
+}
+.termHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--on-panel) 10%, transparent);
+}
+.termDots {
+  display: inline-flex;
+  gap: 5px;
+  flex: none;
+}
+.termDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--on-panel);
+  opacity: 0.18;
+}
+.termTitle {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+  color: var(--on-panel-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.termLive {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding: 2px 9px;
+  border: 1px solid color-mix(in srgb, var(--on-panel) 18%, transparent);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--on-panel-2);
+}
+.termLiveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--clay);
+  animation: v1Pulse 1.8s ease-in-out infinite;
+}
+.termBody {
+  padding: 14px 16px 16px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: var(--on-panel);
+  overflow-x: auto;
+}
+.promptLine {
+  white-space: nowrap;
+}
+.promptHost {
+  color: var(--on-panel-2);
+}
+.promptArrow {
+  color: var(--clay);
+}
+.comment {
+  color: var(--on-panel-2);
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+/* ── connected schema (psql-style) ── */
+.schemaSection {
+  margin-top: 34px;
+}
+.schemaTerm {
+  margin-top: 10px;
+}
+.schemaGrid {
+  min-width: 620px;
+  display: grid;
+  grid-template-columns: 130px 110px 1fr;
+  column-gap: 20px;
+  row-gap: 1px;
+  margin: 8px 0 10px;
+}
+.schemaName {
+  color: var(--on-panel);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.schemaRows {
+  color: var(--on-panel-2);
+  text-align: right;
+  white-space: nowrap;
+}
+.schemaCols {
+  color: var(--on-panel-2);
+  white-space: nowrap;
+}
+
+/* ── suggested chips ── */
+.suggestBlock {
+  margin-top: 30px;
+}
+.suggestLabel {
+  margin-bottom: 10px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chipBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink-2);
+  font-size: 13.5px;
+  line-height: 1.3;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color 0.15s,
+    color 0.15s,
+    background 0.15s;
+}
+.chipBtn:hover {
+  border-color: var(--ink-3);
+  color: var(--ink);
+  background: var(--paper-2);
+}
+.chipSigil {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--clay-deep);
+}
+:global([data-theme='dark']) .chipSigil {
+  color: var(--clay);
+}
+
+/* ── console-prompt composer ── */
+.composer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel);
+  box-shadow: var(--shadow-lift);
+}
+.promptLabel {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  white-space: nowrap;
+  user-select: none;
+  flex: none;
+}
+@media (max-width: 560px) {
+  .promptLabel .promptHost {
+    display: none; /* keep just the `=>` sigil on phones */
+  }
+}
+.inputWrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+.input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--on-panel);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.6;
+  padding: 6px 0;
+  caret-color: var(--clay);
+}
+.ghost {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+.cursorBlock {
+  flex: none;
+  width: 0.6em;
+  height: 1.2em;
+  background: var(--clay);
+  animation: v1Blink 1.1s steps(1) infinite;
+}
+@keyframes v1Blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.ghostText {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--on-panel-2);
+  opacity: 0.75;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.input:not(:placeholder-shown) ~ .ghost {
+  display: none;
+}
+.inputWrap:focus-within .cursorBlock {
+  display: none;
+}
+.sendBtn {
+  flex: none;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 9px;
+  background: var(--clay);
+  color: var(--panel);
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.sendBtn:hover {
+  background: var(--clay-deep);
+  color: #fff;
+}
+.readonlyNote {
+  margin-top: 9px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+/* ── sample answered turn ── */
+.turn {
+  margin-top: 44px;
+}
+.userRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+.userMsg {
+  max-width: 85%;
+  padding: 10px 15px;
+  border-radius: 16px 16px 4px 16px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.noteChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--paper-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.traceRows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 12px;
+}
+.traceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  white-space: nowrap;
+}
+.traceCheck {
+  color: var(--clay);
+}
+.traceName {
+  color: var(--on-panel);
+  font-weight: 700;
+}
+.traceMeta {
+  color: var(--on-panel-2);
+  font-size: 11.5px;
+}
+.sqlCard {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--panel-2);
+}
+.sql {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--on-panel);
+  white-space: pre;
+  overflow-x: auto;
+}
+.sqlKw {
+  color: var(--clay);
+}
+.sqlFn {
+  color: var(--on-panel);
+}
+.sqlStr {
+  color: var(--series-4);
+}
+.sqlNum {
+  color: var(--series-4);
+}
+.sqlCom {
+  color: var(--on-panel-2);
+  font-style: italic;
+}
+.sqlMeta {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--on-panel-2);
+  white-space: nowrap;
+  overflow-x: auto;
+}
+.answerViz {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 320px));
+  gap: 12px;
+}
+.answerText {
+  margin-top: 14px;
+  font-size: 15px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+.answerCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--clay-deep);
+  text-decoration: none;
+}
+:global([data-theme='dark']) .answerCta {
+  color: var(--clay);
+}
+.answerCta:hover {
+  text-decoration: underline;
+}
+
+/* ── payoff dashboard grid ── */
+.payoff {
+  margin-top: 72px;
+  padding-top: 44px;
+  border-top: 1px solid var(--line);
+}
+.payoffKicker {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--clay-deep);
+  margin-bottom: 10px;
+}
+:global([data-theme='dark']) .payoffKicker {
+  color: var(--clay);
+}
+.payoffTitle {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 720;
+  letter-spacing: -0.015em;
+}
+.payoffSub {
+  margin: 0 0 24px;
+  max-width: 640px;
+  font-size: 14.5px;
+  line-height: 1.66;
+  color: var(--ink-2);
+}
+.payoffGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+@media (max-width: 680px) {
+  .payoffGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ── final CTA ── */
+.ctaCard {
+  margin-top: 64px;
+  padding: 38px 30px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper-2);
+  text-align: center;
+}
+.ctaCmd {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  margin: 0 0 14px;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+.ctaCmdSigil {
+  color: var(--clay-deep);
+}
+@media (max-width: 560px) {
+  .ctaCmdNote {
+    display: none; /* the trailing # comment clips on phones */
+  }
+}
+:global([data-theme='dark']) .ctaCmdSigil {
+  color: var(--clay);
+}
+.ctaTitle {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 720;
+}
+.ctaSub {
+  margin: 0 auto 20px;
+  max-width: 480px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.ctaBtn {
+  display: inline-flex;
+  padding: 11px 22px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 15px;
+  font-weight: 650;
+  text-decoration: none;
+}
+.ctaMcp {
+  display: block;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--ink-3);
+  text-decoration: none;
+}
+.ctaMcp:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}

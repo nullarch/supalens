@@ -1,0 +1,256 @@
+/* Sign-in: a simple login structure (quiet bar, short intro beside one card,
+   one-line footer) in the editorial system shared by the home page and /app.
+   Tokens come from `.ed` (editorial.css). The global names LoginForm and the language
+   Select read are remapped below, so the form renders in the same system here while
+   /dev/entry keeps the global look. */
+
+.page {
+  --ink: var(--ed-ink);
+  --ink-2: var(--ed-copy);
+  --ink-3: var(--ed-muted);
+  --paper: var(--ed-fill);
+  --paper-2: var(--ed-bg);
+  --paper-3: var(--ed-fill);
+  --surface-canvas: var(--ed-bg);
+  --line: var(--ed-line);
+  --line-2: color-mix(in srgb, var(--ed-muted) 38%, var(--ed-line));
+  --action: var(--ed-ink);
+  --action-hover: var(--ed-accent);
+  --on-action: var(--ed-bg);
+  --r-control: var(--ed-r-button);
+  --font-sans: var(--ed-sans);
+  --login-focus: var(--ed-accent);
+  --login-control-height: 48px;
+  --login-button-weight: 400;
+  --login-label-weight: 400;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* One column for bar, body and footer: every left and right edge lines up. */
+.row {
+  width: min(100% - 2 * var(--ed-gutter), var(--ed-content));
+  margin-inline: auto;
+}
+
+/* ============================ bar ============================ */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 80px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--ed-ink);
+}
+.wordmark {
+  font-family: var(--ed-serif);
+  font-size: 20px;
+  line-height: 1.5;
+  letter-spacing: -0.025em;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ed-copy);
+  font-size: 15px;
+  white-space: nowrap;
+  transition: color 180ms ease;
+}
+
+/* ============================ body ============================ */
+.shell {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+  align-items: center;
+  gap: clamp(48px, 7vw, 100px);
+  padding-block: clamp(24px, 5vh, 64px);
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+.headline {
+  margin-top: 22.5px;
+  font-family: var(--ed-serif);
+  font-size: clamp(36px, 3.6vw, 46px);
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+}
+.headline > span {
+  display: block;
+  text-wrap: balance;
+}
+.introNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+  max-width: 460px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--ed-line);
+  color: var(--ed-copy);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.introNote svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--ed-accent);
+}
+
+.card {
+  min-width: 0;
+  padding: 36px 32px 28px;
+  border: 1px solid var(--ed-line-soft);
+  border-radius: 20px;
+  background: var(--ed-panel);
+}
+.title {
+  font-size: 30px;
+  line-height: 1.2;
+}
+.subtitle {
+  margin-top: 10px;
+  color: var(--ed-copy);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.status {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--intent-negative) 25%, transparent);
+  border-radius: var(--ed-r-button);
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.status svg {
+  flex: none;
+  margin-top: 2px;
+}
+.form {
+  margin-top: 26px;
+}
+.legal {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--ed-line);
+  color: var(--ed-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.legal a {
+  color: var(--ed-copy);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--ed-muted) 55%, transparent);
+  text-underline-offset: 3px;
+  transition: color 180ms ease, text-decoration-color 180ms ease;
+}
+
+/* ============================ footer ============================ */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 72px;
+  border-top: 1px solid var(--ed-line-soft);
+  color: var(--ed-muted);
+  font-size: 13px;
+}
+.languageRoot {
+  min-width: 112px;
+}
+
+@media (hover: hover) {
+  .navLink:hover,
+  .legal a:hover {
+    color: var(--ed-accent);
+    text-decoration-color: currentColor;
+  }
+}
+
+/* Korean/Japanese: CJK serif, no negative tracking, word-safe wrapping. */
+:global(.ed:is(:lang(ko), :lang(ja))) .headline {
+  font-size: clamp(32px, 3.2vw, 42px);
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+}
+:global(.ed:is(:lang(ko), :lang(ja))) .title {
+  font-size: 26px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+:global(.ed:lang(ko)) :is(.headline, .subtitle, .legal, .introNote, .status) {
+  word-break: keep-all;
+}
+:global(.ed:lang(ja)) :is(.headline, .subtitle, .legal, .introNote) {
+  line-break: strict;
+}
+/* Japanese has no spaces: break the headline at phrase boundaries where supported. */
+:global(.ed:lang(ja)) :is(.headline > span, .subtitle, .legal, .introNote) {
+  word-break: auto-phrase;
+}
+
+/* ============================ responsive ============================ */
+/* Below 900px only the card remains, as on the reference. */
+@media (max-width: 900px) {
+  .shell {
+    display: block;
+    width: min(100% - 2 * var(--ed-gutter), 460px);
+  }
+  .intro {
+    display: none;
+  }
+}
+@media (max-width: 640px) {
+  .header {
+    min-height: 64px;
+  }
+  .nav {
+    gap: 12px;
+  }
+  .navLink {
+    font-size: 14px;
+  }
+  .shell {
+    padding-block: 12px 32px;
+  }
+  .card {
+    padding: 28px 20px 22px;
+  }
+  .title {
+    font-size: 26px;
+  }
+  .footer {
+    min-height: 64px;
+  }
+}
+@media (max-width: 360px) {
+  .wordmark {
+    display: none;
+  }
+}

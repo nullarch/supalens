@@ -1,0 +1,493 @@
+/* ============================================================
+   Settings · Billing — Design-system surfaces.
+   The current plan is a card: plan name as a serif figure with its
+   state badge and the manage action, then four figure cells (price ·
+   monitors used · check interval · period) divided by lines. Below:
+   usage meters in a card beside the payments table shell, then the plan
+   comparison (PlanCards).
+   ============================================================ */
+.page {
+  min-width: 0;
+  container-type: inline-size;
+}
+
+/* ---------- current plan card ---------- */
+.banner {
+  display: grid;
+  min-width: 0;
+  padding: 24px 28px 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-2);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.bandMain {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  min-width: 0;
+}
+.bandText {
+  display: grid;
+  gap: 4px;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.bandLabel {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.planRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}
+.planName {
+  margin: 0;
+  font-family: var(--ax-serif);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.26;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+.subline {
+  font-size: 14px;
+  line-height: 22.75px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+.dunning {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--intent-negative);
+}
+.dunning::before {
+  content: "";
+  position: relative;
+  top: -1px;
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--ax-err, var(--intent-negative));
+}
+.dunning[data-status="paused"] {
+  color: var(--intent-warning);
+}
+.dunning[data-status="paused"]::before {
+  background: var(--intent-warning);
+}
+.bannerActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.bannerActionStack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  min-width: 0;
+}
+/* the plan action: ink primary, as the reference */
+.bannerPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--action);
+  color: var(--on-action);
+  font-family: var(--ax-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 160ms ease, transform 120ms ease;
+}
+@media (hover: hover) {
+  .bannerPrimary:not(:disabled):hover {
+    opacity: 0.85;
+  }
+}
+.bannerPrimary:not(:disabled):active {
+  transform: scale(0.98);
+}
+.bannerPrimary:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+.bannerPrimary:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.bannerError {
+  max-width: 320px;
+  font-size: 13px;
+  line-height: 20px;
+  text-align: right;
+  color: var(--intent-negative);
+}
+
+/* figures */
+.figures {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 24px -28px 0;
+  border-top: 1px solid var(--line);
+}
+.figures > div {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+  padding: 18px 24px 22px;
+  border-left: 1px solid var(--ax-line-soft);
+}
+.figures > div:first-child {
+  padding-left: 28px;
+  border-left: 0;
+}
+.figures dt {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.figures dd {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 6px;
+  margin: 0;
+  font-family: var(--ax-serif);
+  font-size: 24px;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.figures dd small {
+  font-family: var(--ax-sans);
+  font-size: 14px;
+  letter-spacing: 0;
+  color: var(--ink-3);
+}
+.figures dd.figurePeriod {
+  font-family: var(--ax-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  letter-spacing: 0;
+  padding-top: 5px;
+}
+.bandMeter {
+  display: block;
+  height: 4px;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: var(--paper-3);
+  overflow: hidden;
+}
+.bandMeter > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--brand);
+}
+.bandMeter > span[data-high="true"] {
+  background: var(--intent-warning);
+}
+
+/* ---------- usage + payments ---------- */
+.cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  margin-top: 40px;
+}
+.section {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  min-height: 28px;
+}
+.sectionTitle {
+  margin: 0;
+  font-family: var(--ax-sans);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+  color: var(--ink);
+}
+.cycle {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+.usagePanel {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  padding: 4px 24px 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-2);
+}
+.usage {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.usageRow {
+  display: grid;
+  gap: 8px;
+  padding: 14px 0;
+}
+.usageRow + .usageRow {
+  border-top: 1px solid var(--ax-line-soft);
+}
+.usageTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.usageLabel {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.usageVal {
+  font-family: var(--ax-serif);
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.usageMax {
+  font-family: var(--ax-sans);
+  font-size: 13px;
+  letter-spacing: 0;
+  color: var(--ink-3);
+}
+.meter.meter {
+  height: 4px;
+  background: var(--paper-3);
+}
+.meter :global(.dx-meter-fill) {
+  background: var(--brand);
+}
+.meter :global(.dx-meter-fill)[data-high="true"] {
+  background: var(--intent-warning);
+}
+.limitsReduced {
+  margin: 16px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+  font-size: 14px;
+  line-height: 22px;
+}
+.usageNote {
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.overage {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--paper-3);
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-2);
+}
+.overage[data-state="exceeded"] {
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+}
+.em {
+  font-weight: 500;
+  color: inherit;
+  font-variant-numeric: tabular-nums;
+}
+.muted {
+  color: var(--ink-3);
+}
+
+/* payments table shell */
+.tableCard {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-2);
+}
+.tableWrap {
+  overflow-x: auto;
+}
+.tableWrap table {
+  min-width: 420px;
+}
+.tableWrap:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}
+.table th {
+  padding: 12.8px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--ax-tint, var(--ax-panel));
+  font-family: var(--ax-sans);
+  font-size: 12.8px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-3);
+}
+.table td {
+  border-bottom-color: var(--ax-line-soft);
+}
+.table th:first-child,
+.table td:first-child {
+  padding-left: 24px;
+}
+.table th:last-child,
+.table td:last-child {
+  padding-right: 20px;
+}
+.thAmount {
+  text-align: right;
+}
+.txDate {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.txAmt {
+  text-align: right;
+  font-size: 14px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.emptyTx {
+  margin: 0;
+  padding: 40px 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  text-align: center;
+  color: var(--ink);
+}
+.footNote {
+  margin: 20px 0 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+
+/* ---------- responsive: by the column the page gets ---------- */
+@container (max-width: 860px) {
+  .cols {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+}
+@container (max-width: 680px) {
+  .figures {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .figures > div:nth-child(3) {
+    padding-left: 28px;
+    border-left: 0;
+  }
+  .figures > div:nth-child(n + 3) {
+    border-top: 1px solid var(--ax-line-soft);
+  }
+}
+@container (max-width: 480px) {
+  .banner {
+    padding: 20px 20px 0;
+  }
+  .figures {
+    margin: 20px -20px 0;
+  }
+  .figures > div,
+  .figures > div:first-child,
+  .figures > div:nth-child(3) {
+    padding: 14px 16px 18px 20px;
+  }
+  .figures > div:nth-child(even) {
+    padding-left: 16px;
+  }
+  .bannerActions,
+  .bannerActionStack {
+    width: 100%;
+    align-items: stretch;
+  }
+  .bannerActions > *,
+  .bannerPrimary {
+    flex: 1;
+    width: 100%;
+  }
+  .bannerError {
+    max-width: none;
+    text-align: left;
+  }
+  .usagePanel {
+    padding: 4px 20px 16px;
+  }
+}
+@container (max-width: 320px) {
+  .figures {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .figures > div,
+  .figures > div:nth-child(even) {
+    padding-left: 20px;
+    border-left: 0;
+  }
+  .figures > div:nth-child(n + 2) {
+    border-top: 1px solid var(--ax-line-soft);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bannerPrimary {
+    transition-duration: 0.01ms;
+  }
+}

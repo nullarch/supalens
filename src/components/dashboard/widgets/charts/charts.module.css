@@ -1,0 +1,193 @@
+/* Shared chart chrome — tooltip, skeleton, pie legend, reference legend, after the
+   Design-system charts (white radius-10 tooltip, 7px dots with 14px/500 labels).
+   Token-driven with global fallbacks: the same chart renders inside /app (app
+   tokens) and on /demo, /share and the landing page (global tokens). */
+
+/* ---------- tooltip: a small white card, radius 10, fine line ---------- */
+.tooltip {
+  min-width: 132px;
+  max-width: 260px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-2);
+  box-shadow: var(--ax-shadow-sm, var(--shadow-lift));
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+.tooltipLabel {
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.tooltipRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.tooltipRow + .tooltipRow {
+  margin-top: 2px;
+}
+.swatch {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  align-self: center;
+}
+.tooltipName {
+  min-width: 0;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.tooltipVal {
+  min-width: 0;
+  margin-left: auto;
+  padding-left: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+/* ---------- lazy-chart skeleton ---------- */
+.skeleton {
+  width: 100%;
+  height: 100%;
+  min-height: 180px;
+  border-radius: var(--r-control);
+  background-color: var(--paper-3);
+  background-image: linear-gradient(90deg, transparent 25%, color-mix(in srgb, var(--line) 70%, transparent) 37%, transparent 63%);
+  background-size: 400% 100%;
+  animation-name: chShimmer;
+  animation-duration: 1.4s;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+}
+@keyframes chShimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation-name: none;
+  }
+}
+
+/* ---------- pie / donut ---------- */
+.pie {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.pieCanvas {
+  position: relative;
+  flex: 1 1 180px;
+  min-width: 160px;
+}
+.pieCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  pointer-events: none;
+}
+.pieCenterVal {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-serif, var(--font-sans));
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-align: center;
+  color: var(--ink);
+}
+.pieLegend {
+  flex: 1 1 140px;
+  min-width: 120px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pieLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.pieLegendName {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.pieLegendPct {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+
+/* small centered note (e.g. a scatter that has no numeric points to plot) */
+.note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  padding: 0 8px;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+/* Reference definitions stay readable at every data coordinate and card width. */
+.referenceFrame { display: flex; flex-direction: column; min-width: 0; gap: 16px; }
+.referenceFrameFill { flex: 1 0 auto; }
+.referencePlot { position: relative; min-height: 180px; min-width: 0; flex-shrink: 0; }
+.referenceFrameFill .referencePlot { flex: 1 0 180px; }
+.referenceCanvas { position: absolute; inset: 0; }
+.referenceLegend { flex-shrink: 0; min-width: 0; padding: 16px 8px 0; border-top: 1px solid var(--ax-line-soft, var(--line)); font-family: var(--font-sans); color: var(--ink-3); font-size: 13px; line-height: 20px; overflow-wrap: anywhere; }
+.referenceLegend h4 { margin: 0; font-size: 14px; font-weight: 500; line-height: 20px; color: var(--ink); }
+.referenceLegend p { margin: 2px 0 8px; }
+.referenceList { margin: 0; padding: 0; list-style: none; }
+.referenceList li { display: grid; grid-template-columns: 34px minmax(0, 1fr) minmax(0, auto); gap: 12px; align-items: start; padding: 8px 0; border-top: 1px solid var(--ax-line-soft, var(--line)); }
+.referenceKey { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; font-size: 12px; font-weight: 500; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.referenceDefinition { min-width: 0; }
+.referenceName { display: block; color: var(--ink); font-size: 13px; font-weight: 500; }
+.referenceIntent, .referenceCoincident { display: block; color: var(--ink-3); }
+.referenceValue { max-width: 14ch; text-align: end; font-variant-numeric: tabular-nums; color: var(--ink); }
+.referenceExact { margin-top: 4px; }
+.referenceExact summary { display: flex; align-items: center; min-height: 44px; cursor: pointer; color: var(--ink-2); font-weight: 500; }
+.referenceExact summary:hover { color: var(--ink); }
+.referenceExact summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: var(--r-control); }
+.referenceExact dl { margin: 0; }
+.referenceExact dl>div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; padding: 4px 0; border-top: 1px solid var(--ax-line-soft, var(--line)); }
+.referenceExact dd { margin: 0; min-width: 0; font-family: var(--ax-mono, var(--font-mono)); font-size: 12.5px; font-variant-numeric: tabular-nums; color: var(--ink); }
+@media(max-width:480px) {
+  .referenceList li { grid-template-columns: 34px minmax(0, 1fr); gap: 2px 10px; }
+  .referenceKey { grid-row: span 2; }
+  .referenceValue { grid-column: 2; text-align: start; max-width: none; }
+}

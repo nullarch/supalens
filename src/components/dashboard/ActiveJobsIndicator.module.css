@@ -1,0 +1,197 @@
+/* Activity center v0. `rail`: a nav-item row in the sidebar foot, popover opens
+   upward. `bar`: a compact chip in the mobile top bar, popover drops below it. */
+.jobsWrap {
+  position: relative;
+  display: flex;
+}
+.jobsBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 32px;
+  margin-bottom: 4px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.jobsBtn:hover,
+.jobsBtn[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--paper-3) 60%, transparent);
+  color: var(--ink);
+}
+.jobsBtnLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.jobsCompact {
+  display: none;
+  font-variant-numeric: tabular-nums;
+}
+.jobsPulse,
+.jobsDot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin: 0 5px;
+  border-radius: 50%;
+  background: var(--brand);
+  animation-name: jobsPulse;
+  animation-duration: 1.6s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.jobsDot {
+  margin: 0;
+}
+@keyframes jobsPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.75); }
+}
+.jobsDoneMark {
+  /* Disappearance from the active list establishes an end, not success. */
+  width: 17px;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 14px;
+  line-height: 1;
+}
+.jobsPop {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 8px;
+  z-index: 62;
+  width: 300px;
+  max-width: calc(100vw - 32px);
+  max-height: min(440px, calc(100dvh - 120px));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper-2);
+  box-shadow: var(--shadow-lift-strong);
+}
+.jobsPopHead {
+  padding: 8px 10px 4px;
+  font-family: var(--ax-mono);
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.jobsRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background-color 120ms ease;
+}
+.jobsRow:hover,
+.jobsRow:focus-visible {
+  background: var(--paper-3);
+  outline: none;
+}
+.jobsRow[data-stale="true"] {
+  background: var(--intent-warning-bg);
+}
+.jobsDot[data-stale="true"] {
+  background: var(--ink-3);
+  animation: none;
+}
+.jobsRowMain {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.jobsRowKind {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.jobsStale {
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--intent-warning);
+}
+.jobsRowDetail {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.jobsRowTime {
+  flex: none;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+/* collapsed rail: icon-only row */
+:global(html[data-sidebar="collapsed"]) .jobsWrap[data-placement="rail"] .jobsBtn {
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+}
+:global(html[data-sidebar="collapsed"]) .jobsWrap[data-placement="rail"] .jobsBtnLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+/* mobile top bar chip */
+.jobsWrap[data-placement="bar"] .jobsBtn {
+  width: auto;
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0;
+  justify-content: center;
+  padding: 0 10px;
+  font-size: 13px;
+}
+.jobsWrap[data-placement="bar"] .jobsBtnLabel {
+  display: none;
+}
+.jobsWrap[data-placement="bar"] .jobsCompact {
+  display: inline;
+}
+.jobsWrap[data-placement="bar"] .jobsPop {
+  position: fixed;
+  top: 60px;
+  bottom: auto;
+  left: auto;
+  right: 16px;
+  width: min(300px, calc(100vw - 32px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jobsPulse,
+  .jobsDot {
+    animation: none;
+  }
+}

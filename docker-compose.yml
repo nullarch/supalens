@@ -1,0 +1,159 @@
+# Supalens, self-hosted — everything in one stack.
+#
+#   ./selfhost.sh          # writes .env (asks for the address and an Anthropic API key), then starts this
+#
+# or by hand:  cp .env.example .env  →  fill it in  →  docker compose up --build -d
+#
+# What runs:
+#   gateway  one public port. /auth/v1 and /rest/v1 go to Supabase, everything else to the app.
+#   web      the app, including the agents and scheduled jobs (no Trigger.dev needed).
+#   db       Postgres (the Supabase image: roles, auth schema, extensions).
+#   auth     Supabase Auth. Public sign-up is OFF — accounts are created inside the app.
+#   rest     PostgREST.
+#   migrate  one-shot: applies supabase/migrations, then exits.
+#
+# To use your own Supabase project or Trigger.dev instead, see docker-compose.external.yml.
+
+name: supalens
+
+x-app-url: &app-url ${NEXT_PUBLIC_APP_URL:?run ./selfhost.sh or set NEXT_PUBLIC_APP_URL in .env}
+
+services:
+  gateway:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8080}:80"
+    volumes:
+      - ./selfhost/Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      web:
+        condition: service_started
+
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SUPALENS_EDITION: selfhost
+        NEXT_PUBLIC_APP_URL: *app-url
+        # the browser reaches Supabase through the gateway, on the app's own origin
+        NEXT_PUBLIC_SUPABASE_URL: *app-url
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY:?run ./selfhost.sh}
+        NEXT_PUBLIC_SUPABASE_COOKIE_NAME: sb-supalens-auth-token
+        NEXT_PUBLIC_MCP_URL: ${NEXT_PUBLIC_MCP_URL:-}
+        NEXT_PUBLIC_SUPPORT_EMAIL: ${NEXT_PUBLIC_SUPPORT_EMAIL:-}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NEXT_PUBLIC_SUPALENS_EDITION: selfhost
+      # the server reaches Supabase on the Docker network, not through its own public address
+      SUPABASE_INTERNAL_URL: http://gateway
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      rest:
+        condition: service_started
+    # lets a database on the Docker host be connected as host.docker.internal (Linux too)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  db:
+    image: supabase/postgres:15.8.1.085
+    restart: unless-stopped
+    environment:
+      POSTGRES_HOST: /var/run/postgresql
+      PGPORT: 5432
+      POSTGRES_PORT: 5432
+      PGPASSWORD: ${POSTGRES_PASSWORD:?run ./selfhost.sh}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: postgres
+      POSTGRES_DB: postgres
+      JWT_SECRET: ${JWT_SECRET:?run ./selfhost.sh}
+      JWT_EXP: 3600
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "log_min_messages=fatal"]
+    volumes:
+      - ./selfhost/db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:ro
+      - ./selfhost/db/jwt.sql:/docker-entrypoint-initdb.d/init-scripts/99-jwt.sql:ro
+      - db-data:/var/lib/postgresql/data
+      - db-config:/etc/postgresql-custom
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  auth:
+    image: supabase/gotrue:v2.197.0
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      API_EXTERNAL_URL: *app-url
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${POSTGRES_PASSWORD}@db:5432/postgres
+      GOTRUE_SITE_URL: *app-url
+      GOTRUE_URI_ALLOW_LIST: ""
+      # Internal accounts only: nobody can sign themselves up, the app creates accounts with the
+      # service role, and no confirmation mail is involved.
+      GOTRUE_DISABLE_SIGNUP: "true"
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED: "false"
+      GOTRUE_MAILER_AUTOCONFIRM: "true"
+      GOTRUE_PASSWORD_MIN_LENGTH: 8
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: 3600
+      GOTRUE_JWT_SECRET: ${JWT_SECRET}
+      GOTRUE_JWT_ISSUER: *app-url
+      GOTRUE_EXTERNAL_PHONE_ENABLED: "false"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9999/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  migrate:
+    image: supabase/postgres:15.8.1.085
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+      # GoTrue creates its own tables first; the app's migrations reference auth.users
+      auth:
+        condition: service_healthy
+    environment:
+      PGHOST: db
+      PGPORT: 5432
+      PGUSER: postgres
+      PGDATABASE: postgres
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./supabase/migrations:/migrations:ro
+      - ./selfhost/migrate.sh:/migrate.sh:ro
+    entrypoint: ["/bin/sh", "/migrate.sh"]
+
+  rest:
+    image: postgrest/postgrest:v14.18
+    restart: unless-stopped
+    depends_on:
+      # start after the schema exists, so the first schema cache is complete
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@db:5432/postgres
+      PGRST_DB_SCHEMAS: public,graphql_public
+      PGRST_DB_MAX_ROWS: 1000
+      PGRST_DB_EXTRA_SEARCH_PATH: public,extensions
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+      PGRST_APP_SETTINGS_JWT_EXP: 3600
+    command: ["postgrest"]
+
+volumes:
+  db-data:
+  db-config:

@@ -1,0 +1,1134 @@
+/* ============================================================
+   KPI review — an approval workflow in the app design system.
+   Serif title + source/lede line → three stat cards (proposed /
+   recommended / selected) → the plan card (honest monitor split,
+   caps, alert toggle, dashboard target) → per-category white
+   proposal cards → a sticky white action bar with the primary
+   approve action. The apply report is a card of divided rows with
+   state dots. Badges, buttons, toggles and dots come from
+   dashboard.css; this module owns the page layout.
+   ============================================================ */
+
+.review {
+  min-width: 0;
+}
+
+/* ---------- head ---------- */
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  margin: -4px 0 12px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-3);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+.sourceName {
+  font-weight: 500;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.ledeSep {
+  margin: 0 8px;
+  color: var(--line-2);
+}
+
+/* modal variant: the dialog supplies the serif title */
+.modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-bottom: 20px;
+}
+.modalSub {
+  flex: 1 1 320px;
+  min-width: 0;
+  margin: 0;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+}
+.modalActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---------- notices + strips ---------- */
+.notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin: 0 0 16px;
+  padding: 10px 12px 10px 20px;
+  border-radius: var(--r-card);
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+}
+.notice[data-kind="quota"],
+.notice[data-kind="unknown"] {
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+}
+.noticeText {
+  flex: 1 1 260px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.notice a {
+  min-height: 44px;
+  white-space: normal;
+}
+
+.strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  min-height: 48px;
+  margin: 0 0 16px;
+  padding: 6px 8px 6px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--ax-tint);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--ink-2);
+}
+.stripAction {
+  margin-left: auto;
+}
+
+/* ---------- apply report ---------- */
+.result {
+  margin: 0 0 24px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+}
+.result[data-outcome="partial"] {
+  border-color: color-mix(in srgb, var(--ax-warn) 45%, var(--line));
+}
+.result[data-outcome="error"] {
+  border-color: color-mix(in srgb, var(--ax-err) 45%, var(--line));
+}
+.resultHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  padding: 24px 24px 0;
+}
+.resultLead {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  flex: 1 1 340px;
+  min-width: 0;
+}
+.resultLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.resultSummary {
+  margin: 0;
+  font-family: var(--ax-serif);
+  font-size: 24px;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.resultCtas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.resultMeta {
+  display: grid;
+  gap: 2px;
+  margin: 10px 0 0;
+  padding: 0 24px;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.report {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.reportRow {
+  display: grid;
+  grid-template-columns: 7px minmax(0, 1fr) minmax(0, 1.15fr);
+  align-items: start;
+  gap: 2px 16px;
+  padding: 13px 24px;
+}
+.reportRow + .reportRow {
+  border-top: 1px solid var(--ax-line-soft);
+}
+.reportRow > :first-child {
+  margin-top: 7px;
+}
+.reportName {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  min-width: 0;
+}
+.reportTitle {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.reportKey {
+  font-family: var(--ax-mono);
+  font-size: 12.5px;
+  color: var(--ink-3);
+  overflow-wrap: anywhere;
+}
+.reportOutcome {
+  min-width: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.reportRow[data-state="failed"] .reportOutcome {
+  color: var(--intent-negative);
+}
+.inlineLink {
+  margin-left: 8px;
+  font-weight: 500;
+  color: var(--brand);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* ---------- approval: stat cards + plan card ---------- */
+.approval {
+  container: kpi-approval / inline-size;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 0 0 40px;
+}
+.figures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+}
+.figure {
+  min-width: 0;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+}
+.figure dt {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.figure dd {
+  margin: 4px 0 0;
+  font-family: var(--ax-serif);
+  font-size: 28px;
+  line-height: 35px;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.figure[data-accent] dd {
+  color: var(--brand);
+}
+
+.plan {
+  min-width: 0;
+  padding: 24px 24px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+}
+.planHead {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+}
+.planTitle {
+  margin: 0;
+  font-family: var(--ax-sans);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--ink);
+}
+.planStatus {
+  flex: 1 1 280px;
+  min-width: 0;
+  margin: 0;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+}
+.planHead[data-state="error"] .planStatus {
+  color: var(--intent-warning);
+}
+.planHead :global(.dx-btn-ghost) {
+  align-self: center;
+}
+
+.split {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.splitItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.splitItem::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--ink-3);
+}
+.splitItem[data-tone="on"] {
+  color: var(--ink);
+}
+.splitItem[data-tone="on"]::before {
+  background: var(--brand);
+  box-shadow: none;
+}
+.splitItem[data-tone="muted"] {
+  color: var(--ink-3);
+}
+
+.reasons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-top: 12px;
+}
+.reasonsLabel {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.reasonList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+.reasonChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 3px 3px 3px 10px;
+  border-radius: 999px;
+  background: var(--paper-3);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--ink-2);
+}
+.reasonCount {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--paper-2);
+  font-size: 12px;
+  text-align: center;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.capWarn {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--intent-warning-bg);
+}
+.capLine {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--intent-warning);
+}
+.capKeys {
+  display: block;
+  margin-top: 2px;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.capWarn .inlineLink {
+  margin-left: 0;
+  font-size: 14px;
+  color: var(--intent-warning);
+}
+
+.planFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ax-line-soft);
+}
+.alertToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.alertText {
+  min-width: 0;
+}
+.alertHint {
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.cadence {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.advanced {
+  margin-top: 12px;
+  border-top: 1px solid var(--ax-line-soft);
+}
+.advanced > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  min-height: 44px;
+  list-style: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+.advanced > summary::-webkit-details-marker {
+  display: none;
+}
+.advanced > summary::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin: 0 2px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 150ms var(--ax-ease);
+}
+.advanced[open] > summary::before {
+  transform: rotate(45deg);
+}
+.picker {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding: 2px 0 16px;
+  font-size: 14px;
+  color: var(--ink);
+}
+.pickerLabel {
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.pickerOpt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  cursor: pointer;
+}
+/* A long dashboard name truncates inside the trigger instead of widening the card. */
+.picker .pickerSelect {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+.pickerOpt[data-disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+.pickerOpt input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--brand);
+  cursor: inherit;
+}
+
+/* ---------- category groups ---------- */
+.groups {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 36px;
+}
+.group {
+  min-width: 0;
+}
+.groupHead {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.groupTitle {
+  margin: 0;
+  font-family: var(--ax-sans);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--ink);
+}
+.groupCount {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.board {
+  container: kpi-board / inline-size;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+/* ---------- proposal card ---------- */
+.card {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) minmax(236px, 288px) 32px;
+  grid-template-areas: "check body side dismiss";
+  gap: 0 20px;
+  min-width: 0;
+  padding: 24px 16px 24px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.card[data-checked="true"] {
+  border-color: color-mix(in srgb, var(--brand) 55%, var(--line));
+}
+.card[data-status="stale"] {
+  box-shadow: inset 3px 0 0 var(--ax-warn);
+}
+.card[data-status="accepted"] {
+  background: var(--ax-tint);
+}
+.card[data-status="accepted"] .cardTitle {
+  color: var(--ink-2);
+}
+
+.checkHit {
+  grid-area: check;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 5px;
+  cursor: pointer;
+}
+.check {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--brand);
+  cursor: pointer;
+}
+.check:disabled {
+  cursor: default;
+}
+
+.cardBody {
+  grid-area: body;
+  min-width: 0;
+}
+.titleLine {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+.cardTitle {
+  min-width: 0;
+  margin: 0;
+  font-family: var(--ax-sans);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.metaLine {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 2px;
+}
+.importance {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.pips {
+  display: inline-flex;
+  gap: 3px;
+}
+.pips > span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--line-2);
+}
+.pips > span[data-on] {
+  background: var(--ink-2);
+}
+.key {
+  min-width: 0;
+  font-family: var(--ax-mono);
+  font-size: 12.5px;
+  color: var(--ink-3);
+  overflow-wrap: anywhere;
+}
+.desc {
+  max-width: 64ch;
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+  overflow-wrap: anywhere;
+}
+.current {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin: 12px 0 0;
+  font-variant-numeric: tabular-nums;
+}
+.currentLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.currentValue {
+  font-family: var(--ax-serif);
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.currentDelta {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+.evidence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.evChip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--paper-3);
+  font-size: 12px;
+  line-height: 18px;
+}
+.evKind {
+  flex-shrink: 0;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+.evRef {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--ax-mono);
+  font-size: 12px;
+  color: var(--ink);
+}
+
+.cardSide {
+  grid-area: side;
+  min-width: 0;
+}
+.previewFrame {
+  padding: 6px;
+  border: 1px solid var(--ax-line-soft);
+  border-radius: 12px;
+  background: var(--ax-tint);
+}
+.preview {
+  height: 132px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+/* WidgetRenderer reserves a full chart body height (≈208px) via an inline min-height so a live
+   dashboard cell has no layout shift. In this thumbnail the card fills the frame instead and the
+   KPI/BigNumber content (vertically centered) stays fully visible. */
+.preview :global([data-widget-card]) {
+  height: 100% !important;
+}
+.preview :global([data-widget-body]) {
+  min-height: 0 !important;
+  height: 100%;
+}
+.mode {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  margin: 0;
+  padding: 8px 6px 2px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.mode svg {
+  flex-shrink: 0;
+  color: var(--brand);
+}
+.mode[data-mode="dashboard"] {
+  color: var(--ink-3);
+}
+.modeName {
+  min-width: 0;
+}
+.modeReason {
+  min-width: 0;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.modeReason::before {
+  content: "·";
+  margin-right: 8px;
+}
+
+.dismiss {
+  grid-area: dismiss;
+  justify-self: end;
+  align-self: start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-control);
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+.dismiss:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ---------- sticky action bar ---------- */
+.actionBar {
+  position: sticky;
+  bottom: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 24px;
+  margin-top: 32px;
+  padding: 16px 0 max(16px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+}
+.actionCount {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  min-width: 0;
+  margin: 0;
+}
+.actionNum {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.actionSub {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.applyBtn {
+  min-height: 40px;
+}
+
+/* ---------- empty + running (centered in the card) ---------- */
+.emptyPanel {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 56px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+  text-align: center;
+}
+.emptyTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--ax-sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink);
+}
+.emptyDot {
+  flex-shrink: 0;
+}
+.emptyDesc {
+  max-width: 520px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+}
+.emptyError {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 520px;
+  margin: 8px 0 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--intent-negative);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.emptyError > :first-child {
+  margin-top: 7px;
+}
+.emptyNote {
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: var(--ink-3);
+}
+.emptyPanel :global(.dx-btn) {
+  margin-top: 16px;
+}
+
+/* ---------- modal variant ---------- */
+.review[data-variant="modal"] .approval {
+  margin-bottom: 32px;
+}
+.review[data-variant="modal"] .groups {
+  gap: 28px;
+}
+.review[data-variant="modal"] .actionBar {
+  margin-top: 24px;
+  background: var(--paper-2);
+}
+
+/* ---------- hover (pointer devices) ---------- */
+@media (hover: hover) {
+  .back:hover,
+  .advanced > summary:hover {
+    color: var(--ink);
+  }
+  .inlineLink:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .card:hover {
+    box-shadow: var(--ax-shadow-sm);
+  }
+  .card[data-status="stale"]:hover {
+    box-shadow: inset 3px 0 0 var(--ax-warn), var(--ax-shadow-sm);
+  }
+  .dismiss:not(:disabled):hover {
+    background: var(--paper-3);
+    color: var(--ink);
+  }
+}
+
+/* ---------- Korean / Japanese ---------- */
+:global(html:is(:lang(ko), :lang(ja))) .resultSummary,
+:global(html:is(:lang(ko), :lang(ja))) .figure dd,
+:global(html:is(:lang(ko), :lang(ja))) .currentValue {
+  letter-spacing: -0.01em;
+}
+:global(html:lang(ko)) .planStatus,
+:global(html:lang(ko)) .alertText,
+:global(html:lang(ko)) .reasonsLabel,
+:global(html:lang(ko)) .capLine,
+:global(html:lang(ko)) .noticeText,
+:global(html:lang(ko)) .resultSummary,
+:global(html:lang(ko)) .emptyDesc,
+:global(html:lang(ko)) .desc,
+:global(html:lang(ko)) .modalSub {
+  word-break: keep-all;
+}
+:global(html:lang(ja)) .resultSummary,
+:global(html:lang(ja)) .planStatus,
+:global(html:lang(ja)) .desc {
+  line-break: strict;
+}
+
+/* ---------- responsive ---------- */
+@container kpi-board (max-width: 760px) {
+  .card {
+    grid-template-columns: 20px minmax(0, 1fr) 32px;
+    grid-template-areas:
+      "check body dismiss"
+      ". side side";
+    row-gap: 16px;
+  }
+  .cardSide {
+    max-width: 400px;
+  }
+}
+/* Narrow board: the checkbox + title share the first row and everything else takes the full
+   card width (the body's children join the card grid), so copy is not squeezed into a gutter. */
+@container kpi-board (max-width: 540px) {
+  .card {
+    grid-template-areas: none;
+    grid-template-columns: 20px minmax(0, 1fr) 32px;
+    column-gap: 12px;
+    row-gap: 0;
+    padding: 18px 14px 18px 18px;
+  }
+  .checkHit {
+    grid-area: auto;
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .cardBody {
+    display: contents;
+  }
+  .titleLine {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+  }
+  .cardBody > :not(.titleLine) {
+    grid-column: 1 / -1;
+  }
+  .dismiss {
+    grid-area: auto;
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .cardSide {
+    grid-area: auto;
+    grid-column: 1 / -1;
+    max-width: none;
+    margin-top: 16px;
+  }
+  .evChip {
+    border-radius: 10px;
+  }
+  .evRef {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+@container kpi-approval (max-width: 520px) {
+  .figures {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    background: var(--paper-2);
+  }
+  .figure {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 20px;
+    border: 0;
+    border-radius: 0;
+  }
+  .figure + .figure {
+    border-top: 1px solid var(--ax-line-soft);
+  }
+  .figure dd {
+    margin: 0;
+    font-size: 24px;
+    line-height: 30px;
+  }
+  .plan {
+    padding: 20px 18px 4px;
+  }
+}
+@media (max-width: 768px) {
+  .back {
+    min-height: 44px;
+    margin-top: -12px;
+    margin-bottom: 4px;
+  }
+  /* 44px hit areas centred on the 18px checkbox / 14px icon without moving either */
+  .checkHit {
+    width: 44px;
+    height: 44px;
+    margin: -8px 0 -8px -12px;
+    align-items: center;
+    padding-top: 0;
+  }
+  .dismiss {
+    width: 44px;
+    height: 44px;
+    margin: -8px -8px -8px 0;
+  }
+  .alertToggle,
+  .pickerOpt {
+    min-height: 44px;
+  }
+  .review :global(.dx-btn),
+  .review :global(.dx-btn-ghost) {
+    min-height: 44px;
+  }
+  .reportRow {
+    grid-template-columns: 7px minmax(0, 1fr);
+  }
+  .reportOutcome {
+    grid-column: 2;
+  }
+}
+@media (max-width: 640px) {
+  .approval {
+    margin-bottom: 32px;
+  }
+  .groups {
+    gap: 32px;
+  }
+  .resultHead {
+    padding: 20px 18px 0;
+  }
+  .resultMeta {
+    padding: 0 18px;
+  }
+  .resultSummary {
+    font-size: 22px;
+  }
+  .resultCtas,
+  .resultCtas > a {
+    width: 100%;
+  }
+  .resultCtas > a {
+    white-space: normal;
+    text-align: center;
+  }
+  .reportRow {
+    padding: 13px 18px;
+  }
+  .actionBar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-top: 24px;
+    padding-top: 12px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  .applyBtn {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+  .emptyPanel {
+    padding: 40px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back,
+  .card,
+  .dismiss,
+  .advanced > summary,
+  .advanced > summary::before {
+    transition-duration: 0.01ms;
+  }
+}

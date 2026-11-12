@@ -1,0 +1,417 @@
+/* The /x hero terminal: a real scan replayed on a 14s loop. Always dark (like the scan page's
+   live panel). Longhand animation-* only — the shorthand with var() silently fails under
+   Turbopack in CSS modules. Each line fades in at its own point of the loop (nth-child keyframes),
+   holds, and the whole log clears at the end of the cycle. */
+.window {
+  margin: 0;
+  min-width: 0;
+  border-radius: 22px;
+  background: #16171c;
+  color: #c3c1ce;
+  box-shadow: 0 40px 80px -36px #1a1a1a88;
+  overflow: hidden;
+}
+.bar {
+  height: 46px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 18px;
+  border-bottom: 1px solid #2a2b33;
+}
+.dots {
+  display: flex;
+  gap: 7px;
+}
+.dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  background: #3a3b45;
+}
+.title {
+  min-width: 0;
+  overflow: hidden;
+  color: #a8a5b8;
+  font-family: var(--ed-mono);
+  font-size: 12.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.live {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #a8a5b8;
+  font-family: var(--ed-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+}
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #7fd1a0;
+  animation-name: xrPulse;
+  animation-duration: 1.4s;
+  animation-iteration-count: infinite;
+}
+.log {
+  min-height: 440px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px 26px;
+  font-family: var(--ed-mono);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.line {
+  display: flex;
+  gap: 16px;
+  min-width: 0;
+  opacity: 0;
+  animation-duration: 14s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+.kind {
+  flex: 0 0 56px;
+  color: #7fd1a0;
+  white-space: nowrap;
+}
+:global(.ed:lang(ja)) .kind {
+  flex-basis: 88px;
+}
+.text {
+  min-width: 0;
+  color: #f4f3f8;
+  overflow-wrap: anywhere;
+}
+.line[data-kind='search'] .kind {
+  color: #afbeff;
+}
+.line[data-kind='entity'] .kind,
+.line[data-kind='rule'] .kind {
+  color: #e7c3f2;
+}
+.line[data-kind='entity'] .text,
+.line[data-kind='rule'] .text,
+.line[data-kind='trap'] .text,
+.line[data-kind='done'] .text {
+  font-family: var(--ed-sans);
+}
+.line[data-kind='entity'] .text,
+.line[data-kind='rule'] .text {
+  color: #d9d6e4;
+}
+.line[data-kind='trap'] {
+  margin: 0 -14px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: #3a1f22;
+}
+.line[data-kind='trap'] .kind {
+  color: #ff9b8f;
+}
+.line[data-kind='trap'] .text {
+  color: #ffd9d4;
+}
+.line[data-kind='done'] {
+  margin: 6px -14px 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #1c2b7a;
+}
+.line[data-kind='done'] .kind {
+  color: #afbeff;
+}
+.line[data-kind='done'] .text {
+  color: #ffffff;
+  font-weight: 600;
+}
+.foot {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 26px 22px;
+}
+.track {
+  height: 5px;
+  border-radius: 999px;
+  background: #2a2b33;
+  overflow: hidden;
+}
+.fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: #afbeff;
+  animation-name: xrProgress;
+  animation-duration: 14s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+.footRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #8f8ca0;
+  font-family: var(--ed-mono);
+  font-size: 12px;
+}
+:global(.ed:is(:lang(ko), :lang(ja))) .footRow {
+  font-family: var(--ed-sans);
+}
+.source {
+  color: #afbeff;
+  white-space: nowrap;
+}
+.source:hover {
+  color: #d9dfff;
+}
+
+.line:nth-child(1) {
+  animation-name: xrLine1;
+}
+@keyframes xrLine1 {
+  0%,
+  3.21% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  5.71%,
+  93% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+.line:nth-child(2) {
+  animation-name: xrLine2;
+}
+@keyframes xrLine2 {
+  0%,
+  11.43% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  13.93%,
+  93% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+.line:nth-child(3) {
+  animation-name: xrLine3;
+}
+@keyframes xrLine3 {
+  0%,
+  19.64% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  22.14%,
+  93% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+.line:nth-child(4) {
+  animation-name: xrLine4;
+}
+@keyframes xrLine4 {
+  0%,
+  27.86% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  30.36%,
+  93% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+.line:nth-child(5) {
+  animation-name: xrLine5;
+}
+@keyframes xrLine5 {
+  0%,
+  36.07% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  38.57%,
+  93% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+.line:nth-child(6) {
+  animation-name: xrLine6;
+}
+@keyframes xrLine6 {
+  0%,
+  44.29% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  46.79%,
+  93% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+.line:nth-child(7) {
+  animation-name: xrLine7;
+}
+@keyframes xrLine7 {
+  0%,
+  52.5% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  55.0%,
+  93% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+.line:nth-child(8) {
+  animation-name: xrLine8;
+}
+@keyframes xrLine8 {
+  0%,
+  60.71% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  63.21%,
+  93% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+.line:nth-child(9) {
+  animation-name: xrLine9;
+}
+@keyframes xrLine9 {
+  0%,
+  68.93% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  71.43%,
+  93% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+.line:nth-child(10) {
+  animation-name: xrLine10;
+}
+@keyframes xrLine10 {
+  0%,
+  77.14% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  79.64%,
+  93% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+
+@keyframes xrProgress {
+  0% {
+    width: 0;
+  }
+  80%,
+  100% {
+    width: 100%;
+  }
+}
+@keyframes xrPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Reduced motion: the finished log, no loop (editorial.css shortens every animation to one
+   0.01ms run, which would leave the lines at their hidden end state). */
+@media (prefers-reduced-motion: reduce) {
+  .line {
+    opacity: 1;
+    animation-name: none !important;
+  }
+  .fill {
+    width: 100%;
+    animation-name: none !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .log {
+    min-height: 0;
+    padding: 18px 18px;
+    font-size: 12.5px;
+  }
+  .kind {
+    flex-basis: 48px;
+  }
+  .foot {
+    padding: 0 18px 18px;
+  }
+  .footRow {
+    flex-direction: column;
+    gap: 4px;
+  }
+}

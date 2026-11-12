@@ -1,0 +1,388 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Supalens / Global product system. Neutral surfaces, a copper signature,
+   and independent semantic states. Legacy token names remain as aliases
+   while route modules migrate; they are not separate design systems. */
+@layer base {
+  :root {
+    color-scheme: light;
+    --surface-canvas: #f5f6f7;
+    --paper: #fbfcfc;
+    --paper-2: #ffffff;
+    --paper-3: #f0f2f4;
+    --ink: #191c20;
+    --ink-2: #5e646d;
+    --ink-3: #666d76;
+    --line: #e2e5e8;
+    --line-2: #c3c8ce;
+    --brand: #b94d32;
+    --brand-hover: #a44129;
+    --brand-soft: #f8eae3;
+    --on-brand: #ffffff;
+    --clay: var(--brand);
+    --clay-deep: var(--brand-hover);
+    --clay-tint: var(--brand-soft);
+    --action: #202328;
+    --action-hover: #363b42;
+    --on-action: #ffffff;
+
+    --intent-positive: #28704b;
+    --intent-positive-bg: #edf7f0;
+    --intent-negative: #aa293a;
+    --intent-negative-bg: #fff1f2;
+    --intent-warning: #865a13;
+    --intent-warning-bg: #fff7e8;
+    --intent-critical: #aa293a;
+    --intent-target: #69707a;
+    --intent-neutral: #c3c8ce;
+    --series-1: #3858c7;
+    --series-2: #1c756a;
+    --series-3: #8753a6;
+    --series-4: #986416;
+    --series-5: #b94d32;
+    --series-6: #417f9b;
+    --series-7: #a74478;
+    --series-8: #637044;
+
+    --panel: #101112;
+    --panel-2: #1a1c1e;
+    --on-panel: #eeeff1;
+    --on-panel-2: #a2a5aa;
+    --font-sans: "Inter Variable", Inter, "Pretendard Variable", Pretendard, -apple-system,
+      BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    --font-serif: var(--font-sans);
+    --font-display: var(--font-sans);
+    --font-logo: var(--font-sans);
+    --r-card: 8px;
+    --r-control: 6px;
+    --r-pill: 999px;
+    --section-pad-y: clamp(56px, 8vw, 100px);
+    --section-pad-y-lg: clamp(72px, 10vw, 120px);
+    --heading-gap: clamp(28px, 4vw, 48px);
+    --sub-size: clamp(15px, 1.55vw, 17px);
+    --shadow-lift: 0 12px 32px -20px #19212a20;
+    --shadow-lift-strong: 0 20px 50px -25px #19212a30;
+    --shadow-clay: none;
+
+    /* shadcn compatibility: neutral actions and neutral hover selections. */
+    --background: 180 14% 99%;
+    --foreground: 214 12% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 214 12% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 214 12% 11%;
+    --primary: 218 11% 14%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 15% 95%;
+    --secondary-foreground: 214 12% 11%;
+    --muted: 210 15% 95%;
+    --muted-foreground: 216 7% 40%;
+    --accent: 210 15% 95%;
+    --accent-foreground: 214 12% 11%;
+    --destructive: 352 61% 41%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 12% 90%;
+    --input: 213 10% 78%;
+    --ring: 12 57% 46%;
+    --radius: 0.375rem;
+  }
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --surface-canvas: #101112;
+    --paper: #151618;
+    --paper-2: #1a1c1e;
+    --paper-3: #222426;
+    --ink: #eeeff1;
+    --ink-2: #a2a5aa;
+    --ink-3: #92979e;
+    --line: #2a2d31;
+    --line-2: #484e56;
+    --brand: #f08a65;
+    --brand-hover: #f5a080;
+    --brand-soft: #30241f;
+    --on-brand: #151719;
+    --action: #eeeff1;
+    --action-hover: #d6d9dd;
+    --on-action: #151719;
+    --intent-positive: #88c9a5;
+    --intent-positive-bg: #1b2b22;
+    --intent-negative: #f39aa3;
+    --intent-negative-bg: #302025;
+    --intent-warning: #dfbd78;
+    --intent-warning-bg: #302b20;
+    --intent-critical: #f39aa3;
+    --intent-target: #92979e;
+    --intent-neutral: #484e56;
+    --series-1: #9bb4ff;
+    --series-2: #7bcabc;
+    --series-3: #c2a1e1;
+    --series-4: #dfbd78;
+    --series-5: #f08a65;
+    --series-6: #85bfdc;
+    --series-7: #e4a1c2;
+    --series-8: #bec992;
+    --shadow-lift: 0 12px 32px -20px #0008;
+    --shadow-lift-strong: 0 20px 50px -25px #000a;
+    --background: 220 7% 9%;
+    --foreground: 220 10% 94%;
+    --card: 210 7% 11%;
+    --card-foreground: 220 10% 94%;
+    --popover: 210 7% 11%;
+    --popover-foreground: 220 10% 94%;
+    --primary: 220 10% 94%;
+    --primary-foreground: 210 9% 9%;
+    --secondary: 210 6% 14%;
+    --secondary-foreground: 220 10% 94%;
+    --muted: 210 6% 14%;
+    --muted-foreground: 218 5% 65%;
+    --accent: 210 6% 14%;
+    --accent-foreground: 220 10% 94%;
+    --destructive: 353 79% 78%;
+    --destructive-foreground: 210 9% 9%;
+    --border: 214 8% 18%;
+    --input: 214 9% 31%;
+    --ring: 16 82% 67%;
+  }
+  [data-theme="light"] { color-scheme: light; }
+}
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+  :where(a, button, input, textarea, select, summary):focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 3px;
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.65;
+  }
+  ::selection {
+    background: var(--clay);
+    color: var(--on-brand);
+  }
+  h1, h2, h3, h4 {
+    word-break: keep-all;
+  }
+  /* Japanese has no word spaces: Korean-style keep-all can overflow whole
+     sentences. Preserve Japanese punctuation rules while allowing line breaks. */
+  html:lang(ja) :is(h1, h2, h3, h4, p, li, button, label, summary) {
+    word-break: normal;
+    line-break: strict;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ============================================================
+   Shared utility classes (used by every landing section module)
+   ============================================================ */
+@layer components {
+  /* content column */
+  .lx-container {
+    width: 100%;
+    max-width: 1140px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+
+  /* section vertical rhythm */
+  .lx-section {
+    padding-block: var(--section-pad-y);
+  }
+
+  /* mono all-caps eyebrow — signature */
+  .lx-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-3);
+  }
+
+  /* hero heading tier — biggest text on the page (the 2 hero moments) */
+  :root {
+    --h-hero: clamp(30px, 5.4vw, 58px);
+  }
+
+  /* serif section heading */
+  .lx-heading {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.2;
+    color: var(--ink);
+    font-size: clamp(26px, 4.4vw, 44px);
+  }
+  /* one clay-emphasized word inside a heading */
+  .lx-em {
+    font-style: normal;
+    color: var(--clay);
+  }
+
+  /* THE clay pill CTA (+ arrow nudge on hover) */
+  .lx-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 26px;
+    border: none;
+    border-radius: var(--r-control);
+    background: var(--action);
+    color: var(--on-action);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: none;
+    transition: background 200ms ease, transform 200ms ease;
+  }
+  .lx-cta:hover {
+    background: var(--action-hover);
+  }
+  .lx-cta:hover .lx-cta-icon {
+    transform: translateX(3px);
+  }
+  .lx-cta-icon {
+    transition: transform 200ms ease;
+  }
+
+  /* ghost / outline pill */
+  .lx-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 24px;
+    border-radius: var(--r-control);
+    border: 1px solid var(--line-2);
+    background: transparent;
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: border-color 200ms ease, background 200ms ease, transform 200ms ease;
+  }
+  .lx-ghost:hover {
+    border-color: var(--ink-3);
+    background: var(--paper-2);
+    transform: translateY(-2px);
+  }
+
+  /* cream card with warm paper-lift on hover */
+  .lx-card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  }
+  .lx-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift-strong);
+  }
+
+  /* mono micro-badge */
+  .lx-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 10px;
+    color: var(--on-brand);
+    background: var(--brand);
+    padding: 4px 9px;
+    border-radius: var(--r-pill);
+  }
+
+  /* Bodoni tabular figure (stats / prices) */
+  .lx-figure {
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+    line-height: 0.95;
+    color: var(--ink);
+  }
+
+  /* dark glass tag over imagery */
+  .lx-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(27, 24, 19, 0.62);
+    backdrop-filter: blur(6px);
+    border-radius: var(--r-pill);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--on-panel);
+    padding: 5px 10px;
+  }
+}
+
+/* ============================================================
+   Shared keyframes (section modules reference these by name)
+   ============================================================ */
+@keyframes lx-dash {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+@keyframes lx-travel {
+  0% { left: 0%; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+@keyframes lx-floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes lx-rise {
+  0% { opacity: 0; transform: translateY(0.5em); }
+  12%, 88% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-0.5em); }
+}
+@keyframes lx-hub-pulse {
+  0% { transform: scale(0.6); opacity: 0.55; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+@keyframes lx-eq {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+@keyframes lx-marquee-left {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes lx-marquee-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+@keyframes lx-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes lx-grow-bar {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

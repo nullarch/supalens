@@ -1,0 +1,28 @@
+/* ==========================================================================
+   The 감시 screen's view switch — one segmented control above the page head.
+   It sits ABOVE the title on purpose: the switch is the page-level object
+   (monitors and incidents are one thing in two states) and the `.dx-page-head`
+   title below it names whichever face is showing.
+   ========================================================================== */
+
+.switch {
+  /* .dx-segmented is already inline-flex; this only lets it wrap on narrow screens */
+  flex-wrap: wrap;
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Same count chip the incidents filter uses, so the two segmented rows read as one family. */
+.count {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+.count[data-tone="negative"] {
+  color: var(--intent-negative);
+}
+
+@media (max-width: 640px) {
+  .switch {
+    margin-bottom: 16px;
+  }
+}

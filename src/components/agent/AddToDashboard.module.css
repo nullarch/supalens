@@ -1,0 +1,146 @@
+/* "Save to report" — a header-slot icon button on an answer's widget (compact) or a ghost
+   button, and the picker dialog: one divided list of reports. Dialog chrome: components/modals. */
+
+.button,
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 36px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-control, 10px);
+  background: var(--paper-2);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.button {
+  padding: 7px 14px;
+}
+.iconButton {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  color: var(--ink-3);
+}
+@media (hover: hover) {
+  .button:hover {
+    background: var(--ax-tint, var(--paper-3));
+  }
+  .iconButton:hover {
+    background: var(--paper-3);
+    color: var(--ink);
+  }
+}
+
+.dialog {
+  overflow-wrap: anywhere;
+}
+.dialog button,
+.result > a {
+  min-width: 44px;
+  min-height: 44px;
+}
+.body {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-2);
+}
+.body p {
+  margin: 0;
+}
+.error,
+.partial {
+  padding: 12px 14px;
+  border-radius: 12px;
+}
+.error {
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+}
+.partial {
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+}
+.partial a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* the reports: one white list divided by hairlines */
+.list {
+  max-height: 280px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper-2);
+}
+.list:empty {
+  display: none;
+}
+.list > li + li {
+  border-top: 1px solid var(--ax-line-soft, var(--line));
+}
+.list button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+.list button span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.list svg {
+  flex-shrink: 0;
+  color: var(--ink-3);
+}
+.list button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .list button:not(:disabled):hover {
+    background: var(--ax-tint, var(--paper-3));
+  }
+  .list button:not(:disabled):hover svg {
+    color: var(--ink);
+  }
+}
+.result {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .button {
+    min-height: 44px;
+  }
+}

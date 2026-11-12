@@ -1,0 +1,166 @@
+/* ============================================================
+   Invitation — one centered card (~480px) in the product's card language:
+   brand mark → serif title → muted lede → notices → primary + secondary,
+   and the pre-confirmation footnote as a tinted strip along the foot.
+   ============================================================ */
+
+.shell {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  min-width: 0;
+  padding: clamp(8px, 6vh, 64px) 0 clamp(40px, 7vw, 80px);
+  font-family: var(--ax-sans, var(--font-sans));
+  overflow-wrap: anywhere;
+}
+.card {
+  --pad: clamp(20px, 5vw, 32px);
+  width: min(100%, 480px);
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card, 16px);
+  background: var(--paper-2);
+  overflow: hidden;
+}
+.head {
+  padding: var(--pad) var(--pad) 0;
+}
+.head:last-child {
+  padding-bottom: var(--pad);
+}
+.mark {
+  --clay: var(--ax-mark);
+  display: flex;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+.title {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  font-family: var(--ax-serif, var(--font-serif));
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.26;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.content {
+  min-width: 0;
+  padding: 0 var(--pad) var(--pad);
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-2);
+}
+.lede {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: 24px;
+}
+.actions :is(button, a),
+.home {
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* state notices: the semantic intent carries the text color on its own tint (≥4.5:1) */
+.notice {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 20px 0 0;
+  padding: 10px 14px;
+  border-radius: var(--r-control, 10px);
+  background: var(--paper-3);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+}
+.notice::before {
+  content: "";
+  flex-shrink: 0;
+  position: relative;
+  top: -1px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.notice:focus {
+  outline: none;
+}
+.notice:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.notice[data-kind="rejected"] {
+  color: var(--intent-negative);
+  background: var(--intent-negative-bg);
+}
+.notice[data-kind="unconfirmed"],
+.notice[data-kind="navigation"] {
+  color: var(--intent-warning);
+  background: var(--intent-warning-bg);
+}
+.notice[data-kind="accepted"] {
+  color: var(--intent-positive);
+  background: var(--intent-positive-bg);
+}
+.help {
+  margin: 16px 0 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+/* the pre-confirmation footnote runs edge to edge along the card's foot */
+.footnote {
+  margin: 28px calc(-1 * var(--pad)) calc(-1 * var(--pad));
+  padding: 14px var(--pad) 16px;
+  border-top: 1px solid var(--line);
+  background: var(--ax-tint, var(--paper-3));
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+
+.shell :is(button, a, [tabindex]):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+:global(html:is(:lang(ko), :lang(ja))) .title {
+  font-size: 26px;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+:global(html:lang(ko)) .shell {
+  word-break: keep-all;
+}
+:global(html:lang(ja)) .shell {
+  line-break: strict;
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 26px;
+  }
+  .actions > * {
+    flex: 1 1 100%;
+  }
+}

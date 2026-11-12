@@ -1,0 +1,124 @@
+/* 알림 — one list panel (8px ring), rows split by hairlines. Status is a
+   tiny semantic dot (positive/negative); the toggle is INK (fg track when
+   on), never clay. One row is expanded with a root-cause block. */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  max-width: 900px;
+}
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.h1 {
+  color: var(--cx-fg);
+}
+
+.panel {
+  border-radius: var(--cx-r-window);
+  box-shadow: inset 0 0 0 1px var(--cx-line-2);
+  overflow: hidden;
+}
+
+/* row */
+.row {
+  display: grid;
+  grid-template-columns: 8px 1fr auto auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--cx-line-3);
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  flex: none;
+}
+.dot[data-status='normal'] {
+  background: var(--cx-positive);
+}
+.dot[data-status='firing'] {
+  background: var(--cx-negative);
+}
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.name {
+  font-size: 15px;
+  color: var(--cx-fg);
+}
+.condition {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cx-text-ter);
+}
+.checked {
+  font-size: 12px;
+  color: var(--cx-text-ter);
+  white-space: nowrap;
+}
+
+/* toggle — ink, not clay */
+.toggle {
+  width: 34px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--cx-card-3);
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+  flex: none;
+  transition: background var(--cx-dur) var(--cx-ease);
+}
+.toggle[data-on='true'] {
+  background: var(--cx-fg);
+  justify-content: flex-end;
+}
+.knob {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--cx-bg);
+}
+.toggle[data-on='false'] .knob {
+  background: var(--cx-text-ter);
+}
+
+/* expanded root-cause block */
+.explain {
+  background: var(--cx-card);
+  border-bottom: 1px solid var(--cx-line-3);
+  padding: 14px 18px 16px 42px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.explainLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--cx-text-ter);
+}
+.explainText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--cx-text-sec);
+}
+.explainLink {
+  font-size: 13px;
+}
+
+/* the last visual element in the panel shouldn't carry a divider */
+.panel > .row:last-child,
+.panel > .explain:last-child {
+  border-bottom: none;
+}

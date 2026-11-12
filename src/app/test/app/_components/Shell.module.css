@@ -1,0 +1,186 @@
+/* App shell — 240px paper sidebar + flexible main. Chrome sizes are
+   authored in literal px (per the density contract): wordmark 12–13px,
+   nav 14px, topbar 52px. Active nav = ink text on a tonal card-2 fill
+   (NEVER clay). No shadows anywhere — separation is border + whitespace. */
+
+.shell {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--cx-bg);
+}
+
+/* ---------------- sidebar ---------------- */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--cx-bg);
+  border-right: 1px solid var(--cx-line-2);
+  padding: 18px 14px 16px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 4px 8px 0;
+  height: 34px;
+  color: var(--cx-fg);
+}
+.wordmark {
+  font-size: 12.5px;
+  letter-spacing: 0.12em;
+  color: var(--cx-fg);
+}
+
+.nav {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.navItem {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--cx-text-sec);
+  text-decoration: none;
+  transition: background var(--cx-dur) var(--cx-ease), color var(--cx-dur) var(--cx-ease);
+}
+.navItem:hover {
+  color: var(--cx-fg);
+  background: var(--cx-card);
+}
+.navItem[data-active='true'] {
+  color: var(--cx-fg);
+  background: var(--cx-card-2);
+}
+.navGap {
+  height: 1px;
+  background: var(--cx-line-2);
+  margin: 12px 10px;
+}
+.navInert {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--cx-text-ter);
+  cursor: default;
+}
+
+/* ---------------- sidebar bottom ---------------- */
+.sideBottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 8px;
+}
+.meter {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.meterHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.meterLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--cx-text-ter);
+}
+.meterCount {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cx-text-mid);
+}
+.meterTrack {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--cx-card-2);
+  overflow: hidden;
+}
+.meterFill {
+  height: 100%;
+  width: 56%;
+  border-radius: 999px;
+  background: var(--cx-fg);
+}
+.user {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-top: 12px;
+  border-top: 1px solid var(--cx-line-2);
+}
+.avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cx-card-3);
+  color: var(--cx-fg);
+  font-size: 12px;
+  letter-spacing: -0.02em;
+  flex: none;
+}
+.userName {
+  font-size: 13px;
+  color: var(--cx-text-sec);
+}
+
+/* ---------------- main column ---------------- */
+.mainCol {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
+}
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 26px;
+  background: var(--cx-bg);
+  border-bottom: 1px solid var(--cx-line-2);
+}
+.pageTitle {
+  font-size: 15.5px;
+  color: var(--cx-fg);
+}
+.topRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.orgChip {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cx-text-mid);
+  background: var(--cx-card);
+  border: 1px solid var(--cx-line-2);
+  border-radius: var(--cx-r-frame);
+  padding: 3px 8px;
+}
+.docs {
+  font-size: 13px;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  padding: 34px 26px 72px;
+}

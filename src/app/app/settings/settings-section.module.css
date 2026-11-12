@@ -1,0 +1,8 @@
+/* The Settings section shell: the shared sub-nav, then the page. The pages keep their own
+   PageHead and container, so this only stacks the two. */
+
+.section {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}

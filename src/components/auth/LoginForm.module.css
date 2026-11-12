@@ -1,0 +1,240 @@
+/* LoginForm uses shared action, focus and semantic state tokens. */
+
+.root {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.emailLabel { font-size: 13px; font-weight: var(--login-label-weight, 500); color: var(--ink-2); }
+.msgNeutral { color: var(--ink-2); background: var(--paper-3); border: 1px solid var(--line-2); }
+.msg > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+.retry { display: block; margin-top: 10px; min-height: 36px; text-align: left; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; font: inherit; }
+.retry:focus-visible { outline: 2px solid var(--login-focus, var(--ink)); outline-offset: 3px; border-radius: var(--r-control); }
+
+/* ---- not-configured fallback ---- */
+.notice {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--intent-warning);
+  background: var(--intent-warning-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  padding: 12px 14px;
+}
+.notice code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+}
+
+/* ---- social buttons ---- */
+.social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: var(--login-control-height, 46px);
+  padding: 10px 16px;
+  border-radius: var(--r-control);
+  border: 1px solid var(--line-2);
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: var(--login-button-weight, 600);
+  line-height: 1.4;
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+.social:hover:not(:disabled) {
+  border-color: var(--ink-3);
+  background: var(--paper);
+}
+.social:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.social:focus-visible {
+  outline: 2px solid var(--login-focus, var(--ink));
+  outline-offset: 3px;
+}
+
+/* Kakao keeps its mandated brand color; everything else is paper. */
+.kakao {
+  background: #fee500;
+  border-color: #fee500;
+  color: #1d1916;
+}
+.kakao:hover:not(:disabled) {
+  background: #f4dd00;
+  border-color: #f4dd00;
+}
+
+.icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.socialNote {
+  margin: -2px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+/* ---- divider ---- */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+/* Letter-spacing and case reads as gaps in Hangul/kana. */
+:global(html:is(:lang(ko), :lang(ja))) .divider {
+  letter-spacing: 0;
+  text-transform: none;
+}
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* ---- email form ---- */
+.form {
+  display: grid;
+  gap: 10px;
+}
+.field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-control);
+  min-height: var(--login-control-height, 46px);
+  padding: 0 6px 0 14px;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+/* One ring, not border + offset outline: accent border plus a soft halo.
+   The transparent outline keeps a visible indicator in forced-colors mode. */
+.field:focus-within {
+  border-color: var(--login-focus, var(--ink));
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--login-focus, var(--ink)) 22%, transparent);
+}
+.fieldIcon {
+  display: inline-flex;
+  color: var(--ink-3);
+  flex-shrink: 0;
+}
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--ink);
+  padding: 10px 0;
+  min-width: 0;
+}
+.input::placeholder {
+  color: var(--ink-3);
+}
+
+/* ---- primary submit ---- */
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: var(--login-control-height, 46px);
+  padding: 10px 18px;
+  border: 1px solid var(--action);
+  border-radius: var(--r-control);
+  background: var(--action);
+  color: var(--on-action);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: var(--login-button-weight, 600);
+  line-height: 1.4;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+.submit:hover:not(:disabled) {
+  border-color: var(--action-hover);
+  background: var(--action-hover);
+}
+/* Inactive until an address is typed: a quiet fill, not a faded primary slab. */
+.submit:disabled {
+  border-color: var(--line);
+  background: var(--paper-3);
+  color: var(--ink-3);
+  cursor: not-allowed;
+}
+.submit:focus-visible {
+  outline: 2px solid var(--login-focus, var(--ink));
+  outline-offset: 3px;
+}
+
+/* spinner shown while a request is in flight */
+.spinner {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  animation: lf-spin 0.7s linear infinite;
+}
+@keyframes lf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- result message ---- */
+.msg {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  border-radius: var(--r-control);
+  padding: 10px 12px;
+}
+.msgOk {
+  color: var(--intent-positive);
+  background: var(--intent-positive-bg);
+  border: 1px solid color-mix(in srgb, var(--intent-positive) 24%, transparent);
+}
+.msgErr {
+  color: var(--intent-negative);
+  background: var(--intent-negative-bg);
+  border: 1px solid color-mix(in srgb, var(--intent-negative) 25%, transparent);
+}
+.msgDot {
+  flex-shrink: 0;
+  margin-top: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social, .submit, .field { transition: none; }
+  .spinner {
+    animation: none;
+  }
+}

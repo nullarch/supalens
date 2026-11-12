@@ -1,0 +1,130 @@
+/* ExplanationDisclosure — the AI root-cause text collapsed to one sentence. The host sets font size
+   and text color (a firing row reads in ink, a timeline hypothesis in ink-2); this file owns layout. */
+
+.root {
+  min-width: 0;
+}
+
+.head {
+  min-width: 0;
+}
+.root[data-layout="inline"] .head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 6px 12px;
+}
+.root[data-layout="inline"] .lead {
+  flex: 1 1 320px;
+}
+.root[data-layout="stacked"] .head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "badge toggle"
+    "lead lead";
+  align-items: center;
+  gap: 6px 12px;
+}
+.root[data-layout="stacked"] .badge {
+  grid-area: badge;
+  justify-self: start;
+}
+.root[data-layout="stacked"] .lead {
+  grid-area: lead;
+}
+.root[data-layout="stacked"] .toggle {
+  grid-area: toggle;
+}
+
+.badge {
+  flex: none;
+  margin-top: 1px;
+}
+
+.lead {
+  min-width: 0;
+  margin: 0;
+  white-space: pre-line;
+}
+/* the collapsed one-liner: two lines at most, however long the lead sentence runs */
+.summary .lead {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  white-space: normal;
+}
+.root[open] .summary .lead {
+  display: none;
+}
+
+.summary {
+  list-style: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 22px;
+  white-space: nowrap;
+  color: var(--ink-3);
+  transition: color 150ms ease;
+}
+.toggle::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 150ms ease;
+}
+.root[open] .toggle::after {
+  margin-top: 3px;
+  transform: rotate(-135deg);
+}
+.summary:hover .toggle {
+  color: var(--ink);
+}
+.less,
+.root[open] .more {
+  display: none;
+}
+.root[open] .less {
+  display: inline;
+}
+
+.body {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+.body p {
+  margin: 0;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.body strong,
+.lead strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle,
+  .toggle::after {
+    transition: none;
+  }
+}

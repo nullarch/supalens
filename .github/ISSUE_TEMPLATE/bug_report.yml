@@ -1,0 +1,53 @@
+name: Bug report
+description: Something does not work the way the docs or the UI say it should
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Security problems do not belong here — see [SECURITY.md](https://github.com/nullarch/supalens/blob/main/SECURITY.md).
+        Please do not paste API keys, database passwords or the contents of `.env`.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. …
+        2. …
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How are you running Supalens?
+      options:
+        - Bundled stack (./selfhost.sh, docker-compose.yml)
+        - My own Supabase project (docker-compose.external.yml)
+        - Local development (npm run dev)
+        - Hosted (supalens.ai)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: "git rev-parse --short HEAD"
+  - type: input
+    id: model
+    attributes:
+      label: Model provider and model
+      description: Only for problems with answers, KPI proposals or alert explanations.
+      placeholder: "anthropic / claude-… or openai-compatible / …"
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: "`docker compose logs web --tail 200` — remove anything secret."
+      render: text

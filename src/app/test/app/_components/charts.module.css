@@ -1,0 +1,225 @@
+/* Prototype chart primitives. All colour comes from inline styles that
+   reference the `.tx` ink ramp / --tx-hi; this file is geometry + type only.
+   Mono 11px --cx-text-ter for every axis/label. No shadows, no gradients. */
+
+/* ---------------- horizontal bars ---------------- */
+.hbar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--cx-fg);
+}
+.hbarRow {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+.hbarLabel {
+  font-size: 13px;
+  color: var(--cx-text-sec);
+}
+.hbarTrack {
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+.hbarFill {
+  height: 100%;
+  border-radius: 3px;
+  min-width: 2px;
+}
+.hbarValue {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cx-text-mid);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ---------------- vertical bars ---------------- */
+.vbar {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  height: 190px;
+  color: var(--cx-fg);
+}
+.vbarCol {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.vbarValueTop {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cx-text-ter);
+  line-height: 1;
+}
+.vbarTrack {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.vbarFill {
+  width: 100%;
+  max-width: 34px;
+  border-radius: 3px 3px 0 0;
+  min-height: 3px;
+}
+.vbarLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cx-text-ter);
+  line-height: 1;
+}
+
+/* ---------------- donut ---------------- */
+.donutWrap {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+.donut {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  flex: none;
+}
+.donutSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.donutCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.donutValue {
+  font-size: 19px;
+  color: var(--cx-fg);
+  line-height: 1;
+}
+.donutLabel {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cx-text-ter);
+}
+.legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 120px;
+  flex: 1;
+}
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+}
+.legendDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  flex: none;
+}
+.legendName {
+  color: var(--cx-text-sec);
+}
+.legendVal {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cx-text-mid);
+}
+
+/* ---------------- line ---------------- */
+.line {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.lineLegend {
+  display: flex;
+  gap: 16px;
+}
+.lineLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--cx-text-sec);
+}
+.lineSvg {
+  width: 100%;
+  height: 150px;
+  display: block;
+}
+.gridLine {
+  stroke: var(--cx-line-2);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  vector-effect: non-scaling-stroke;
+}
+.lineXAxis {
+  display: flex;
+  justify-content: space-between;
+}
+.lineX {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cx-text-ter);
+}
+
+/* ---------------- table ---------------- */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--cx-text-ter);
+  text-align: left;
+  padding: 0 0 10px;
+  border-bottom: 1px solid var(--cx-line-3);
+}
+.table td {
+  font-size: 14px;
+  color: var(--cx-fg);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--cx-line-3);
+}
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+.right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+td.right {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--cx-text-sec);
+}

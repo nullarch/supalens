@@ -1,0 +1,94 @@
+/* Supalens marketing primitives. Shared with localized landing, demo and docs.
+   Neutral product-led surfaces, explicit typography, restrained brand accents. */
+.cx {
+  --cx-rem: 1rem;
+  --cx-bg: var(--paper);
+  --cx-fg: var(--ink);
+  --cx-accent: var(--brand);
+  --cx-text-sec: var(--ink-2);
+  --cx-text-mid: var(--ink-2);
+  --cx-text-ter: var(--ink-3);
+  --cx-fs-xs: .75;
+  --cx-fs-sm: .875;
+  --cx-fs-base: 1;
+  --cx-fs-md-sm: 1.125;
+  --cx-fs-md: 1.375;
+  --cx-fs-md-lg: 1.625;
+  --cx-fs-lg: 2.25;
+  --cx-fs-xl: 3.25;
+  --cx-fs-2xl: 4.5;
+  --cx-card: var(--paper-2);
+  --cx-card-2: var(--paper-3);
+  --cx-card-3: var(--paper-3);
+  --cx-card-4: color-mix(in srgb, var(--ink) 7%, var(--paper));
+  --cx-line-1: var(--line);
+  --cx-line-2: var(--line);
+  --cx-line-3: var(--line);
+  --cx-line-4: var(--line-2);
+  --cx-g: 12px;
+  --cx-v: 24px;
+  --cx-r-frame: 8px;
+  --cx-r-window: 8px;
+  --cx-dur: 140ms;
+  --cx-dur-slow: 200ms;
+  --cx-ease: ease;
+  --cx-positive: var(--intent-positive);
+  --cx-negative: var(--intent-negative);
+  background: var(--cx-bg);
+  color: var(--cx-fg);
+  font-family: var(--font-sans);
+  font-size: var(--cx-rem);
+  font-weight: 400;
+}
+.cx h1, .cx h2, .cx h3, .cx h4 { font-weight: 600; margin: 0; }
+.cx :focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+.cx :is(section, article)[id] { scroll-margin-top: 90px; }
+.cx .cx-type-xs { font-size: .75rem; line-height: 1.6; }
+.cx .cx-type-sm { font-size: .875rem; line-height: 1.7; }
+.cx .cx-type-base { font-size: 1rem; line-height: 1.6; }
+.cx .cx-type-md-sm { font-size: 1.125rem; line-height: 1.5; }
+.cx .cx-type-md { font-size: 1.375rem; line-height: 1.45; letter-spacing: -.015em; }
+.cx .cx-type-md-lg { font-size: 1.625rem; line-height: 1.35; letter-spacing: -.025em; }
+.cx .cx-type-lg { font-size: clamp(30px, 3.6vw, 44px); line-height: 1.2; letter-spacing: -.035em; }
+.cx .cx-type-xl { font-size: clamp(36px, 4.5vw, 58px); line-height: 1.15; letter-spacing: -.04em; }
+.cx .cx-type-2xl { font-size: clamp(38px, 5.8vw, 72px); line-height: 1.1; letter-spacing: -.045em; }
+.cx h2.cx-type-md { font-size: clamp(28px, 3.2vw, 40px); line-height: 1.2; letter-spacing: -.035em; }
+.cx .cx-container { max-width: 1168px; margin-inline: auto; }
+.cx .cx-section { padding: var(--section-pad-y) 32px; }
+.cx .cx-section--first { padding-block-start: clamp(48px, 6vw, 88px); }
+.cx .cx-section--last { padding-block-end: var(--section-pad-y-lg); }
+.cx .cx-band { background: var(--surface-canvas); border-block: 1px solid var(--line); }
+.cx .cx-grid { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); gap: var(--cx-g); }
+.cx .cx-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: var(--r-control);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  padding: 12px 18px;
+  min-height: 44px;
+  background: var(--action);
+  color: var(--on-action);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--cx-dur) var(--cx-ease);
+}
+.cx .cx-btn:hover { background: var(--action-hover); }
+.cx .cx-btn--secondary, .cx .cx-btn--ghost { background: var(--paper-2); color: var(--ink); border-color: var(--line-2); }
+.cx .cx-btn--secondary:hover, .cx .cx-btn--ghost:hover { background: var(--paper-3); }
+.cx .cx-btn--sm { font-size: 13px; padding: 8px 12px; min-height: 36px; }
+.cx .cx-link { color: var(--brand); text-decoration: none; transition: color var(--cx-dur); }
+.cx .cx-link:hover { color: var(--brand-hover); text-decoration: underline; text-underline-offset: 4px; }
+.cx .cx-card { background: var(--cx-card); border: 1px solid var(--line); border-radius: var(--r-card); padding: 22px; }
+.cx .cx-frame { position: relative; border-radius: var(--cx-r-frame); overflow: hidden; }
+.cx .cx-frame::after { content: ''; position: absolute; inset: 0; border: 1px solid var(--line); border-radius: inherit; pointer-events: none; }
+.cx .cx-hairline { border-bottom: 1px solid var(--line); }
+@media (max-width: 640px) {
+  .cx .cx-section { padding-inline: 20px; }
+  .cx .cx-btn { font-size: 13px; padding: 11px 14px; gap: 8px; }
+  .cx .cx-type-md { font-size: 18px; }
+}

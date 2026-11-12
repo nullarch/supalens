@@ -1,0 +1,227 @@
+/* Heading block: heading + one-sentence body, same size, split by color. */
+.head {
+  max-width: 600px;
+}
+.lede {
+  margin-top: 8px;
+  color: var(--cx-text-sec);
+  word-break: keep-all;
+}
+
+/* Flat bento: 1 → 2 (660) → 3 (900) columns. */
+.grid {
+  margin-top: clamp(32px, 5vw, 56px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--cx-g);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  min-height: 180px;
+}
+
+.index {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cx-text-ter);
+}
+.title {
+  margin-top: 14px;
+  color: var(--cx-fg);
+}
+.body {
+  margin-top: 8px;
+  color: var(--cx-text-sec);
+  word-break: keep-all;
+}
+
+/* ── Vignette: frosted mini-mock pinned to the tile bottom ───────────── */
+.vig {
+  margin-top: auto;
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 104px;
+  justify-content: flex-end;
+}
+
+.vig,
+.vig * {
+  font-family: var(--font-sans);
+}
+
+/* shared mono label look */
+.vig code,
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* ── routing ────────────────────────────────────────────────────────── */
+.pillRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pill {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: var(--cx-text-sec);
+  background: var(--cx-bg);
+  box-shadow: inset 0 0 0 1px var(--cx-line-2);
+}
+/* ── build (KPI proposals) ─────────────────────────────────────────── */
+.kpiList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.kpiRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--cx-r-frame);
+  background: var(--cx-bg);
+  box-shadow: inset 0 0 0 1px var(--cx-line-2);
+}
+.kpiName {
+  font-size: 12px;
+  color: var(--cx-fg);
+  flex: 1;
+}
+.kpiMeta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--cx-text-ter);
+  white-space: nowrap;
+}
+.kpiChip {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  color: var(--cx-positive);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in oklab, var(--cx-positive) 30%, transparent);
+  white-space: nowrap;
+}
+
+/* ── secondary (on-demand companions) ───────────────────────────────── */
+.secondary {
+  margin-top: clamp(20px, 3vw, 28px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+.secLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--cx-text-ter);
+}
+
+/* ── alert ──────────────────────────────────────────────────────────── */
+.alertChip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--cx-r-frame);
+  background: var(--cx-bg);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in oklab, var(--cx-negative) 35%, var(--cx-line-2));
+}
+.alertDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cx-negative);
+}
+.alertName {
+  font-size: 12px;
+  color: var(--cx-fg);
+  flex: 1;
+}
+.alertDelta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--cx-negative);
+}
+.alertHint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 2px;
+  font-size: 11px;
+  color: var(--cx-text-ter);
+}
+.spin {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--cx-line-4);
+  border-top-color: var(--cx-accent);
+  flex: none;
+}
+
+/* ── github ─────────────────────────────────────────────────────────── */
+.win {
+  border-radius: var(--cx-r-window);
+  background: var(--cx-bg);
+  box-shadow: inset 0 0 0 1px var(--cx-line-2), var(--shadow-lift);
+  overflow: hidden;
+}
+.winBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--cx-line-2);
+  background: var(--cx-card-2);
+}
+.winName {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--cx-text-sec);
+}
+.winBadge {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  color: var(--cx-accent);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in oklab, var(--cx-accent) 30%, transparent);
+}
+.winBody {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.mdH {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cx-text-mid);
+}
+.mdLine {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cx-text-sec);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

@@ -1,0 +1,35 @@
+/* Shimmer placeholder — same gradient/keyframe convention as the chart widget
+   skeleton (charts.module.css `chShimmer`), styled off the global tokens so it
+   renders identically anywhere under /app. Used by every route `loading.tsx`. */
+.skel {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+  background: linear-gradient(90deg, var(--paper-3) 25%, var(--line) 37%, var(--paper-3) 63%);
+  background-size: 400% 100%;
+  animation: skelShimmer 1.4s ease infinite;
+  border-radius: var(--r-control);
+}
+
+.loadingFrame, .loadingShapes { min-width: 0; width: 100%; }
+.loadingAnnouncement { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.table { min-width: 0; }
+.table th, .table td { min-width: 0; padding-left: 8px; padding-right: 8px; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.grid[data-columns="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid[data-columns="4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media(max-width:800px) { .grid, .grid[data-columns="4"] { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media(max-width:580px) { .grid, .grid[data-columns="2"], .grid[data-columns="4"] { grid-template-columns: minmax(0, 1fr); } }
+@keyframes skelShimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skel {
+    animation: none;
+  }
+}

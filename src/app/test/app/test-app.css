@@ -1,0 +1,25 @@
+/* ============================================================
+   test-app — product-density additions on top of the landing ".cx"
+   system. Scoped to `.tx` (the product wrapper set in layout.tsx)
+   so nothing here can leak into the marketing `.cx` pages.
+
+   The product surface needs exactly one thing the marketing system
+   doesn't: a chart palette. Per the design contract that palette is
+   an INK-OPACITY ramp (flat fills, descending weight) plus a SINGLE
+   clay highlight — the only place clay is allowed inside a chart.
+   Everything else (type, buttons, surfaces, motion) is inherited
+   verbatim from landing.css. No shadows, no gradients, no weight.
+   ============================================================ */
+
+.tx {
+  /* chart ink ramp — descending opacity mixed onto paper so fills stay
+     flat and opaque over card bands (contract: ~.72/.52/.38/.26/.18). */
+  --tx-series-1: color-mix(in oklab, var(--cx-fg) 72%, var(--cx-bg));
+  --tx-series-2: color-mix(in oklab, var(--cx-fg) 52%, var(--cx-bg));
+  --tx-series-3: color-mix(in oklab, var(--cx-fg) 38%, var(--cx-bg));
+  --tx-series-4: color-mix(in oklab, var(--cx-fg) 26%, var(--cx-bg));
+  --tx-series-5: color-mix(in oklab, var(--cx-fg) 18%, var(--cx-bg));
+
+  /* the ONE highlighted series per chart — the only chart use of clay */
+  --tx-hi: var(--cx-accent);
+}

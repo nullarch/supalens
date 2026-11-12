@@ -1,0 +1,598 @@
+/* Dev demo variation V2 — "Split product hero". Self-contained like the widget
+   library: GLOBAL theme tokens only (--paper, --ink, --line, --clay …), no .dx-*
+   utilities (those load only under /app). Works in light AND dark ([data-theme]). */
+
+.page {
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ── slim sticky header ── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px clamp(20px, 4vw, 40px);
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.wordmark {
+  /* brand rule: Workbench ships ONE weight — always 400, always lowercase */
+  font-family: var(--font-logo);
+  font-weight: 400;
+  font-size: 19px;
+  letter-spacing: 0.01em;
+}
+.headerActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+.loginLink {
+  font-size: 14px;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+.loginLink:hover {
+  color: var(--ink);
+}
+.headerCta {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 15px;
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+}
+:global([data-theme='dark']) .headerCta {
+  color: #0d0d0d;
+}
+
+.main {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: clamp(28px, 4vw, 48px) 24px 90px;
+}
+
+/* ── split hero grid: pitch+ask left, preview right ── */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'pitch preview'
+    'ask preview';
+  column-gap: clamp(32px, 4.5vw, 60px);
+  align-items: start;
+}
+.pitch {
+  grid-area: pitch;
+}
+.ask {
+  grid-area: ask;
+  margin-top: 30px;
+}
+.preview {
+  grid-area: preview;
+  min-width: 0;
+}
+
+/* ── pitch ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--paper-2);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.badgeDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34a853;
+  animation: v2Pulse 1.6s ease-in-out infinite;
+}
+@keyframes v2Pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.title {
+  margin: 16px 0 12px;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(28px, 3.4vw, 42px);
+  line-height: 1.22;
+  letter-spacing: -0.015em;
+}
+.titleEm {
+  font-style: normal;
+  color: var(--clay-deep);
+}
+:global([data-theme='dark']) .titleEm {
+  color: var(--clay);
+}
+.sub {
+  margin: 0;
+  max-width: 520px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+.schemaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+.schemaLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+.schemaChip {
+  padding: 3px 9px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--paper-2);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+/* ── ask block: suggested chips + composer ── */
+.suggestLabel {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-3);
+  margin-bottom: 10px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chipBtn {
+  padding: 8px 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  color: var(--ink-2);
+  font-size: 13.5px;
+  line-height: 1.3;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.chipBtn:hover {
+  border-color: var(--ink-3);
+  color: var(--ink);
+  background: var(--paper-2);
+}
+.composer {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 8px;
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  background: var(--paper-2);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.composer:focus-within {
+  border-color: var(--clay);
+  box-shadow: 0 0 0 3px var(--clay-tint);
+}
+.input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.5;
+  padding: 8px 10px;
+  font-family: inherit;
+  text-overflow: ellipsis;
+}
+.input::placeholder {
+  color: var(--ink-3);
+}
+.sendBtn {
+  align-self: center;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: var(--clay);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset;
+  transition: background 0.15s;
+}
+.sendBtn:hover {
+  background: var(--clay-deep);
+}
+/* console dark law: the primary action is a white pill, terracotta stays an accent */
+:global([data-theme='dark']) .sendBtn {
+  background: #ffffff;
+  color: #0d0d0d;
+  box-shadow: none;
+}
+:global([data-theme='dark']) .sendBtn:hover {
+  background: #e1e0d9;
+}
+.readonlyNote {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+/* ── the payoff: live dashboard preview panel ── */
+.previewEyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+  margin-bottom: 10px;
+}
+.panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper-2);
+  box-shadow: var(--shadow-lift-strong);
+  animation: v2Float 8s ease-in-out infinite;
+  --sheen: rgba(255, 255, 255, 0.35);
+}
+:global([data-theme='dark']) .panel {
+  --sheen: rgba(255, 255, 255, 0.05);
+}
+@keyframes v2Float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+/* periodic refresh sheen sweeping over the panel — the "it just refreshed" feel */
+.panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 42%;
+  transform: translateX(-140%) skewX(-14deg);
+  background: linear-gradient(100deg, transparent, var(--sheen), transparent);
+  animation: v2Sheen 9s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes v2Sheen {
+  0%,
+  58% {
+    transform: translateX(-140%) skewX(-14deg);
+  }
+  76%,
+  100% {
+    transform: translateX(360%) skewX(-14deg);
+  }
+}
+.panelHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.winDots {
+  display: inline-flex;
+  gap: 5px;
+}
+.winDots span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--line-2);
+}
+.winDots span:first-child {
+  background: var(--clay);
+  opacity: 0.75;
+}
+.panelTitle {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.updatedNote {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.liveChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink-2);
+}
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34a853;
+  animation: v2Pulse 1.6s ease-in-out infinite;
+}
+.pGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+}
+/* fill-mode widgets: the CELL owns the height, so the panel stays compact.
+   BigNumber's value is clamp(32px, 20cqw, 60px) — at ~295px cells that is the
+   full 60px, so the stat cell needs header+value+caption ≈ 184px. */
+.cellStat {
+  height: 184px;
+  min-width: 0;
+}
+.cellWide {
+  grid-column: 1 / -1;
+  height: 228px;
+  min-width: 0;
+}
+.cellHalf {
+  height: 252px;
+  min-width: 0;
+}
+.panelCaption {
+  margin: 14px 4px 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--ink-3);
+}
+
+/* ── sample answered turn ── */
+.turnSection {
+  max-width: 860px;
+  margin: clamp(64px, 8vw, 110px) auto 0;
+  padding-top: 44px;
+  border-top: 1px solid var(--line);
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-3);
+}
+.sectionTitle {
+  margin: 10px 0 8px;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(22px, 3vw, 30px);
+  letter-spacing: -0.01em;
+}
+.sectionSub {
+  margin: 0 0 28px;
+  max-width: 620px;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+.turn {
+  display: block;
+}
+.userRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+.userMsg {
+  max-width: 85%;
+  padding: 10px 15px;
+  border-radius: 16px 16px 4px 16px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.cachedChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--paper-2);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 320px));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.chartCol {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.answerText {
+  margin: 0;
+  white-space: pre-wrap;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.answerCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--clay-deep);
+  text-decoration: none;
+}
+:global([data-theme='dark']) .answerCta {
+  color: var(--clay);
+}
+.answerCta:hover {
+  text-decoration: underline;
+}
+
+/* ── final CTA ── */
+.ctaCard {
+  max-width: 860px;
+  margin: clamp(56px, 7vw, 90px) auto 0;
+  padding: 38px 30px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper-2);
+  text-align: center;
+}
+.ctaTitle {
+  margin: 0 0 8px;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(22px, 3vw, 28px);
+  letter-spacing: -0.01em;
+}
+.ctaSub {
+  margin: 0 auto 20px;
+  max-width: 480px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  border-radius: var(--r-pill);
+  background: var(--clay);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 650;
+  text-decoration: none;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, var(--shadow-clay);
+  transition: background 0.2s, transform 0.2s;
+}
+.ctaBtn:hover {
+  background: var(--clay-deep);
+  transform: translateY(-2px);
+}
+:global([data-theme='dark']) .ctaBtn {
+  background: #ffffff;
+  color: #0d0d0d;
+  box-shadow: none;
+}
+:global([data-theme='dark']) .ctaBtn:hover {
+  background: #e1e0d9;
+}
+.ctaMcp {
+  display: block;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--ink-3);
+  text-decoration: none;
+}
+.ctaMcp:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* ── responsive: stack pitch → preview → ask (payoff stays visible early) ── */
+@media (max-width: 1020px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    grid-template-areas:
+      'pitch'
+      'preview'
+      'ask';
+    row-gap: 34px;
+  }
+  .ask {
+    margin-top: 0;
+  }
+  .sub {
+    max-width: 640px;
+  }
+  .panel {
+    animation: none; /* the float reads odd mid-scroll on touch */
+  }
+}
+@media (max-width: 640px) {
+  .pGrid {
+    padding: 10px;
+    gap: 8px;
+  }
+  .cellWide,
+  .cellHalf {
+    grid-column: 1 / -1;
+  }
+  /* ~160px-wide stat cells: 20cqw bottoms out at the 32px min font, but the
+     caption wraps to 2 lines at this width — reserve for it */
+  .cellStat {
+    height: 176px;
+  }
+  .cellWide {
+    height: 244px; /* room for the rotated ko date labels */
+  }
+  .cellHalf {
+    height: 240px;
+  }
+  .updatedNote {
+    display: none;
+  }
+}

@@ -1,0 +1,444 @@
+/* ==========================================================================
+   Goal → monitor: the composer and the approval card.
+   Same product language as monitors.module.css (warm neutrals, DM Sans 500,
+   one brand accent, state colour only for state). The card leads with the
+   operator's own words, then the evidence (chart + backtest), then the rule.
+   ========================================================================== */
+
+.composer {
+  margin-bottom: 20px;
+}
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px 0;
+}
+.lead {
+  margin: 6px 0 0;
+  max-width: 62ch;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 24px 24px;
+}
+.goalRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(160px, 240px);
+  gap: 12px;
+}
+.goalInput {
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 16px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--ax-sans);
+  font-size: 16px;
+  line-height: 24px;
+  resize: none;
+}
+.goalInput::placeholder {
+  color: var(--ink-3);
+}
+.goalInput:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+.examples {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.chip {
+  min-height: 32px;
+  padding: 5px 12px;
+  border: 1px solid var(--ax-line-soft);
+  border-radius: 999px;
+  background: var(--paper-2);
+  color: var(--ink-2);
+  font-family: var(--ax-sans);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.chip:hover,
+.chip:focus-visible {
+  border-color: var(--line-2);
+  background: var(--paper-3);
+}
+.foot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ax-line-soft);
+}
+.footHint {
+  flex: 1 1 260px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.link {
+  color: var(--brand);
+  font-weight: 500;
+  text-decoration: none;
+}
+.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.error {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+/* ---------- working ---------- */
+.working {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.quoted {
+  margin: 0;
+  font-family: var(--ax-serif);
+  font-size: 20px;
+  line-height: 28px;
+  color: var(--ink);
+}
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--ink-3);
+}
+.step[data-state="active"] {
+  color: var(--ink);
+}
+.step[data-state="done"] {
+  color: var(--ink-2);
+}
+.stepDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line-2);
+}
+.step[data-state="active"] .stepDot {
+  background: var(--brand);
+  animation-name: pulse;
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+.step[data-state="done"] .stepDot {
+  background: var(--intent-positive);
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .step[data-state="active"] .stepDot {
+    animation-name: none;
+  }
+}
+.agentText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-2);
+  white-space: pre-line;
+}
+
+/* ---------- draft card ---------- */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.cardTop {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.kicker {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+.nameInput {
+  width: 100%;
+  max-width: 480px;
+  padding: 4px 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--ax-serif);
+  font-size: 24px;
+  line-height: 32px;
+}
+.nameInput:hover {
+  border-bottom-color: var(--ax-line-soft);
+}
+.nameInput:focus {
+  outline: none;
+  border-bottom-color: var(--brand);
+}
+.meta {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+
+.chart {
+  margin: 0;
+  padding: 12px 12px 8px;
+  border: 1px solid var(--ax-line-soft);
+  border-radius: 12px;
+  background: var(--paper-2);
+  min-width: 0;
+}
+.chartSvg {
+  display: block;
+  max-width: 100%;
+}
+.chartLine {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.chartEdge {
+  fill: none;
+  stroke: var(--intent-negative);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 4;
+  opacity: 0.7;
+}
+.chartFired {
+  fill: var(--intent-negative);
+  stroke: var(--paper-2);
+  stroke-width: 2;
+}
+.chartFocus {
+  fill: var(--brand);
+}
+.chartCursor {
+  stroke: var(--line-2);
+  stroke-width: 1;
+}
+.chartCaption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 4px 0;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.chartReadout {
+  text-align: center;
+  color: var(--ink-2);
+}
+.chartReadout strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+.chartRange {
+  color: var(--intent-negative);
+}
+.chartAxis {
+  white-space: nowrap;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--ax-line-soft);
+  border-radius: 12px;
+  background: var(--ax-line-soft);
+}
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 12px 16px;
+  background: var(--paper-2);
+}
+.factLabel {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.factValue {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.factValue[data-tone="negative"] {
+  color: var(--intent-negative);
+}
+.factNote {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--ink-3);
+}
+
+.rule {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--ax-line-soft);
+  border-radius: 12px;
+  background: var(--ax-tint);
+}
+.ruleSentence {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--ink);
+}
+.controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+.controls > :global(.dx-segmented) {
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+.control {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.slider {
+  width: 160px;
+  accent-color: var(--brand);
+}
+.smallInput {
+  width: 96px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-control);
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--ax-sans);
+  font-size: 14px;
+}
+.smallInput:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+.basis {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.warn {
+  margin: 0;
+  font-size: 13px;
+  color: var(--intent-warning);
+}
+
+.why {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-2);
+}
+.whyLabel {
+  margin-right: 6px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.sqlBlock {
+  margin: 8px 0 0;
+  padding: 12px;
+  overflow-x: auto;
+  border-radius: 10px;
+  background: var(--paper-3);
+  font-family: var(--ax-mono);
+  font-size: 12px;
+  line-height: 19px;
+  white-space: pre-wrap;
+  color: var(--ink-2);
+}
+.summaryToggle {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+@container (max-width: 640px) {
+  .goalRow,
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .chartCaption {
+    flex-wrap: wrap;
+  }
+  .chartReadout {
+    flex: 1 1 100%;
+    order: -1;
+    text-align: left;
+  }
+  .slider {
+    width: 120px;
+  }
+}

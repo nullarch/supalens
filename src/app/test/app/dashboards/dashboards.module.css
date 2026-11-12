@@ -1,0 +1,111 @@
+/* 대시보드 — full-width 12-col grid (gap 10px). Cards are 8px windows,
+   alternating a 1px ring on paper with a flat tonal fill for rhythm.
+   ZERO shadows; the only clay is the current-month bar + one donut/line
+   series. */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+}
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.h1 {
+  color: var(--cx-fg);
+}
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin: 18px 0 20px;
+}
+.tab {
+  font-size: 13px;
+  color: var(--cx-text-ter);
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: default;
+}
+.tab[data-active] {
+  color: var(--cx-fg);
+  background: var(--cx-card-2);
+}
+
+/* grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 10px;
+}
+.card {
+  border-radius: var(--cx-r-window);
+  box-shadow: inset 0 0 0 1px var(--cx-line-2);
+  padding: 16px 18px 18px;
+  min-width: 0;
+}
+/* alternate fill cards for rhythm (ring vs flat tonal band) */
+.fill {
+  box-shadow: none;
+  background: var(--cx-card);
+}
+.card[data-span='4'] {
+  grid-column: span 4;
+}
+.card[data-span='5'] {
+  grid-column: span 5;
+}
+.card[data-span='7'] {
+  grid-column: span 7;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.cardTitle {
+  font-size: 13px;
+  color: var(--cx-fg);
+}
+.more {
+  font-size: 15px;
+  line-height: 1;
+  color: var(--cx-text-ter);
+  letter-spacing: 0.08em;
+  cursor: default;
+}
+
+/* KPI cards */
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  min-height: 116px;
+}
+.kpiLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--cx-text-ter);
+}
+.kpiValue {
+  font-size: 32px;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--cx-fg);
+}
+.kpiDelta {
+  font-size: 12px;
+}
+.kpiDelta[data-trend='up'] {
+  color: var(--cx-positive);
+}
+.kpiDelta[data-trend='down'] {
+  color: var(--cx-negative);
+}

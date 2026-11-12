@@ -1,0 +1,200 @@
+.hero {
+  padding-top: clamp(60px, 5vw, 75px);
+}
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.announcement {
+  min-height: 32px;
+  text-transform: none;
+  transition: border-color 180ms ease;
+}
+.announcement svg {
+  flex: none;
+  transition: transform 180ms ease;
+}
+.title {
+  margin-top: 22.5px;
+  font-size: 60px;
+  line-height: 1.06;
+}
+.title > span {
+  display: block;
+}
+.copy {
+  max-width: 640px;
+  margin-top: 22.5px;
+  color: var(--ed-copy);
+  font-size: 18px;
+  line-height: 1.625;
+  white-space: pre-line;
+}
+.actions {
+  justify-content: center;
+  margin-top: 30px;
+}
+.trust {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 18px;
+  color: var(--ed-muted);
+  font-size: 13px;
+}
+.trust svg {
+  flex: none;
+}
+.connects {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 22px;
+  margin-top: 30px;
+}
+.connectsLabel {
+  color: var(--ed-muted);
+  font-family: var(--ed-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 22px;
+}
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  color: var(--ed-copy);
+  font-size: 15px;
+  transition: color 180ms ease;
+}
+.logo svg {
+  flex: none;
+  transition: color 180ms ease;
+}
+
+.stageWrap {
+  margin-top: 45px;
+}
+.stage {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(28px, 6vw, 72px) clamp(14px, 6vw, 84px);
+  border-radius: var(--ed-r-panel);
+  background: #141a5c;
+}
+.window {
+  max-width: 980px;
+  margin-inline: auto;
+}
+.caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 10px;
+  padding-inline: 4px;
+  color: var(--ed-muted);
+  font-family: var(--ed-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.caption a {
+  font-family: var(--ed-sans);
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+:global(.ed:is(:lang(ko), :lang(ja))) .connectsLabel {
+  font-family: var(--ed-sans);
+  letter-spacing: 0.02em;
+}
+:global(.ed:is(:lang(ko), :lang(ja))) .caption {
+  font-family: var(--ed-sans);
+  letter-spacing: 0.02em;
+}
+
+@media (hover: hover) {
+  .logo:hover {
+    color: var(--ed-ink);
+  }
+  .logo:hover svg {
+    color: var(--source-color);
+  }
+  .announcement:hover {
+    border-color: var(--ed-bloom);
+  }
+  .announcement:hover svg {
+    transform: translateX(2px);
+  }
+}
+@media (max-width: 640px) {
+  .title {
+    font-size: 40px;
+  }
+  .copy {
+    font-size: 17px;
+  }
+  .stage {
+    border-radius: 22px;
+  }
+}
+@media (max-width: 480px) {
+  .connects {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .logos {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 2px 26px;
+  }
+  /* Let the three short sentences flow instead of orphaning single words. */
+  :global(.ed:not(:lang(ja))) .copy {
+    white-space: normal;
+  }
+  .trust {
+    display: block;
+  }
+  .trust svg {
+    display: inline;
+    margin-right: 6px;
+    vertical-align: -2px;
+  }
+}
+@media (max-width: 380px) {
+  .title {
+    font-size: 34px;
+  }
+  .actions :global(.ed-button) {
+    padding-inline: 10px;
+    font-size: 13px;
+  }
+}
+
+/* Korean and Japanese headline: 40–56px at ~1.2 leading (reference guidance). */
+:global(.ed:is(:lang(ko), :lang(ja))) .title {
+  font-size: 54px;
+  line-height: 1.22;
+}
+@media (max-width: 640px) {
+  :global(.ed:is(:lang(ko), :lang(ja))) .title {
+    font-size: 36px;
+  }
+  .caption {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+}

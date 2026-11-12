@@ -1,0 +1,133 @@
+/* OAuth return — the product's announcement banner (radius 16, soft gradient; the
+   warning tone tints it amber) at the top of the content column, with a state dot,
+   a 500 lead, the muted explanation, small actions and a close. */
+.card:global(.dx-announce) {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  gap: 12px;
+  margin: 0 0 28px;
+  padding: 14px 10px 14px 18px;
+  color: var(--ax-announce-ink, var(--ink));
+  scroll-margin-top: 88px;
+}
+/* Focus is moved here programmatically on return so assistive tech reads the result;
+   it is not a user-chosen target, so it draws no ring. */
+.card:global(.dx-announce):is(:focus, :focus-visible) {
+  outline: none;
+}
+
+.dot {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  margin-top: 8px;
+  border-radius: 50%;
+  background: var(--ax-warn, var(--intent-warning));
+}
+.card[data-tone="success"] .dot {
+  background: var(--ax-ok, var(--intent-positive));
+}
+.card[data-tone="progress"] .dot {
+  background: var(--brand);
+  animation-name: oauth-pulse;
+  animation-duration: 1.4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@keyframes oauth-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+.title {
+  margin: 0;
+  font-family: var(--ax-sans, var(--font-sans));
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--ax-announce-ink, var(--ink));
+  overflow-wrap: anywhere;
+}
+.body {
+  margin: 0;
+  max-width: 80ch;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.actions:not(:empty) {
+  margin-top: 10px;
+}
+.actions :global(:is(.dx-btn, .dx-btn-ghost)) {
+  white-space: normal;
+  text-align: center;
+}
+
+.close {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-top: -1px;
+  border: 0;
+  border-radius: var(--r-control, 10px);
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+@media (hover: hover) {
+  .close:hover {
+    background: color-mix(in srgb, var(--paper-2) 70%, transparent);
+    color: var(--ink);
+  }
+}
+.card :is(button, a):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+:global(html:lang(ko)) .body,
+:global(html:lang(ko)) .title {
+  word-break: keep-all;
+}
+
+@media (max-width: 768px) {
+  .card:global(.dx-announce) {
+    margin-bottom: 20px;
+    padding: 12px 6px 14px 16px;
+  }
+  .close {
+    width: 44px;
+    height: 44px;
+    margin-top: -10px;
+  }
+  .actions :global(:is(.dx-btn, .dx-btn-ghost)) {
+    min-height: 44px;
+  }
+}
+@media (max-width: 480px) {
+  .actions > * {
+    flex: 1 1 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card[data-tone="progress"] .dot {
+    animation-name: none;
+  }
+  .close {
+    transition-duration: 0.01ms;
+  }
+}

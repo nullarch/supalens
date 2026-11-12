@@ -1,0 +1,100 @@
+/* ============================================================
+   /app/ask route frame — full-height chat surface.
+
+   The page fills the viewport below the shell so the chat's top bar sits near the
+   top edge and the composer can dock to the bottom edge: it cancels the shell's
+   page-column padding on both ends (48px top / 80px bottom; 32 / 64 ≤640px).
+   Desktop has no top bar (the sidebar owns chrome); ≤900px a 56px bar appears.
+   ============================================================ */
+
+.page {
+  --ask-top: 48px; /* the page column's top padding, cancelled */
+  --ask-tail: 80px; /* …and its bottom padding, cancelled */
+  --ask-bar: 0px; /* the mobile top bar */
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-top: calc(-1 * var(--ask-top));
+  margin-bottom: calc(-1 * var(--ask-tail));
+  min-height: calc(100vh - var(--ask-bar));
+  min-height: calc(100dvh - var(--ask-bar));
+}
+/* zero sources: a regular page with its own title row, not a chat */
+.page[data-empty] {
+  margin-top: 0;
+  min-height: calc(100dvh - var(--ask-bar) - var(--ask-top));
+}
+
+.unconfigured {
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+  padding: 40px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+/* ---------- loading skeletons (mirror the empty chat and the saved pages) ---------- */
+.loadingAsk {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: calc(100dvh - 128px);
+}
+.loadingMasthead {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: -36px;
+}
+.loadingWelcome {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+  padding-bottom: min(14vh, 120px);
+}
+.loadingRows {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 8px;
+  width: 100%;
+}
+.loadingHistory {
+  width: 100%;
+}
+.loadingRun {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+}
+.loadingFigures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .page {
+    --ask-bar: 56px;
+  }
+}
+@media (max-width: 640px) {
+  .page {
+    --ask-top: 32px;
+    --ask-tail: 64px;
+  }
+  .loadingFigures {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

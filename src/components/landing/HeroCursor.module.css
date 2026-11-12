@@ -1,0 +1,69 @@
+/* ============================================================
+   HeroCursor — left-aligned copy + dominant media frame. Styles
+   ride the global `.cx` tokens (landing.css); this module only
+   positions/sizes. The frame's contents (the OS-desktop auto-KPI
+   scene) live in HeroDesktop.module.css.
+   Breakpoints (min-width): 420 / 660 / 900 / 1140.
+
+   The site header + its offset are NO LONGER here: extracted to
+   `headers/` (each variant renders its own fixed bar + in-flow
+   spacer, so this hero needs no top padding).
+   ============================================================ */
+
+/* ---------------- hero copy ---------------- */
+.hero {
+  /* padding/rhythm come from .cx-section + .cx-section--first */
+}
+.copy {
+  /* measured live 2026-07-06: cursor's hero copy block is max-w-prose =
+     658.32px (41.145rem). The previous 30ch resolved against the WRAPPER's
+     16px font (≈286px) and strangled the 26px headline. */
+  max-width: calc(var(--cx-rem) * 41.145);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--cx-rem) * 1.4);
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: calc(var(--cx-rem) * 0.8);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cx-accent);
+}
+.headline {
+  color: var(--cx-fg);
+  /* the two-sentence headline reads as two lines on wide screens */
+  max-width: 26ch;
+  text-wrap: balance;
+}
+.sub {
+  margin: 0;
+  max-width: 52ch;
+  color: var(--cx-text-mid);
+}
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cx-g);
+}
+
+/* ---------------- media panel ---------------- */
+.media {
+  position: relative;
+  margin-top: calc(var(--cx-v) * 2);
+  min-height: 460px;
+  background: var(--cx-card-3);
+}
+
+/* ---------------- breakpoints ---------------- */
+@media (min-width: 660px) {
+  .media {
+    aspect-ratio: 16 / 9;
+    /* the 460px floor must yield once the ratio is on: min-height + aspect-ratio
+       makes the box's TRANSFERRED width 460×16/9 ≈ 818px, which overflowed every
+       viewport under ~840px (69px horizontal scroll at 768). With the floor off,
+       width fills the container and height follows the ratio; the scene inside
+       is %-sized (window 84%/86%) so it scales cleanly. */
+    min-height: 0;
+  }
+}

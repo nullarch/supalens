@@ -1,0 +1,24 @@
+# One origin for the app and the two Supabase services it uses.
+#
+# supabase-js expects /auth/v1 and /rest/v1 under a single base URL. Putting them on the app's own
+# origin means the browser needs exactly one address, and there is no cross-origin request.
+# TLS: put your own reverse proxy in front, or replace `:80` with your domain and Caddy will
+# obtain a certificate (then publish 443 in docker-compose.yml).
+:80 {
+	encode zstd gzip
+
+	handle_path /auth/v1/* {
+		reverse_proxy auth:9999
+	}
+
+	handle_path /rest/v1/* {
+		reverse_proxy rest:3000
+	}
+
+	handle {
+		reverse_proxy web:3000 {
+			# agent answers stream as server-sent events: never buffer them
+			flush_interval -1
+		}
+	}
+}

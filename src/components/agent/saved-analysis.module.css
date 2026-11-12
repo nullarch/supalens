@@ -1,0 +1,505 @@
+/* ============================================================
+   Saved analyses — history list, one saved run, and the public share page.
+
+   Two audiences share this module:
+   - /app (HistoryView, SavedRunView): the app design system (warm neutral
+     greys, 16px table shell with a tinted head, 500-weight UI text).
+   - /share (SharedAnswer): outside /app, global tokens, no app fonts.
+   The classes both render (.page .answerPage .title .meta .note .prose
+   .figures .stats .charts) keep a neutral base that reads right under the
+   global tokens; their app look is layered on with
+   :global(html:has([data-surface="app"])). Classes only /app renders are
+   styled directly.
+   ============================================================ */
+
+/* ---------- shared base ---------- */
+.page {
+  width: 100%;
+  min-width: 0;
+  margin: 0 auto;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.answerPage {
+  max-width: 768px;
+}
+.publicPage {
+  max-width: 800px;
+  padding: 40px 24px 64px;
+}
+.title {
+  margin: 20px 0;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.note {
+  margin: 12px 0 20px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.prose {
+  margin-bottom: 24px;
+  font-size: 15px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.figures {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 14px;
+  min-width: 0;
+}
+.charts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  min-width: 0;
+}
+.stats > *,
+.charts > * {
+  min-width: 0;
+}
+.page :is(a, button, summary):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* ---------- public share page only ---------- */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+}
+.footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.footer a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- the app look for the shared classes ---------- */
+:global(html:has([data-surface="app"])) .title {
+  margin: 20px 0 8px;
+  font-family: var(--ax-serif);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 35.2px;
+  letter-spacing: -0.025em;
+}
+:global(html:has([data-surface="app"])) .meta {
+  gap: 4px 0;
+  margin-bottom: 24px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+:global(html:has([data-surface="app"])) .meta > * + *::before {
+  content: "·";
+  margin: 0 8px;
+  color: var(--line-2);
+}
+:global(html:has([data-surface="app"])) .note {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+}
+:global(html:has([data-surface="app"])) .prose {
+  margin: 28px 0 24px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+:global(html:has([data-surface="app"])) .figures,
+:global(html:has([data-surface="app"])) .stats,
+:global(html:has([data-surface="app"])) .charts {
+  gap: 12px;
+}
+:global(html:has([data-surface="app"])) .stats {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+}
+
+/* ---------- /app: history ---------- */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-bottom: 16px;
+}
+.toolbar .note {
+  max-width: 520px;
+  font-size: 13px;
+  line-height: 20px;
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.filterLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--paper-3);
+}
+.segmented a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 5px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--ink-3);
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 16px;
+  text-decoration: none;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+.segmented a[aria-current] {
+  border-color: var(--line);
+  background: var(--paper-2);
+  box-shadow: var(--ax-shadow-sm, 0 1px 3px #0000001a, 0 1px 2px -1px #0000001a);
+  color: var(--ink);
+}
+@media (hover: hover) {
+  .segmented a:not([aria-current]):hover {
+    color: var(--ink);
+  }
+}
+
+/* one table shell: tinted head row, a tinted band per conversation, faint row lines */
+.list {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card, 16px);
+  background: var(--paper-2);
+}
+.listHead,
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px 190px;
+  gap: 20px;
+}
+.listHead {
+  padding: 12.8px 16px 12.8px 24px;
+  border-bottom: 1px solid var(--line);
+  background: var(--ax-tint, var(--ax-panel));
+  font-size: 12.8px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+.group {
+  min-width: 0;
+}
+.group + .group {
+  border-top: 1px solid var(--line);
+}
+.groupHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 10px 16px 10px 24px;
+  border-bottom: 1px solid var(--ax-line-soft);
+  background: var(--ax-tint, var(--ax-panel));
+}
+.groupHead h2 {
+  min-width: 0;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+}
+.groupLink {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 3px;
+}
+@media (hover: hover) {
+  .groupLink:hover {
+    color: var(--ink);
+    text-decoration-color: currentColor;
+  }
+}
+.groupMeta {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.runs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.row {
+  align-items: baseline;
+  padding: 14px 16px 14px 24px;
+  font-size: 14px;
+  line-height: 22px;
+  transition: background-color 120ms ease;
+}
+.row + .row {
+  border-top: 1px solid var(--ax-line-soft);
+}
+@media (hover: hover) {
+  .row:hover {
+    background: var(--ax-tint, var(--ax-panel));
+  }
+}
+.question {
+  min-width: 0;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .question:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--line-2);
+    text-underline-offset: 3px;
+  }
+}
+
+/* operational state: a named dot, the label stays secondary */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--ink-3);
+}
+.status[data-state="succeeded"]::before {
+  background: var(--ax-ok, var(--intent-positive));
+  box-shadow: none;
+}
+.status[data-state="failed"]::before {
+  background: var(--ax-err, var(--intent-negative));
+  box-shadow: none;
+}
+.status[data-state="running"]::before {
+  background: var(--brand);
+  box-shadow: none;
+}
+.status[data-state="unknown"]::before {
+  background: var(--intent-warning);
+  box-shadow: none;
+}
+.timing {
+  display: grid;
+  gap: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.timing time {
+  color: var(--ink-2);
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 56px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card, 16px);
+  background: var(--paper-2);
+  text-align: center;
+}
+.emptySentence {
+  max-width: 460px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink);
+}
+.emptyState :global(.dx-btn) {
+  white-space: normal;
+  text-align: center;
+}
+
+/* ---------- /app: one saved run ---------- */
+.back {
+  margin-top: 4px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.notice {
+  display: grid;
+  gap: 2px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--ax-tint, var(--ax-panel));
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-3);
+}
+.notice p {
+  margin: 0;
+}
+.notice a {
+  color: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.notice[data-state="failed"] {
+  border-color: transparent;
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+}
+.notice[data-state="running"],
+.notice[data-state="queued"] {
+  border-color: transparent;
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+}
+.notice .status {
+  font-weight: 500;
+  color: var(--ink);
+}
+.notice[data-state="failed"] .status,
+.notice[data-state="running"] .status,
+.notice[data-state="queued"] .status {
+  color: inherit;
+}
+.notice .errorDetail {
+  margin-top: 4px;
+  font-family: var(--ax-mono);
+  font-size: 12.5px;
+}
+
+/* ---------- Korean / Japanese ---------- */
+:global(html:is(:lang(ko), :lang(ja)):has([data-surface="app"])) .title {
+  font-size: 26px;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+:global(html:is(:lang(ko), :lang(ja)):has([data-surface="app"])) .prose {
+  line-height: 1.8;
+}
+:global(html:lang(ko)) .title,
+:global(html:lang(ko)) .emptySentence {
+  word-break: keep-all;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 860px) {
+  .listHead {
+    display: none;
+  }
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 16px;
+  }
+  .question {
+    grid-column: 1 / -1;
+  }
+  .timing {
+    justify-items: end;
+    text-align: right;
+  }
+}
+@media (max-width: 768px) {
+  .segmented a,
+  .pagination :global(a) {
+    min-height: 44px;
+  }
+  .row,
+  .groupHead {
+    padding-inline: 16px;
+  }
+  .groupLink {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .groupMeta {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+@media (max-width: 650px) {
+  .publicPage {
+    padding: 28px 16px 48px;
+  }
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .timing {
+    justify-items: start;
+    text-align: left;
+  }
+}

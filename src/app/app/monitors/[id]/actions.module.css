@@ -1,0 +1,89 @@
+/* Monitor detail actions — the question first (primary), management as secondary buttons. */
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.manage {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.control {
+  min-height: 44px;
+  height: auto;
+  white-space: normal;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.control[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.danger {
+  color: var(--intent-negative);
+}
+@media (hover: hover) {
+  .danger:not(:disabled):hover {
+    background: var(--intent-negative-bg);
+    color: var(--intent-negative);
+  }
+}
+.feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+.feedback:empty {
+  display: none;
+}
+.notice {
+  margin: 0;
+  max-width: 440px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--ink-2);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.notice[data-tone="error"] {
+  color: var(--intent-negative);
+}
+.notice[data-tone="success"] {
+  color: var(--intent-positive);
+}
+.modal {
+  overflow-wrap: anywhere;
+}
+.modal .feedback {
+  align-items: flex-start;
+}
+.modal .notice {
+  text-align: left;
+}
+@media (max-width: 640px) {
+  .wrap,
+  .feedback {
+    align-items: flex-start;
+  }
+  .controls {
+    justify-content: flex-start;
+  }
+  .notice {
+    text-align: left;
+  }
+}

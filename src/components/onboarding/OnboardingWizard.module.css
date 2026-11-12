@@ -1,0 +1,691 @@
+/* ============================================================
+   First-login onboarding — a large dialog in the app design system.
+
+   A white sheet inset 16px from the viewport (16px radius, 1px line): a top
+   row with numbered steps and the close control, each act as a two-column
+   spread (serif 28px title + muted lede left, the act's material right), and
+   a footer row with the quiet skip and the ink primary. The spread folds to
+   one column on narrow screens; the top and footer rows stay pinned while
+   the sheet scrolls.
+
+   Portaled to <body>, opened from /app, where the app tokens live on <html>.
+   ============================================================ */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: var(--ax-scrim, rgba(16, 17, 18, 0.45));
+  animation-name: wizFade;
+  animation-duration: 200ms;
+  animation-timing-function: ease-out;
+}
+
+.panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 81;
+  display: flex;
+  flex-direction: column;
+  width: min(100% - 32px, 1040px);
+  min-height: min(600px, 100dvh - 32px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card, 16px);
+  background: var(--paper-2);
+  box-shadow: var(--shadow-lift-strong);
+  color: var(--ink);
+  outline: none;
+  overflow-wrap: anywhere;
+  animation-name: wizRise;
+  animation-duration: 240ms;
+  animation-timing-function: ease-out;
+}
+/* the sheet takes programmatic focus at each act; the ring belongs on its controls, not the sheet */
+.panel[role="dialog"]:focus-visible {
+  outline: none;
+}
+@keyframes wizFade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes wizRise {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 8px));
+  }
+}
+
+/* ---------- top row: numbered steps · close ---------- */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 60px;
+  padding: 8px 10px 8px clamp(20px, 2.8vw, 28px);
+  border-bottom: 1px solid var(--ax-line-soft);
+  background: var(--paper-2);
+}
+.dots {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  min-width: 0;
+}
+.stops {
+  display: flex;
+  align-items: center;
+}
+.stop {
+  display: inline-flex;
+  align-items: center;
+}
+.connector {
+  width: 20px;
+  height: 1px;
+  margin: 0 6px;
+  background: var(--line);
+  transition: background-color 200ms ease;
+}
+.connector[data-done="true"] {
+  background: var(--line-2);
+}
+.dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--line-2);
+  border-radius: 50%;
+  background: var(--paper-2);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease;
+}
+.dotDone {
+  border-color: transparent;
+  background: var(--paper-3);
+  color: var(--ink-2);
+}
+.dotOn {
+  border-color: var(--action);
+  background: var(--action);
+  color: var(--on-action);
+}
+.stepNum,
+.topLabel {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-3);
+}
+.topLabel {
+  color: var(--ink-2);
+}
+.close {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: var(--r-control, 10px);
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+@media (hover: hover) {
+  .close:not(:disabled):hover {
+    background: var(--paper-3);
+    color: var(--ink);
+  }
+}
+
+/* ---------- the spread ---------- */
+.spread {
+  display: grid;
+  flex: 1 0 auto;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-content: start;
+  align-items: start;
+  gap: 28px clamp(28px, 4vw, 48px);
+  padding: clamp(28px, 3.6vw, 40px) clamp(20px, 2.8vw, 28px);
+}
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+.title {
+  margin: 0;
+  font-family: var(--ax-serif);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 35.2px;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.sub {
+  max-width: 440px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+}
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* progress / tags */
+.replayTag,
+.progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.replayTagDot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--brand);
+  animation-name: wizPulse;
+  animation-duration: 1.4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@keyframes wizPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ---------- footer row ---------- */
+.foot {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: auto;
+  padding: 10px clamp(20px, 2.8vw, 28px);
+  border-top: 1px solid var(--ax-line-soft);
+  background: var(--paper-2);
+}
+.skip,
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 6px 10px;
+  margin-left: -10px;
+  border: 0;
+  border-radius: var(--r-control, 10px);
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.back {
+  align-self: flex-start;
+  font-size: 13px;
+}
+.primary,
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: var(--r-control, 10px);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 150ms ease, background-color 150ms ease, transform 100ms ease;
+}
+.primary {
+  border: 1px solid var(--action);
+  background: var(--action);
+  color: var(--on-action);
+}
+.ghost {
+  border: 1px solid var(--line-2);
+  background: var(--paper-2);
+  color: var(--ink);
+}
+.primary:not(:disabled):active,
+.ghost:not(:disabled):active {
+  transform: scale(0.98);
+}
+@media (hover: hover) {
+  .skip:not(:disabled):hover,
+  .back:not(:disabled):hover {
+    background: var(--paper-3);
+    color: var(--ink);
+  }
+  .primary:not(:disabled):hover {
+    opacity: 0.85;
+  }
+  .ghost:not(:disabled):hover {
+    background: var(--ax-tint, var(--ax-panel));
+  }
+}
+.primary:disabled,
+.ghost:disabled,
+.skip:disabled,
+.back:disabled,
+.close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Act 1: replay ---------- */
+.replay {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 240px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card, 16px);
+  background: var(--ax-tint, var(--ax-panel));
+}
+.replayQ {
+  align-self: flex-end;
+  max-width: 85%;
+  min-height: 40px;
+  padding: 9px 14px;
+  border-radius: 12px;
+  background: var(--paper-3);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--ink);
+}
+/* Give the metric its own row so neither the currency unit nor its label is elided.
+ * The chart also gets the full width instead of competing with the numeric value. */
+.replayWidgets {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+/* explicit heights, not min-height: ResponsiveContainer needs a bounded box, and fill-mode
+ * widgets overflow min-height cells. Charts need Reel-scale heights (≥185px) — below that the
+ * rotated date axis consumes the whole box and the plot area collapses to nothing. */
+.replayStat {
+  height: 185px;
+}
+.replayChart {
+  height: 185px;
+}
+.replayAnswer {
+  margin: 0;
+  padding: 0 4px 4px;
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink);
+}
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 3px;
+  vertical-align: -0.16em;
+  background: var(--brand);
+  animation-name: wizBlink;
+  animation-duration: 1.05s;
+  animation-timing-function: steps(1);
+  animation-iteration-count: infinite;
+}
+@keyframes wizBlink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Act 2: connect ---------- */
+.trust {
+  display: grid;
+  width: 100%;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.trust li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-2);
+}
+.trust li + li {
+  border-top: 1px solid var(--ax-line-soft);
+}
+.trust li::before {
+  content: "";
+  position: relative;
+  top: -2px;
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--ax-ok, var(--intent-positive));
+}
+.connectGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.connectBtn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 64px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card, 16px);
+  background: var(--paper-2);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: box-shadow 150ms ease, border-color 150ms ease;
+}
+.connectHero {
+  grid-column: 1 / -1;
+  min-height: 72px;
+  font-size: 15px;
+}
+.connectName {
+  flex: 1;
+  min-width: 0;
+}
+.connectArrow {
+  flex-shrink: 0;
+  color: var(--ink-3);
+  transition: transform 150ms ease, color 150ms ease;
+}
+@media (hover: hover) {
+  .connectBtn:hover {
+    border-color: var(--line-2);
+    box-shadow: var(--ax-shadow-sm, 0 1px 3px #0000001a, 0 1px 2px -1px #0000001a);
+  }
+  .connectBtn:hover .connectArrow {
+    color: var(--ink);
+    transform: translateX(2px);
+  }
+}
+.logo {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-control, 10px);
+  background: var(--paper-3);
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 500;
+}
+.connectHero .logo {
+  background: var(--action);
+  color: var(--on-action);
+}
+.formWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 16px 20px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card, 16px);
+  background: var(--paper-2);
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--intent-positive-bg);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--ink);
+}
+.toastOk {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ax-ok, var(--intent-positive));
+  color: var(--paper-2);
+}
+
+/* ---------- Act 3: attach the code ---------- */
+.whyList {
+  margin: 0;
+  padding: 0 20px;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card, 16px);
+  background: var(--paper-2);
+}
+.whyList li {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 14px 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  color: var(--ink);
+}
+.whyList li + li {
+  border-top: 1px solid var(--ax-line-soft);
+}
+.whyIndex {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.limit {
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--ax-tint, var(--ax-panel));
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--ink-3);
+}
+
+/* ---------- Act 4: extraction / samples ---------- */
+.hintChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.hintChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--paper-3);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--ink-2);
+}
+.hintChipMore {
+  border-color: var(--line-2);
+  border-style: dashed;
+  background: transparent;
+  color: var(--ink-3);
+}
+.extractFeedback {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 22px;
+  overflow-wrap: anywhere;
+}
+.extractFeedback p {
+  width: 100%;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+}
+.extractFeedback [data-outcome="running"] {
+  background: var(--paper-3);
+  color: var(--ink-2);
+}
+.extractFeedback [data-outcome="quota"] {
+  background: var(--intent-warning-bg);
+  color: var(--intent-warning);
+}
+.sampleGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.sampleCell {
+  height: 160px;
+}
+.sampleWide {
+  grid-column: 1 / -1;
+  height: 220px;
+}
+
+/* ---------- Korean / Japanese ---------- */
+:global(html:is(:lang(ko), :lang(ja))) .title {
+  font-size: 26px;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+:global(html:lang(ko)) .title,
+:global(html:lang(ko)) .sub,
+:global(html:lang(ko)) .whyList li {
+  word-break: keep-all;
+}
+:global(html:lang(ja)) .title {
+  line-break: strict;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .spread {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .sub {
+    max-width: none;
+  }
+}
+@media (max-width: 640px) {
+  .panel {
+    min-height: calc(100dvh - 32px);
+  }
+  .top {
+    min-height: 56px;
+    padding-left: 16px;
+  }
+  .connector {
+    width: 10px;
+    margin: 0 3px;
+  }
+  .spread {
+    padding: 24px 16px;
+  }
+  .foot {
+    padding: 10px 16px;
+  }
+  .foot > button {
+    flex: 1 1 auto;
+  }
+  .skip {
+    margin-left: 0;
+  }
+  .connectGrid,
+  .sampleGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrim,
+  .panel {
+    animation-duration: 0.01ms;
+  }
+  .replayTagDot,
+  .caret {
+    animation-name: none;
+  }
+  .primary,
+  .ghost,
+  .connectBtn,
+  .connectArrow,
+  .connector,
+  .dot {
+    transition-duration: 0.01ms;
+  }
+}

@@ -1,0 +1,20 @@
+.shell { min-height: 100dvh; display: grid; align-items: center; padding: 48px 16px; background: var(--paper); color: var(--ink); font-family: var(--font-sans); word-break: keep-all; overflow-wrap: anywhere; }
+.content { width: 100%; max-width: 560px; min-width: 0; margin: auto; }
+.brand { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; font-size: 24px; font-weight: 600; letter-spacing: -.8px; }
+.brand small { margin-left: 5px; color: var(--ink-2); font-size: 16px; font-weight: 400; letter-spacing: 0; }
+.card { padding: clamp(20px, 4vw, 36px); border: 1px solid var(--line); border-radius: var(--r-card); background: var(--paper-2); }
+.eyebrow { font-size: 12px; color: var(--ink-2); margin-bottom: 14px; }
+.card h1 { font-size: clamp(24px, 4vw, 30px); line-height: 1.4; font-weight: 600; letter-spacing: -.6px; }
+.description { margin-top: 16px; font-size: 15px; line-height: 1.8; color: var(--ink-2); }
+.notice { margin-top: 28px; padding: 16px; border: 1px solid var(--line); border-radius: var(--r-control); background: var(--paper-3); }
+.notice strong { display: block; font-size: 15px; font-weight: 600; line-height: 1.6; }
+.notice p { font-size: 14px; line-height: 1.8; margin-top: 6px; }
+.notice[data-kind=error] { color: var(--intent-negative); background: var(--intent-negative-bg); border-color: transparent; }
+.notice[data-kind=completed] { color: var(--intent-positive); background: var(--intent-positive-bg); border-color: transparent; }
+.warning { padding: 16px; margin-top: 16px; font-size: 14px; line-height: 1.8; color: var(--intent-warning); background: var(--intent-warning-bg); border-radius: var(--r-control); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.actions button, .actions a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; max-width: 100%; padding: 10px 16px; border: 1px solid transparent; border-radius: var(--r-control); background: var(--action); color: var(--on-action); font: 500 14px/1.6 var(--font-sans); text-align: center; text-decoration: none; cursor: pointer; overflow-wrap: anywhere; }
+.actions .secondary { background: var(--paper-2); color: var(--ink); border-color: var(--line-2); }
+.actions :is(a,button):focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.help { font-size: 13px; line-height: 1.8; color: var(--ink-2); margin-top: 24px; }
+@media (max-width: 480px) { .shell { padding-top: 28px; align-items: start; } .actions { flex-direction: column; } .actions > * { width: 100%; } }

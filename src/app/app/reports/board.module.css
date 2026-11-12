@@ -1,0 +1,490 @@
+/* ============================================================
+   Reports (/app/reports) — the report archive's frame: the title row with
+   the service switcher, the feed beside a service rail (service list or one
+   service in full, the last seven days, quick links). The feed and the report
+   document style themselves in reports.module.css.
+   ============================================================ */
+
+/* A wide page (data-page-width="wide"): the shell gives it up to 1600px and the feed and
+   rail re-flow on the page's own width. */
+.page {
+  container: reports / inline-size;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- strips ---------- */
+
+.dot {
+  position: relative;
+  top: -1px;
+  width: 7px;
+  height: 7px;
+  margin: 0 10px 0 -16px;
+  flex-shrink: 0;
+  align-self: center;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.dot[data-state="normal"] { background: var(--ax-ok); }
+.dot[data-state="firing"],
+.dot[data-tone="negative"] { background: var(--ax-err); }
+.dot[data-state="degraded"],
+.dot[data-state="paused"] { background: var(--ax-warn); }
+.dot[data-state="pending"],
+.dot[data-state="analyzing"] {
+  background: var(--brand);
+  animation-name: overviewPulse;
+  animation-duration: 1.6s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@keyframes overviewPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.lead {
+  margin-right: 6px;
+  font-weight: 500;
+  color: var(--ax-announce-ink);
+}
+.note {
+  color: var(--ink-2);
+}
+.note[data-sep="true"]::before {
+  content: "·";
+  margin: 0 7px;
+  color: var(--ink-3);
+}
+
+/* ---------- monitor rows (service card) ---------- */
+.rowLink {
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.rowLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.value {
+  font-family: var(--ax-serif);
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- view switcher (Design-system segmented control) ---------- */
+/* A flex item can't shrink below its content by default; let the switcher scroll instead
+   of pushing the page wider than a phone. */
+.headActions {
+  min-width: 0;
+  max-width: 100%;
+}
+.switcher {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.switcher::-webkit-scrollbar {
+  display: none;
+}
+.switcherItem {
+  flex-shrink: 0;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- service card (the single view's rail) ---------- */
+.service {
+  container: service / inline-size;
+  min-width: 0;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+  transition: box-shadow 150ms ease;
+}
+.service:hover {
+  box-shadow: var(--ax-shadow-sm);
+}
+.serviceHead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  min-width: 0;
+}
+.serviceLogo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: var(--paper-3);
+  color: var(--ink);
+}
+.serviceName {
+  min-width: 0;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+}
+.serviceLink {
+  color: var(--ink);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.serviceLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+/* "Last check 3m ago" rides in the head so the figures row keeps three roomy columns. */
+.serviceChecked {
+  margin-left: auto;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.serviceOpen {
+  margin-left: auto;
+}
+.serviceChecked + .serviceOpen {
+  margin-left: 4px;
+}
+.serviceAlert {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 14px 0 0;
+  padding: 10px 14px 10px 30px;
+  border-radius: 12px;
+  background: var(--intent-negative-bg);
+  color: var(--intent-negative);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+.serviceAlertLink {
+  margin-left: auto;
+  color: var(--intent-negative);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+/* Three figures; each is label-over-number on a shared subgrid, so a label that wraps in a
+   narrow card never knocks its number out of line with the others. */
+.serviceFigures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto auto;
+  column-gap: 24px;
+  row-gap: 2px;
+  margin: 18px 0 0;
+}
+.serviceFigures > div {
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  min-width: 0;
+}
+.serviceFigures dt {
+  display: flex;
+  align-items: center;
+  align-self: end;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.serviceFigures dd {
+  margin: 0;
+  font-family: var(--ax-serif);
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.serviceFigures dd[data-tone="negative"] { color: var(--intent-negative); }
+.serviceFigures dd[data-tone="warning"] { color: var(--intent-warning); }
+.serviceNext {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  /* --ax-tint equals the card surface in dark mode; the fill token stays visible in both. */
+  background: var(--paper-3);
+}
+.serviceNextText {
+  flex: 1 1 320px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+}
+.serviceRows {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--ax-line-soft);
+}
+.serviceRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(72px, auto);
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  border-bottom: 1px solid var(--ax-line-soft);
+}
+.serviceRow:hover {
+  background: var(--ax-fill-soft);
+}
+.serviceRow .value {
+  font-size: 16px;
+  text-align: right;
+}
+.serviceRow[data-state="incident"] .value { color: var(--intent-negative); }
+.serviceRow:is([data-state="error"], [data-state="paused"], [data-state="pending"]) .value { color: var(--ink-3); }
+.serviceMore {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+.serviceMore a {
+  color: var(--ink-3);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.serviceMore a:hover {
+  color: var(--ink);
+}
+
+/* ---------- report board: the feed + a service rail ----------
+   One column at reading widths; beside the feed at board widths, where the rail stays in view
+   while the log scrolls. */
+.board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+.boardMain {
+  min-width: 0;
+}
+.rail {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+  min-width: 0;
+}
+@container reports (min-width: 1040px) {
+  .board {
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 40px;
+  }
+  .rail {
+    position: sticky;
+    top: 24px;
+  }
+}
+.railCard {
+  min-width: 0;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
+}
+.railTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--ink-2);
+}
+.railCount {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.railList,
+.railLinks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.railService {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin: 0 -8px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background-color 150ms ease;
+}
+.railService:hover {
+  background: var(--ax-fill-soft);
+}
+.railLogo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--paper-3);
+}
+.railName {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+.railFigures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px 12px;
+  margin: 0;
+}
+.railFigures dt {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--ink-3);
+}
+.railFigures dd {
+  margin: 4px 0 0;
+  font-family: var(--ax-serif);
+  font-size: 22px;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.railFigures dd[data-tone="negative"] {
+  color: var(--intent-negative);
+}
+.railFigures dd.railMttr {
+  font-family: var(--ax-sans);
+  font-size: 15px;
+  letter-spacing: normal;
+}
+.railLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  margin: 0 -8px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-decoration: none;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.railLink:hover {
+  background: var(--ax-fill-soft);
+  color: var(--ink);
+}
+.railLinkGo {
+  margin-left: auto;
+  color: var(--ink-3);
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+.railLink:hover .railLinkGo,
+.railLink:focus-visible .railLinkGo {
+  opacity: 1;
+}
+@media (max-width: 640px) {
+  .railService,
+  .railLink {
+    min-height: 44px;
+  }
+}
+
+/* ---------- nothing connected ---------- */
+.reportsEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 28px;
+  border: 1px dashed var(--line-2);
+  border-radius: var(--r-card);
+}
+@media (max-width: 640px) {
+  .reportsEmpty :global(.dx-btn) {
+    min-height: 44px;
+  }
+}
+.reportsEmpty p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--ink-2);
+}
+
+/* ---------- Korean: never split a word across lines ---------- */
+:global(html:lang(ko)) :is(.note, .lead, .serviceNextText) {
+  word-break: keep-all;
+}
+
+/* ---------- responsive ---------- */
+
+@container service (max-width: 420px) {
+  .serviceOpen {
+    display: none;
+  }
+  .serviceChecked {
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+  .serviceFigures {
+    column-gap: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  
+  
+  .serviceNext :global(.dx-btn),
+  .serviceNext :global(.dx-btn-ghost) {
+    min-height: 44px;
+  }
+  
+}
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    animation: none;
+  }
+}
