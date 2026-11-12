@@ -1,3 +1,6 @@
+import { existsSync } from 'node:fs'
+import { join } from 'node:path'
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 /**
@@ -140,6 +143,28 @@ describe('MCP endpoint', () => {
     expect(res.status).toBe(401)
     expect(res.headers.get('www-authenticate')).toContain('error="invalid_token"')
   })
+
+  // Needs the built view (`npm run build:mcp-app`; CI builds it before the tests).
+  it.runIf(existsSync(join(process.cwd(), '.mcp', 'result-view.html')))(
+    'offers the inline result view over the protocol: tool link, capability, readable resource',
+    async () => {
+      const discover = await rpcResult(await POST(modern('server/discover'), ctx()))
+      expect(JSON.stringify(discover)).toContain('io.modelcontextprotocol/ui')
+
+      const list = await rpcResult(await POST(modern('tools/list'), ctx()))
+      const tools = list.tools as { name: string; _meta?: { ui?: { resourceUri?: string } } }[]
+      const linked = tools.filter((tool) => tool._meta?.ui?.resourceUri).map((tool) => tool.name).sort()
+      expect(linked).toEqual(['aggregate', 'execute_sql', 'get_analysis', 'query_documents'])
+
+      const uri = 'ui://supalens/result.html'
+      const read = await rpcResult(await POST(modern('resources/read', { uri }, { 'mcp-name': uri }), ctx()))
+      const [content] = read.contents as { mimeType: string; text: string }[]
+      expect(content.mimeType).toBe('text/html;profile=mcp-app')
+      expect(content.text).toContain('<div id="root"')
+      // self-contained: a sandboxed view has no network, so nothing may be fetched
+      expect(content.text).not.toMatch(/<script[^>]+src=|<link[^>]+href=/)
+    },
+  )
 
   it('a browser GET goes to the setup page; the removed transports are gone', async () => {
     const browser = await GET(new Request('https://app.test/api/mcp/mcp', { headers: { accept: 'text/html' } }), ctx())

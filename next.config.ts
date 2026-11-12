@@ -55,6 +55,8 @@ const nextConfig: NextConfig = {
     // The agent SDK resolves its per-platform native binary at runtime, which file tracing does
     // not see. A built-in build runs agents in this server, so the binary must be in the image.
     ...(builtinTasks ? { '/**': ['./node_modules/@anthropic-ai/claude-agent-sdk*/**/*'] } : {}),
+    // The MCP App view (scripts/build-mcp-app.mjs) is read from .mcp/ at runtime.
+    '/api/mcp/[transport]': ['./.mcp/result-view.html'],
     '/share/*/opengraph-image/*': [
       './assets/fonts/share/*.otf', './assets/fonts/share/*.ttf', './assets/fonts/share/*LICENSE',
       './node_modules/harfbuzzjs/*.wasm',

@@ -21,6 +21,7 @@ import { ANOMALY_SERIES_MAX } from '@/lib/alerts/evaluate'
 import { readOrgTimezone } from '@/lib/org/timezone'
 
 import { assertMcpWriteAllowed, type McpAuthContext } from './auth'
+import { resultViewToolMeta } from './result-view'
 import { persistableError } from '@/lib/supabase-oauth/errors'
 
 const APP_URL = appOrigin()
@@ -241,6 +242,8 @@ function trimKpiSample(k: KpiCatalogRow): KpiCatalogRow {
 }
 
 export function registerSupalensTools(server: McpServer): void {
+  // links the data tools to the inline result view when it is built (see ./result-view.ts)
+  const view = resultViewToolMeta()
   // ── orientation ─────────────────────────────────────────────────────────
   server.registerTool(
     'get_setup_status',
@@ -344,6 +347,7 @@ export function registerSupalensTools(server: McpServer): void {
   server.registerTool(
     'execute_sql',
     {
+      ...view,
       title: 'Run read-only SQL',
       description:
         "Run a READ-ONLY (SELECT/WITH) SQL query against the workspace's connected PostgreSQL/MySQL database. Returns {columns, rows, rowCount, truncated}. Writes are structurally rejected (SELECT-only guard + read-only transaction). Credentials never leave supalens.",
@@ -414,6 +418,7 @@ export function registerSupalensTools(server: McpServer): void {
   server.registerTool(
     'query_documents',
     {
+      ...view,
       title: 'Query Firestore documents',
       description:
         "Read documents from ONE collection of the workspace's connected Firestore database, with optional where filters, an orderBy, and a limit. Returns {columns, rows, rowCount, truncated} (documents flattened; __id is the doc id). NO JOINs; results are capped.",
@@ -448,6 +453,7 @@ export function registerSupalensTools(server: McpServer): void {
   server.registerTool(
     'aggregate',
     {
+      ...view,
       title: 'Aggregate Firestore documents',
       description:
         'Server-side aggregation over a Firestore collection: count, or sum/average of a numeric field, with optional where filters. Cheap — prefer over reading all documents to total them.',
@@ -841,6 +847,7 @@ export function registerSupalensTools(server: McpServer): void {
   server.registerTool(
     'get_analysis',
     {
+      ...view,
       title: 'Get analysis result',
       description: 'Poll the result of an ask() run. Returns {status, done, result, error}. result holds the agent prose + any visualizations once done.',
       annotations: { title: 'Get analysis result', readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },

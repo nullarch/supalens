@@ -60,3 +60,6 @@ next-env.d.ts
 /scripts/verify-*.mjs
 /docs/assets/demo.mp4
 *.log
+
+# built MCP App view (scripts/build-mcp-app.mjs)
+/.mcp/

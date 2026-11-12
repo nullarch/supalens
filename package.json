@@ -7,8 +7,11 @@
     "node": ">=20"
   },
   "scripts": {
+    "predev": "node scripts/build-mcp-app.mjs",
     "dev": "next dev --turbopack",
+    "prebuild": "node scripts/build-mcp-app.mjs",
     "build": "next build",
+    "build:mcp-app": "node scripts/build-mcp-app.mjs",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
@@ -40,6 +43,8 @@
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@google-cloud/firestore": "^8.6.0",
     "@heroicons/react": "^2.2.0",
+    "@modelcontextprotocol/client": "^2.4.0",
+    "@modelcontextprotocol/ext-apps": "^2.0.4",
     "@modelcontextprotocol/sdk": "^1.32.2",
     "@modelcontextprotocol/server": "^2.4.0",
     "@next/third-parties": "^15.1.5",
@@ -89,6 +94,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "dotenv": "^17.2.3",
+    "esbuild": "^0.28.2",
     "eslint": "^9",
     "eslint-config-next": "^15.1.11",
     "postcss": "^8",

@@ -115,6 +115,13 @@ servers) — the endpoint does not import it.
 - Protected-resource metadata is served at the root and the path-suffixed well-known URL; a request
   with no credential gets a 401 with no error code, so the client offers sign-in instead of
   reporting an expired login.
+- **MCP App.** `execute_sql`, `query_documents`, `aggregate` and `get_analysis` link to
+  `ui://supalens/result.html`: a host that supports MCP Apps draws the result inline — the charts an
+  analysis chose, or a chart/table inferred from a bare result. The view (`src/mcp-app/`, decisions in
+  `model.ts`) is bundled into one self-contained file by `scripts/build-mcp-app.mjs` (runs before
+  `dev` and `build`; output `.mcp/`, not committed). It draws only what the host hands it, has no
+  network access, and is not offered at all when the file has not been built. Look at it without a
+  host: `node scripts/build-mcp-app.mjs --preview result.json --out view.html`.
 - A 2026-07-28 request needs the `Mcp-Method` header (and `Mcp-Name` on `tools/call`); a hand-written
   probe without them gets an error, not a result.
 

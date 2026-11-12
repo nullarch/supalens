@@ -5,6 +5,7 @@ import { verifyMcpToken } from '@/lib/mcp/auth'
 import { signInChallenge } from '@/lib/mcp/oauth'
 import { clientIpOf, rateLimit, tooManyRequests } from '@/lib/rate-limit'
 import { registerSupalensTools } from '@/lib/mcp/tools'
+import { registerResultView, resultViewAvailable } from '@/lib/mcp/result-view'
 
 // The query engine uses `pg` + the secrets vault + KMS — strictly Node, never Edge.
 export const runtime = 'nodejs'
@@ -25,7 +26,14 @@ const HOUR_MS = 3_600_000
  * back to 2025-era `initialize` for older clients. No Redis, no SSE; GET/DELETE answer 405.
  * Connect URL → `<origin>/api/mcp/mcp` (hosted: the MCP host rewrites `/mcp` → here).
  */
-const handler = createMcpHandler((server) => registerSupalensTools(server), {
+const handler = createMcpHandler(
+  (server) => {
+    registerSupalensTools(server)
+    registerResultView(server)
+  },
+  {
+  // MCP Apps: advertised so a host knows the data tools' ui:// view is meant to be rendered.
+  ...(resultViewAvailable() ? { capabilities: { extensions: { 'io.modelcontextprotocol/ui': {} } } } : {}),
   serverInfo: { name: 'supalens', version: '1.1.0' },
   instructions:
     'Supalens answers questions about the databases connected to one workspace. Start with ' +
@@ -40,8 +48,11 @@ const handler = createMcpHandler((server) => registerSupalensTools(server), {
   cacheHints: {
     'server/discover': { ttlMs: HOUR_MS, cacheScope: 'private' },
     'tools/list': { ttlMs: HOUR_MS, cacheScope: 'private' },
+    'resources/list': { ttlMs: HOUR_MS, cacheScope: 'private' },
+    'resources/read': { ttlMs: HOUR_MS, cacheScope: 'private' },
   },
-})
+  },
+)
 
 const json = (body: unknown, status: number, headers: Record<string, string> = {}) =>
   new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json', ...headers } })

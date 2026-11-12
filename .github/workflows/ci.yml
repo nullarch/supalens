@@ -43,5 +43,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # the MCP App view is a build output; the protocol test reads it
+      - name: Build MCP App view
+        run: npm run build:mcp-app
+
       - name: Unit tests
         run: npm test
