@@ -24,7 +24,6 @@ to. If you do not wish to, delete this section from your version.
 
 - `assets/fonts/share/` — Noto Sans KR, Noto Sans JP and Noto Emoji, SIL Open Font License 1.1
   (licence files alongside the fonts).
-- `.agents/skills/supabase-postgres-best-practices/` — from Supabase, MIT License.
 - `selfhost/db/roles.sql`, `selfhost/db/jwt.sql` — from the Supabase self-hosting kit
   (`supabase/supabase`, `docker/volumes/db`), Apache License 2.0.
 - Fonts are installed from npm, not stored here: Inter and IBM Plex Mono (fontsource packages)

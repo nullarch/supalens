@@ -1,6 +1,6 @@
 # Name and logo
 
-"Supalens" and the Supalens logo (the files under `branding/`) identify the project and the
+"Supalens" and the Supalens logo (the app icon and wordmark) identify the project and the
 hosted service at supalens.ai. The AGPL-3.0 licence that covers the code does not license them.
 
 You may:
