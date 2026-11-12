@@ -5,6 +5,10 @@
 <h1 align="center">Supalens</h1>
 
 <p align="center">
+  <b>English</b> · <a href="./README.ko.md">한국어</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.zh-CN.md">简体中文</a> · <a href="./README.es.md">Español</a>
+</p>
+
+<p align="center">
   <b>Open-source AI data analyst you self-host.</b><br>
   Connect Postgres, ask in plain language, get KPIs proposed from your schema and code,<br>
   and let it watch them — when a number moves, it investigates and tells you why.

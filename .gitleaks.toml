@@ -1,0 +1,18 @@
+# Secret scanning (CI: .github/workflows/ci.yml). The default rules, minus the fixtures below —
+# each entry is a value that LOOKS like a credential on purpose and is not one.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Redaction-test fixtures: fake keys the X-ray redactor must catch"
+paths = ['''^src/lib/xray/xray\.test\.ts$''']
+
+[[allowlists]]
+description = "Supabase CLI's published local-development keys (issuer supabase-demo), used by the E2E setup"
+regexTarget = "match"
+regexes = ['''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIi[A-Za-z0-9_-]*\.[A-Za-z0-9_-]+''']
+
+[[allowlists]]
+description = "The installer reads a key from the terminal into a variable; no key is in the file"
+regexTarget = "line"
+regexes = ['''read -r ANTHROPIC_API_KEY''']
